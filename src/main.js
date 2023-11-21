@@ -1,8 +1,11 @@
-import {World } from "./World/World.js";
+import {World} from "./World/World.js";
 
 function main(){
     const container = document.getElementById('scene-container');
     const world = new World(container);
     world.render();
 }
-main();
+const button = document.getElementById('button');
+button.addEventListener('click', () => {
+    main();
+});
