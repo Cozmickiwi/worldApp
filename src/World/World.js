@@ -2,6 +2,7 @@
 import{createCamera} from './components/camera.js';
 import{createCube} from './components/cube.js';
 import{createScene} from './components/scene.js';
+import{createLights} from './components/lights.js';
 // Import systems
 import{createRenderer} from './systems/renderer.js';
 import{Resizer} from './systems/Resizer.js';
@@ -20,7 +21,8 @@ class World{
         cube.name = 'cube1';
         cube2.name = 'cube2';
         cube.translateZ(-80);
-        scene.add(cube, cube2);
+        const light = createLights();
+        scene.add(cube, cube2, light);
         const resizer = new Resizer(container, camera, renderer);
     }
     render(){
