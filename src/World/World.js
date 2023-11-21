@@ -15,6 +15,8 @@ class World{
         scene = createScene();
         renderer = createRenderer();
         container.append(renderer.domElement);
+        const cube = createCube();
+        scene.add(cube);
     }
     render(){
         renderer.render(scene, camera);
