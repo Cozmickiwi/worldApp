@@ -1,1 +1,4 @@
-// To do...
+class Resizer{
+    constructor(){}
+}
+export{Resizer};
