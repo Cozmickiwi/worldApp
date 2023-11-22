@@ -1,4 +1,4 @@
-import { TorusKnotGeometry, TorusGeometry, Mesh, MeshStandardMaterial } from '../../../node_modules/three/build/three.module.js';
+import { TorusKnotGeometry, TorusGeometry, Mesh, MeshStandardMaterial, MeshToonMaterial} from '../../../node_modules/three/build/three.module.js';
 
 function createCube(first){
     const geometry = new TorusKnotGeometry(6.5, 1);
@@ -12,10 +12,14 @@ function createCube(first){
     const material2 = new MeshStandardMaterial({
         color: 'Indigo',
         wireframe: true,
-        wireframeLinewidth: .2,
+        opacity: .1,
+        wireframeLinewidth: 1,
         wireframeLinecap: 'round',
         roughness: .8,
     });
+    const toon = new MeshToonMaterial({
+        color: 'blue',
+    })
     const cube = new Mesh(geometry, material);
     const cube2 = new Mesh(geometry2, material2);
     cube2.position.set(-.5, 0, -20);
