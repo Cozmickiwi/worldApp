@@ -10,6 +10,7 @@ let cameraZStatus = 10;
 let shape1XRot;
 let shape1YRot;
 let shape1ZRot;
+let shape2XRot;
 let shape2ZRot;
 let cameraZMax;
 let cameraZMin;
@@ -22,11 +23,19 @@ let controlupd;
 let cameraPosX = false;
 let cameraPosXRev = false;
 let cameraFoward = false;
+let cameraBack = false;
 let currentCamPos = 0;
 let rightSensitivity;
 let leftSensitivity;
 let fowardSpeed;
 let backSpeed;
+let mouseMovementX = 0;
+let mouseMovementY = 0;
+let mouseYPos = 0;
+let doomControls = true;
+let depth = -360;
+let zPos = 360;
+let xPos = 0;
 const clock = new Clock();
 
 function rad(num){
@@ -44,6 +53,11 @@ window.addEventListener('keydown', (event) => {
     }
     else if(event.key == 'w'){
         cameraFoward = true;
+        cameraBack = false;
+    }
+    else if(event.key == 's'){
+        cameraBack = true;
+        cameraFoward = false;
     }
 })
 window.addEventListener('keyup', (event) => {
@@ -56,8 +70,15 @@ window.addEventListener('keyup', (event) => {
     else if(event.key == 'w'){
         cameraFoward = false;
     }
+    else if(event.key == 's'){
+        cameraBack = false;
+    }
 })
 
+window.addEventListener('mousemove', (event) => {
+    mouseMovementX = event.movementX;
+    mouseMovementY = event.movementY;
+})
 
 function settings(){
     (function shape1Settings(){
@@ -66,6 +87,7 @@ function settings(){
         shape1ZRot = rad(0.6); 
     })();
     (function shape2Settings(){
+        shape2XRot = rad(1.15);
         shape2ZRot = rad(0.4);
     })();
     (function cameraAnimSettings(){
@@ -79,7 +101,7 @@ function settings(){
         rightSensitivity = 1;
         leftSensitivity = 1;
         fowardSpeed = 0.6;
-        backSpeed = 0.2;
+        backSpeed = 0.4;
     })();
 }
 function init(scene, camera){
@@ -94,6 +116,8 @@ function shape1(timeScale){
     cube.rotation.z += (shape1ZRot * timeScale);
 }
 function shape2(timeScale){
+    cube2.rotation.x += (shape2XRot * timeScale);
+    cube2.rotation.y += (shape2XRot * timeScale);
     cube2.rotation.z += (shape2ZRot * timeScale);
 }
 function cameraAnim(timeScale){
@@ -112,24 +136,80 @@ function cameraAnim(timeScale){
         }
     }
     */
-    if(cameraPosX == true){
+    if(doomControls == true){
+        if(cameraPosX == true){
         cameraMod.rotation.y -= (rad(rightSensitivity) * timeScale);
         currentCamPos -= (rightSensitivity * timeScale)/2;
-        if(currentCamPos<=-360){
-            currentCamPos += 360;
+            if(currentCamPos<=-360){
+                currentCamPos += 360;
+            }
+        }
+        if(cameraPosXRev == true){
+            cameraMod.rotation.y += (rad(leftSensitivity) * timeScale);
+            currentCamPos += (leftSensitivity * timeScale)/2;
+            if(currentCamPos>=360){
+                currentCamPos -= 360;
+            }
         }
     }
-    if(cameraPosXRev == true){
-        cameraMod.rotation.y += (rad(leftSensitivity) * timeScale);
-        currentCamPos += (leftSensitivity * timeScale)/2;
-        if(currentCamPos>=360){
-            currentCamPos -= 360;
+    else if(doomControls == false){
+        if(mouseMovementX < 0){
+            //cameraMod.rotation.y += (rad((leftSensitivity*(-1*(mouseMovementX)))) * timeScale);
+            currentCamPos += (((leftSensitivity*(-1*(mouseMovementX)))))/2;
+            console.log(xPos);
+            console.log(zPos);
+            if(xPos<=zPos &&(zPos>=0 && xPos>=0)){
+                xPos += (((leftSensitivity*(-1*(mouseMovementX)))))/2;
+            }
+            else if(xPos>zPos&&(zPos>=0 && xPos>=0)){
+                zPos -= (((leftSensitivity*(-1*(mouseMovementX)))))/2;
+            }
+            else if(xPos>zPos &&(zPos<0 && xPos>=0)){
+                xPos -= (((leftSensitivity*(-1*(mouseMovementX)))))/2;
+            }
+            else{
+                zPos += (((leftSensitivity*(-1*(mouseMovementX)))))/2;
+                if(zPos >= 100 && xPos<=0){
+                    xPos = 0;
+                    zPos = 360;
+                }
+            }
+            //depth += (((leftSensitivity*(-1*(mouseMovementX)))))/2;
+            cameraMod.lookAt(xPos,mouseYPos/2,zPos);
+            if(currentCamPos>=720){
+                currentCamPos -= 720;
+            }
+            mouseMovementX = 0;
         }
+        else if(mouseMovementX > 0){
+            //cameraMod.rotation.y += (rad((leftSensitivity*(-1*(mouseMovementX)))) * timeScale);
+            currentCamPos += (((leftSensitivity*(-1*(mouseMovementX)))))/2;
+            depth -= (((leftSensitivity*(-1*(mouseMovementX)))))/2;
+            cameraMod.lookAt(-(currentCamPos),mouseYPos/2,-currentCamPos);
+            console.log(currentCamPos)
+            if(currentCamPos<=-360000){
+                currentCamPos += 3600;
+            }
+            mouseMovementX = 0;
+        }
+        if((mouseMovementY>0 || mouseMovementY<0)){// && mouseYPos <= 90 && mouseYPos >= -90){
+            //cameraMod.rotation.z = 0;
+            //cameraMod.rotation.x += (rad((leftSensitivity*(-1*(mouseMovementY)))) * timeScale);
+            //cameraMod.rotation.z += (rad((leftSensitivity*(-1*(mouseMovementY)))) * timeScale);
+            //cameraMod.up.set(0,0,10)
+            mouseYPos += (((leftSensitivity*(-1*(mouseMovementY)))) * timeScale)/2;
+            //depth += (((leftSensitivity*(-1*(mouseMovementY)))) * timeScale)/2;
+            console.log(currentCamPos);
+            //cameraMod.lookAt((-(currentCamPos)), mouseYPos/2, 1);
+            cameraMod.lookAt(xPos,mouseYPos/2,zPos)
+            mouseMovementY = 0;
+        }
+        
     }
     if(cameraFoward == true){
         console.log(currentCamPos)
         if(currentCamPos == 0){
-            cameraMod.position.z -= (0.2 * timeScale);
+            cameraMod.position.z -= (fowardSpeed * timeScale);
         }
         else if(currentCamPos<0 && currentCamPos>-90){
             let direction = (90+currentCamPos)*.01;
@@ -156,6 +236,46 @@ function cameraAnim(timeScale){
             let direction = (90+currentCamPos)*.01;
             cameraMod.position.z -= ((fowardSpeed*direction) * timeScale);
             cameraMod.position.x += ((fowardSpeed+(fowardSpeed*direction)) * timeScale);
+            //console.log((0.2*direction) * timeScale);
+            //console.log((0.2+(0.2*direction)) * timeScale);
+        }
+        if(currentCamPos <= -180){
+            currentCamPos = (180-((currentCamPos*(-1))-180));
+        }
+        else if(currentCamPos >= 180){
+            currentCamPos = (-1*(180+(180-currentCamPos)));
+        }
+    }
+    else if(cameraBack == true){
+        console.log(currentCamPos)
+        if(currentCamPos == 0){
+            cameraMod.position.z += (backSpeed * timeScale);
+        }
+        else if(currentCamPos<0 && currentCamPos>-90){
+            let direction = (90+currentCamPos)*.01;
+            cameraMod.position.z += ((backSpeed*direction) * timeScale);
+            cameraMod.position.x -= ((backSpeed-(backSpeed*direction)) * timeScale);
+            //console.log((0.2*direction) * timeScale);
+            //console.log((0.2-(0.2*direction)) * timeScale);
+        }
+        else if(currentCamPos>0 && currentCamPos<90){
+            let direction = (90-currentCamPos)*.01;
+            cameraMod.position.z += ((backSpeed*direction) * timeScale);
+            cameraMod.position.x += ((backSpeed-(backSpeed*direction)) * timeScale);
+            //console.log((0.2*direction) * timeScale);
+            //console.log((0.2-(0.2*direction)) * timeScale);
+        }
+        else if(currentCamPos>90 && currentCamPos<180){
+            let direction = (90-currentCamPos)*.01;
+            cameraMod.position.z += ((backSpeed*direction) * timeScale);
+            cameraMod.position.x += ((backSpeed+(backSpeed*direction)) * timeScale);
+            //console.log((0.2*direction) * timeScale);
+            //console.log((0.2+(0.2*direction)) * timeScale);
+        }
+        else if(currentCamPos<-90 && currentCamPos>-180){
+            let direction = (90+currentCamPos)*.01;
+            cameraMod.position.z += ((backSpeed*direction) * timeScale);
+            cameraMod.position.x -= ((backSpeed+(backSpeed*direction)) * timeScale);
             //console.log((0.2*direction) * timeScale);
             //console.log((0.2+(0.2*direction)) * timeScale);
         }
