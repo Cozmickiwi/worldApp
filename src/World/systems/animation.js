@@ -13,13 +13,11 @@ function objectNames(scene, camera){
     cameraMod = camera;
 }
 function shape1(timeScale){
-    //let cube = scene.getObjectByName('cube1');
     cube.rotation.x += (0.02 * timeScale);
     cube.rotation.y += (0.015 * timeScale);
     cube.rotation.z += (0.01 * timeScale);
 }
 function shape2(timeScale){
-    //let cube2 = scene.getObjectByName('cube2');
     cube2.rotation.z += (0.007 * timeScale);
 }
 function cameraAnim(timeScale){
