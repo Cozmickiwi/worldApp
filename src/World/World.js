@@ -6,6 +6,7 @@ import{createLights} from './components/lights.js';
 // Import systems
 import{createRenderer} from './systems/renderer.js';
 import{Resizer} from './systems/Resizer.js';
+import { animateMod } from './systems/animation.js';
 
 let camera;
 let renderer;
@@ -28,13 +29,7 @@ class World{
     render(){
         function animate(){
             window.requestAnimationFrame(animate);
-            let cube = scene.getObjectByName('cube1');
-            let cube2 = scene.getObjectByName('cube2');
-            cube2.rotation.z += 0.007;
-            cube.rotation.x += 0.02;
-            cube.rotation.y += 0.015;
-            cube.rotation.z += 0.01;
-            camera.rotation.z += 0.01;
+            animateMod(scene, camera);
             renderer.render(scene, camera);
         }
         renderer.render(scene, camera);
