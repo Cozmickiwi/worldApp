@@ -34,7 +34,7 @@ class World{
             cube.rotation.x += 0.02;
             cube.rotation.y += 0.015;
             cube.rotation.z += 0.01;
-            
+            camera.rotation.z += 0.01;
             renderer.render(scene, camera);
         }
         renderer.render(scene, camera);
