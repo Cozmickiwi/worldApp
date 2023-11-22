@@ -6,7 +6,8 @@ import{createLights} from './components/lights.js';
 // Import systems
 import{createRenderer} from './systems/renderer.js';
 import{Resizer} from './systems/Resizer.js';
-import { animateMod } from './systems/animation.js';
+import{animateMod} from './systems/animation.js';
+import{createControls} from './systems/controls.js';
 
 let camera;
 let renderer;
