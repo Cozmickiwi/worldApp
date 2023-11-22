@@ -1,16 +1,29 @@
-import { TorusKnotGeometry, TorusGeometry, Mesh, MeshStandardMaterial, MeshToonMaterial} from '../../../node_modules/three/build/three.module.js';
+import {
+    IcosahedronGeometry, 
+    TorusGeometry, 
+    Mesh, 
+    MeshStandardMaterial, 
+    MeshToonMaterial,
+    TextureLoader,
+} from '../../../node_modules/three/build/three.module.js';
 
 function createCube(first){
-    const geometry = new TorusKnotGeometry(6.5, 1);
+    const geometry = new IcosahedronGeometry(4.5);
     const geometry2 = new TorusGeometry(6.5, .7);
+    const textureLoader = new TextureLoader();
+    const texture = textureLoader.load(
+        '/src/World/components/assets/space-cruiser-panels2-unity/space-cruiser-panels2_albedo.png',
+    );
     const material = new MeshStandardMaterial({
-        color: 'blue',
-        wireframe: true,
+        //color: 0x0000ff2f,
+        wireframe: false,
         wireframeLinewidth: .5,
         wireframeLinecap: 'round',
+        map: texture,
+        
     });
     const material2 = new MeshStandardMaterial({
-        color: 'Indigo',
+        color: 'MediumOrchid',
         wireframe: true,
         opacity: .1,
         wireframeLinewidth: 1,
