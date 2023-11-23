@@ -9,6 +9,8 @@ import {
     DoubleSide,
 } from '../../../node_modules/three/build/three.module.js';
 
+
+
 function createCube(first){
     const geometry = new IcosahedronGeometry(2.5);
     const geometry2 = new TorusGeometry(6.5, .7);
@@ -46,10 +48,11 @@ function createCube(first){
     const cube = new Mesh(geometry, material);
     const cube2 = new Mesh(geometry2, material2);
     const plane = new Mesh(geometry3, material3);
-    //cube2.position.set(0, 0, -20);
+    cube.position.set(0,10,0);
+    cube2.position.set(0, 10, 0);
     //cube2.rotation.y = 2.4;
     plane.rotation.x = ((Math.PI*2)/(360/90));
-    plane.position.set(0, -10, 0)
+    //plane.position.set(0, -10, 0)
     plane.material.side = DoubleSide;
     if(first == true){
         return (cube);
