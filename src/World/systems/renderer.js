@@ -5,6 +5,7 @@ function createRenderer(){
         antialias: true,
     });
     renderer.useLegacyLights = true;
+    renderer.autoClear = false;
     return renderer;
 }
 export{createRenderer};
