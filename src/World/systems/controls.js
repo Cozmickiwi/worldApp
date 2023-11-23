@@ -3,7 +3,7 @@ import{PointerLockControls} from '../../../node_modules/three/examples/jsm/contr
 function createControls(camera, canvas){
     const controls = new PointerLockControls(camera, canvas);
     controls.enableDamping = true;
-    controls.dampingFactor= 0.075;
+    controls.dampingFactor= 0.75;
     //controls.listenToKeyEvents(window);
     return controls;
 }
