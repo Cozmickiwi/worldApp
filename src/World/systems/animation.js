@@ -1,4 +1,14 @@
-import { Clock } from "../../../node_modules/three/build/three.module.js";
+import { 
+    Clock,
+    Euler, } from "../../../node_modules/three/build/three.module.js";
+
+import{
+    createControls,
+} from './controls.js'
+
+import{
+    createRenderer,
+} from './renderer.js'
 
 const list = [];
 let cube;
@@ -36,11 +46,32 @@ let doomControls = true;
 let depth = -360;
 let zPos = 360;
 let xPos = 0;
+let cameraBob = 0;
+let cameraBobDown = false;
+let cameraBobAmount;
+let control1;
 const clock = new Clock();
-
+let controls;
+const renderer = new createRenderer;
 function rad(num){
     return((Math.PI)/(360/num));
 }
+
+function deg(num){
+    return(num * (180/Math.PI));
+}
+
+let doomButton = document.getElementById('doomControl');
+doomButton.addEventListener('click', () => {
+    if(doomControls == false){
+        doomControls = true;
+        cameraMod.rotation.set(0,0,0);
+        currentCamPos = 0;
+    }
+    else{
+        doomControls = false;
+    }
+})
 
 window.addEventListener('keydown', (event) => {
     if(event.key == 'a'){
@@ -74,12 +105,12 @@ window.addEventListener('keyup', (event) => {
         cameraBack = false;
     }
 })
-
+/*
 window.addEventListener('mousemove', (event) => {
     mouseMovementX = event.movementX;
     mouseMovementY = event.movementY;
 })
-
+*/
 function settings(){
     (function shape1Settings(){
         shape1XRot = rad(1.15);
@@ -103,6 +134,9 @@ function settings(){
         fowardSpeed = 0.6;
         backSpeed = 0.4;
     })();
+    (function bobSettings(){
+        cameraBobAmount = 0.025;
+    })();
 }
 function init(scene, camera){
     cube = scene.getObjectByName('cube1');
@@ -121,6 +155,22 @@ function shape2(timeScale){
     cube2.rotation.z += (shape2ZRot * timeScale);
 }
 function cameraAnim(timeScale){
+    function cameraBobFun(end){
+        if(cameraBob<=1 && cameraBobDown == false && end == false){
+            cameraMod.position.y += (cameraBobAmount*timeScale);
+            cameraBob += (cameraBobAmount*timeScale);
+        }
+        else{
+            cameraBobDown = true;
+            if(cameraBob - (cameraBobAmount*timeScale) <= cameraBobAmount){
+                cameraBobDown = false;
+                cameraBob = 0;
+                cameraMod.position.y = 10;
+            }
+            cameraMod.position.y -= (cameraBobAmount*timeScale);
+            cameraBob -= (cameraBobAmount*timeScale);
+        }
+    }
     /*
     cameraMod.rotation.z += (cameraZRot * timeScale);
     if(cameraRev == false && (cameraZStatus)<cameraZMax){
@@ -153,11 +203,36 @@ function cameraAnim(timeScale){
         }
     }
     else if(doomControls == false){
+        if(cameraPosX == true){
+            control1.moveRight(.25);
+            cameraPosXRev = false;
+            cameraBobFun(false);
+        }
+        else if(cameraPosXRev == true){
+            control1.moveRight(-.25);
+            cameraPosX = false;
+            cameraBobFun(false);
+        }
+        //console.log(deg(cameraMod.rotation._y))
+        //currentCamPos = deg(cameraMod.rotation._y);
+        /*
+        controls = createControls(cameraMod, renderer.domElement);
+        //controls.current.connect();
+        //controls.current.lock();
+        document.addEventListener('click', () => {
+            controls.lock();
+        })
+        
+        controls.addEventListener('change', () =>{
+            console.log(controls);
+        })
+        
         if(mouseMovementX < 0){
-            //cameraMod.rotation.y += (rad((leftSensitivity*(-1*(mouseMovementX)))) * timeScale);
+            cameraMod.rotation.y += (rad((leftSensitivity*(-1*(mouseMovementX)))) * timeScale);
             currentCamPos += (((leftSensitivity*(-1*(mouseMovementX)))))/2;
             console.log(xPos);
             console.log(zPos);
+            /*
             if(xPos<=zPos &&(zPos>=0 && xPos>=0)){
                 xPos += (((leftSensitivity*(-1*(mouseMovementX)))))/2;
             }
@@ -176,16 +251,17 @@ function cameraAnim(timeScale){
             }
             //depth += (((leftSensitivity*(-1*(mouseMovementX)))))/2;
             cameraMod.lookAt(xPos,mouseYPos/2,zPos);
+            
             if(currentCamPos>=720){
                 currentCamPos -= 720;
             }
             mouseMovementX = 0;
         }
         else if(mouseMovementX > 0){
-            //cameraMod.rotation.y += (rad((leftSensitivity*(-1*(mouseMovementX)))) * timeScale);
+            cameraMod.rotation.y += (rad((leftSensitivity*(-1*(mouseMovementX)))) * timeScale);
             currentCamPos += (((leftSensitivity*(-1*(mouseMovementX)))))/2;
             depth -= (((leftSensitivity*(-1*(mouseMovementX)))))/2;
-            cameraMod.lookAt(-(currentCamPos),mouseYPos/2,-currentCamPos);
+            //cameraMod.lookAt(-(currentCamPos),mouseYPos/2,-currentCamPos);
             console.log(currentCamPos)
             if(currentCamPos<=-360000){
                 currentCamPos += 3600;
@@ -194,19 +270,24 @@ function cameraAnim(timeScale){
         }
         if((mouseMovementY>0 || mouseMovementY<0)){// && mouseYPos <= 90 && mouseYPos >= -90){
             //cameraMod.rotation.z = 0;
-            //cameraMod.rotation.x += (rad((leftSensitivity*(-1*(mouseMovementY)))) * timeScale);
+            cameraMod.rotation.x += (rad((leftSensitivity*(-1*(mouseMovementY)))) * timeScale);
             //cameraMod.rotation.z += (rad((leftSensitivity*(-1*(mouseMovementY)))) * timeScale);
             //cameraMod.up.set(0,0,10)
             mouseYPos += (((leftSensitivity*(-1*(mouseMovementY)))) * timeScale)/2;
             //depth += (((leftSensitivity*(-1*(mouseMovementY)))) * timeScale)/2;
             console.log(currentCamPos);
             //cameraMod.lookAt((-(currentCamPos)), mouseYPos/2, 1);
-            cameraMod.lookAt(xPos,mouseYPos/2,zPos)
+            //cameraMod.lookAt(xPos,mouseYPos/2,zPos)
             mouseMovementY = 0;
         }
-        
+        */
     }
     if(cameraFoward == true){
+        if(doomControls == false){
+            control1.moveForward(.5)
+            cameraBobFun(false);
+        }
+        else{
         console.log(currentCamPos)
         if(currentCamPos == 0){
             cameraMod.position.z -= (fowardSpeed * timeScale);
@@ -245,8 +326,15 @@ function cameraAnim(timeScale){
         else if(currentCamPos >= 180){
             currentCamPos = (-1*(180+(180-currentCamPos)));
         }
+        cameraBobFun(false);
     }
+}
     else if(cameraBack == true){
+        if(doomControls == false){
+            control1.moveForward(-.5)
+            cameraBobFun(false);
+        }
+        else{
         console.log(currentCamPos)
         if(currentCamPos == 0){
             cameraMod.position.z += (backSpeed * timeScale);
@@ -285,9 +373,17 @@ function cameraAnim(timeScale){
         else if(currentCamPos >= 180){
             currentCamPos = (-1*(180+(180-currentCamPos)));
         }
+        cameraBobFun(false);
     }
+    
+    }
+    if(cameraBob > 0 && (cameraFoward == false && cameraBack == false && cameraPosX == false && cameraPosXRev == false ||
+        doomControls == true && cameraFoward == false && cameraBack == false)){
+            cameraBobFun(true);
+        }
 }
-export function animateMod(scene, camera, ){
+export function animateMod(scene, camera, controls){
+    control1 = controls;
     const delta = clock.getDelta();
     init(scene, camera);
     //controls.update();
