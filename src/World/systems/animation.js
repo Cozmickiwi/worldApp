@@ -39,6 +39,9 @@ let rightSensitivity;
 let leftSensitivity;
 let fowardSpeed;
 let backSpeed;
+let xP = document.getElementById('x');
+let yP = document.getElementById('y');
+let zP = document.getElementById('z');
 let mouseMovementX = 0;
 let mouseMovementY = 0;
 let mouseYPos = 0;
@@ -135,7 +138,7 @@ function settings(){
         backSpeed = 0.4;
     })();
     (function bobSettings(){
-        cameraBobAmount = 0.025;
+        cameraBobAmount = 0.024;
     })();
 }
 function init(scene, camera){
@@ -154,9 +157,14 @@ function shape2(timeScale){
     cube2.rotation.y += (shape2XRot * timeScale);
     cube2.rotation.z += (shape2ZRot * timeScale);
 }
+
+function gunAnimation(){
+
+}
+
 function cameraAnim(timeScale){
     function cameraBobFun(end){
-        if(cameraBob<=1 && cameraBobDown == false && end == false){
+        if(cameraBob<=.8 && cameraBobDown == false && end == false){
             cameraMod.position.y += (cameraBobAmount*timeScale);
             cameraBob += (cameraBobAmount*timeScale);
         }
@@ -378,11 +386,15 @@ function cameraAnim(timeScale){
     
     }
     if(cameraBob > 0 && (cameraFoward == false && cameraBack == false && cameraPosX == false && cameraPosXRev == false ||
-        doomControls == true && cameraFoward == false && cameraBack == false)){
-            cameraBobFun(true);
-        }
+    doomControls == true && cameraFoward == false && cameraBack == false)){
+        cameraBobFun(true);
+    }
+    xP.textContent = (`x:${cameraMod.position.x}`);
+    yP.textContent = (`y:${cameraMod.position.y}`);
+    zP.textContent = (`z:${cameraMod.position.z}`);
+    
 }
-export function animateMod(scene, camera, controls){
+export function animateMod(scene, camera, controls, gunLoad){
     control1 = controls;
     const delta = clock.getDelta();
     init(scene, camera);
@@ -396,5 +408,11 @@ export function animateMod(scene, camera, controls){
     }
     for(let i=0; i<list.length; i++){
         (list[i])((delta-(1/144))+1);
+    }
+    if(cameraFoward == true || cameraBack == true){
+        return('walk');
+    }
+    else{
+        return('still');
     }
 }
