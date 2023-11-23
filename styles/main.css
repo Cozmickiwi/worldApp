@@ -41,9 +41,9 @@ h1 {
 }
 
 #doomControl{
-  position: relative;
+  position: absolute;
   top: 5vh;
-  left: 37vw;
+  right: 10vw;
 }
 
 .coord{
@@ -53,4 +53,5 @@ h1 {
   align-items: start;
   padding-left: 20px;
   font-weight: bold;
+  top: 10vh;
 }
