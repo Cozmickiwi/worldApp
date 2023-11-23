@@ -39,3 +39,18 @@ h1 {
   top: 350px;
   right: 0vw;
 }
+
+#doomControl{
+  position: relative;
+  top: 5vh;
+  left: 37vw;
+}
+
+.coord{
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  padding-left: 20px;
+  font-weight: bold;
+}
