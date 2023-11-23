@@ -77,6 +77,7 @@ class World{
         const wall2 = createCube('wall1');
         const wall3 = createCube('wall1');
         const wall4 = createCube('wall1');
+        const crossHair = createCube('cross');
         cube.name = 'cube1';
         cube2.name = 'cube2';
         //cube.translateZ(-80);
@@ -153,7 +154,8 @@ class World{
                     mixer.clipAction( clip ).play();
                 } );
                 */
-                orthoScene.add(gltf.scene, light2);
+                crossHair.position.set(0,0,-500)
+                orthoScene.add(gltf.scene, crossHair, light2);
 
             }
         )

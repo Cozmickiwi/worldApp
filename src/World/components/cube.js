@@ -8,6 +8,7 @@ import {
     TextureLoader,
     DoubleSide,
     RepeatWrapping,
+    MeshBasicMaterial,
 } from '../../../node_modules/three/build/three.module.js';
 
 
@@ -17,6 +18,7 @@ function createCube(first){
     const geometry2 = new TorusGeometry(6.5, .7);
     const geometry3 = new PlaneGeometry(600, 600, 100, 100);
     const geometry4 = new PlaneGeometry(600, 100);
+    const geometry5 = new PlaneGeometry(120,120);
     const textureLoader = new TextureLoader();
     const texture = textureLoader.load(
         '/src/World/components/assets/space-cruiser-panels2-unity/space-cruiser-panels2_albedo.png',
@@ -26,6 +28,9 @@ function createCube(first){
     )
     const floorTexture = textureLoader.load(
         '/src/World/components/assets/pngtree-brick.jpg'
+    )
+    const crossTexture = textureLoader.load(
+        '/src/World/components/assets/crosshair.png'
     )
     wallTexture.wrapS = RepeatWrapping;
     wallTexture.wrapT = RepeatWrapping;
@@ -61,6 +66,10 @@ function createCube(first){
         //roughness: 0.1,
         map: wallTexture,
     });
+    const material5 = new MeshStandardMaterial({
+        map: crossTexture,
+        //color:'white',
+    })
     const toon = new MeshToonMaterial({
         color: 'blue',
         
@@ -69,6 +78,7 @@ function createCube(first){
     const cube2 = new Mesh(geometry2, material2);
     const plane = new Mesh(geometry3, material3);
     const wall1 = new Mesh(geometry4, material4);
+    const crossHair = new Mesh(geometry5, material5);
     cube.position.set(0,10,0);
     cube2.position.set(0, 10, 0);
     //cube2.rotation.y = 2.4;
@@ -76,6 +86,8 @@ function createCube(first){
     //plane.position.set(0, -10, 0)
     plane.material.side = DoubleSide;
     wall1.material.side = DoubleSide;
+    crossHair.material.side = DoubleSide;
+    crossHair.material.transparent = true;
     if(first == true){
         return (cube);
     }
@@ -87,6 +99,9 @@ function createCube(first){
     }
     else if(first == 'wall1'){
         return(wall1)
+    }
+    else if(first == 'cross'){
+        return(crossHair)
     }
 }
 export{createCube};
