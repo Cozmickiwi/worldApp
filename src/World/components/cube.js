@@ -10,9 +10,13 @@ import {
     DoubleSide,
     RepeatWrapping,
     MeshBasicMaterial,
+    Box3,
+    Vector3,
 } from '../../../node_modules/three/build/three.module.js';
 
-
+import {
+    GLTFLoader,
+} from '../../../node_modules/three/examples/jsm/loaders/GLTFLoader.js';
 
 function createCube(first){
     const geometry = new IcosahedronGeometry(2.5);
@@ -21,6 +25,7 @@ function createCube(first){
     const geometry4 = new PlaneGeometry(600, 100);
     const geometry5 = new PlaneGeometry(120,120);
     const geometry6 = new BoxGeometry(6, 20, 6);
+    const playerBox = new BoxGeometry(6, 10, 6);
     const textureLoader = new TextureLoader();
     const texture = textureLoader.load(
         '/src/World/components/assets/space-cruiser-panels2-unity/space-cruiser-panels2_albedo.png',
@@ -82,6 +87,7 @@ function createCube(first){
         map: fireTexture,
         
     })
+    const material7 = new MeshStandardMaterial();
     const toon = new MeshToonMaterial({
         color: 'blue',
         
@@ -92,10 +98,18 @@ function createCube(first){
     const wall1 = new Mesh(geometry4, material4);
     const crossHair = new Mesh(geometry5, material5);
     const fire = new Mesh(geometry5, material6);
+    const pBox = new Mesh(playerBox, material7);
     const box = new Mesh(geometry6, material);
+    let boxBB = new Box3(new Vector3(), new Vector3());
+    let playerBB = new Box3(new Vector3(), new Vector3());
     cube.position.set(0,10,0);
+    
     cube2.position.set(0, 10, 0);
     box.position.set(100,10,100);
+    boxBB.setFromObject(box);
+    playerBB.setFromObject(pBox);
+    //console.log(boxBB);
+    console.log(playerBB);
     //cube2.rotation.y = 2.4;
     plane.rotation.x = ((Math.PI*2)/(360/90));
     //plane.position.set(0, -10, 0)
@@ -106,6 +120,9 @@ function createCube(first){
     fire.material.side = DoubleSide;
     fire.material.transparent = true;
     fire.material.opacity = 0.5;
+    //pBox.material.side = DoubleSide;
+    pBox.material.visible = false;
+    playerBB.name = 'playerBB'
     if(first == true){
         return (cube);
     }
@@ -126,6 +143,15 @@ function createCube(first){
     }
     else if(first == 'box'){
         return(box)
+    }
+    else if(first == 'playerBox'){
+        return(pBox)
+    }
+    else if(first == 'bbb'){
+        return(boxBB)
+    }
+    else if(first == 'pbb'){
+        return(playerBB)
     }
 }
 export{createCube};
