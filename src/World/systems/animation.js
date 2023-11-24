@@ -1,6 +1,7 @@
 import { 
     Clock,
-    Euler, } from "../../../node_modules/three/build/three.module.js";
+    Euler,
+Vector3 } from "../../../node_modules/three/build/three.module.js";
 
 import{
     createControls,
@@ -30,6 +31,7 @@ let cameraZRot;
 let cameraXRot;
 let keyPressed = false;
 let controlupd;
+let vector = new Vector3();
 let cameraPosX = false;
 let cameraPosXRev = false;
 let cameraFoward = false;
@@ -49,6 +51,7 @@ let doomControls = true;
 let depth = -360;
 let zPos = 360;
 let xPos = 0;
+let playerBox;
 let cameraBob = 0;
 let cameraBobDown = false;
 let cameraBobAmount;
@@ -56,6 +59,20 @@ let control1;
 let camYRot = 0;
 const clock = new Clock();
 let controls;
+let playerBB;
+let boxBB;
+let worldPosX;
+let worldPosZ;
+let prevWorldPosX;
+let prevWorldPosZ;
+let selectedWorldPos;
+let worldPosXRev;
+let worldPosZRev;
+let cameraSkipSide = false;
+let cameraFowardInt = false;
+let cameraBackInt = false;
+let cameraLeftInt = false;
+let cameraRightInt = false;
 const renderer = new createRenderer;
 function rad(num){
     return((Math.PI)/(360/num));
@@ -142,10 +159,13 @@ function settings(){
         cameraBobAmount = 0.024;
     })();
 }
-function init(scene, camera){
+function init(scene, camera, pBB, bBB){
     cube = scene.getObjectByName('cube1');
     cube2 = scene.getObjectByName('cube2');
+    playerBox = scene.getObjectByName('playerBox');
     cameraMod = camera;
+    playerBB = pBB;
+    boxBB = bBB;
     settings();
 }
 function shape1(timeScale){
@@ -212,12 +232,12 @@ function cameraAnim(timeScale){
         }
     }
     else if(doomControls == false){
-        if(cameraPosX == true){
+        if(cameraPosX == true && !(playerBB.intersectsBox(boxBB))){
             control1.moveRight(.25);
             cameraPosXRev = false;
             cameraBobFun(false);
         }
-        else if(cameraPosXRev == true){
+        else if(cameraPosXRev == true && !(playerBB.intersectsBox(boxBB))){
             control1.moveRight(-.25);
             cameraPosX = false;
             cameraBobFun(false);
@@ -291,7 +311,8 @@ function cameraAnim(timeScale){
         }
         */
     }
-    if(cameraFoward == true){
+    //if(cameraFoward == true && !((cameraMod.position.x>96&&cameraMod.position.x<104)&&(cameraMod.position.z>96&&cameraMod.position.z<104))){
+        if(cameraFoward == true && !(playerBB.intersectsBox(boxBB))){
         if(doomControls == false){
             control1.moveForward(.5)
             cameraBobFun(false);
@@ -338,7 +359,7 @@ function cameraAnim(timeScale){
         cameraBobFun(false);
     }
 }
-    else if(cameraBack == true){
+    else if(cameraBack == true && !(playerBB.intersectsBox(boxBB))){
         if(doomControls == false){
             control1.moveForward(-.5)
             cameraBobFun(false);
@@ -386,6 +407,114 @@ function cameraAnim(timeScale){
     }
     
     }
+    if(playerBB.intersectsBox(boxBB)){
+        if(cameraFoward == true){
+            //cameraFowardInt = true;
+            if(doomControls == false){
+                worldPosX = cameraMod.getWorldDirection(vector).x;
+                worldPosZ = cameraMod.getWorldDirection(vector).z;
+                /*
+                if(worldPosX<0){
+                    worldPosX *= -1;
+                    worldPosXRev = true;
+                }
+                if(worldPosZ<0){
+                    worldPosZ *= -1;
+                    worldPosZRev = true;
+                }
+                if(worldPosX>worldPosZ){
+                    if(worldPosZRev == true && worldPosXRev == false ){
+                        worldPosZ *= -1;
+                    }
+                    selectedWorldPos = worldPosZ;
+                }
+                else{
+                    if(worldPosXRev == true && worldPosZRev == true){
+                        worldPosX *= -1;
+                    }
+                    selectedWorldPos = worldPosX;
+                }
+                */
+                if(cameraMod.position.x < cameraMod.position.z){
+                    if(cameraMod.position.x < 95){
+                        if(deg(cameraMod.rotation.y)>0){
+                            cameraSkipSide = true;
+                        }
+                        else{
+                            if(worldPosX<worldPosZ){
+                                selectedWorldPos = worldPosX;
+                                }
+                            else{
+                                selectedWorldPos = worldPosZ
+                            }
+                        }
+                    }
+                    else{
+                        if(cameraMod.rotation.x > 1.6 ||cameraMod.rotation.x < -1.6 ){
+                            cameraSkipSide = true;
+                        }
+                        else{
+                            selectedWorldPos = worldPosX;
+                        }
+                        
+                    }
+                }
+                else{
+                    if(cameraMod.position.x > 105){
+                        if(deg(cameraMod.rotation.y)<0){
+                            cameraSkipSide = true;
+                        }
+                        else{
+                            selectedWorldPos = (worldPosZ * -1);
+                        }
+                    }
+                    else{
+                        if(deg(cameraMod.rotation.z)<30 && deg(cameraMod.rotation.z)>-30){
+                            cameraSkipSide = true;
+                        }
+                        else{
+                            selectedWorldPos = (worldPosX * -1);
+                        }
+                        
+                    }
+                }
+                if(cameraSkipSide==false){
+                    control1.moveRight(.25*selectedWorldPos);
+                    control1.moveForward(.25*(selectedWorldPos*selectedWorldPos));
+                }
+                else{
+                    control1.moveForward(.25);
+                    cameraSkipSide = false;
+                }
+                
+                
+                console.log(selectedWorldPos);
+                worldPosXRev = false;
+                worldPosZRev = false;
+                /*
+                if((worldPosX>0)){
+                    control1.moveRight(.25*worldPosZ);
+                    control1.moveForward(.25*(worldPosZ*worldPosZ));
+                }
+                else{
+                    control1.moveForward(0.5)
+                }
+                */
+                
+                prevWorldPosX = cameraMod.getWorldDirection(vector).x;
+                prevWorldPosZ = cameraMod.getWorldDirection(vector).x;
+            }
+        }
+        else if(cameraBack == true){
+            cameraBackInt = true;
+        }
+        else if(cameraPosX == true){
+            cameraRightInt = true;
+        }
+        else if(cameraPosXRev == true){
+            cameraLeftInt = true;
+        }
+    }
     if(cameraBob > 0 && (cameraFoward == false && cameraBack == false && cameraPosX == false && cameraPosXRev == false ||
     doomControls == true && cameraFoward == false && cameraBack == false)){
         cameraBobFun(true);
@@ -406,20 +535,27 @@ function cameraAnim(timeScale){
     else if(Number(yP.textContent) >= ((Math.PI*2))){
         camYRot--;
     }
-    */
+    
     if(0>currentCamPos){
-        yP.textContent = (`y:${360+currentCamPos}`);
+        yP.textContent = (`${360+currentCamPos}`);
     }
     else{
-        yP.textContent = (`y:${currentCamPos}`);
-    }
+        yP.textContent = (`${currentCamPos}`);
+    }*/
+    //console.log(cameraMod.getWorldDirection(vector))
     zP.textContent = (`Position: X=${cameraMod.position.x} Y=${cameraMod.position.y} Z=${cameraMod.position.z}`);
     //console.log(sce);
+    //console.log(cameraMod.position.x)
+    yP.textContent = (`y:${deg(cameraMod.rotation.y)} z:${deg(cameraMod.rotation.z)}`);
+    playerBox.position.set(cameraMod.position.x, 5, cameraMod.position.z);
+    playerBB.copy(playerBox.geometry.boundingBox).applyMatrix4(playerBox.matrixWorld);
+    //console.log(playerBB);
+
 }
-export function animateMod(scene, camera, controls, gunLoad){
+export function animateMod(scene, camera, controls, pBB, bBB){
     control1 = controls;
     const delta = clock.getDelta();
-    init(scene, camera);
+    init(scene, camera, pBB, bBB);
     //controls.update();
     //controlupd = controls;
     if(listCont == false){
