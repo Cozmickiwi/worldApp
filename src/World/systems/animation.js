@@ -53,6 +53,7 @@ let cameraBob = 0;
 let cameraBobDown = false;
 let cameraBobAmount;
 let control1;
+let camYRot = 0;
 const clock = new Clock();
 let controls;
 const renderer = new createRenderer;
@@ -389,10 +390,31 @@ function cameraAnim(timeScale){
     doomControls == true && cameraFoward == false && cameraBack == false)){
         cameraBobFun(true);
     }
+    /*
     xP.textContent = (`x:${cameraMod.position.x}`);
     yP.textContent = (`y:${cameraMod.position.y}`);
     zP.textContent = (`z:${cameraMod.position.z}`);
-    
+    */
+    xP.textContent = (`x:${cameraMod.rotation.x}`);
+    //yP.textContent = (`y:${cameraMod.rotation.y}`);
+    //zP.textContent = (`z:${cameraMod.rotation.z}`);
+    //yP.textContent = (`${(cameraMod.rotation.y)+((Math.PI*2)*camYRot)}`);
+    /*
+    if(Number(yP.textContent) <= (-(Math.PI*2))){
+        camYRot++;
+    }
+    else if(Number(yP.textContent) >= ((Math.PI*2))){
+        camYRot--;
+    }
+    */
+    if(0>currentCamPos){
+        yP.textContent = (`y:${360+currentCamPos}`);
+    }
+    else{
+        yP.textContent = (`y:${currentCamPos}`);
+    }
+    zP.textContent = (`Position: X=${cameraMod.position.x} Y=${cameraMod.position.y} Z=${cameraMod.position.z}`);
+    //console.log(sce);
 }
 export function animateMod(scene, camera, controls, gunLoad){
     control1 = controls;
