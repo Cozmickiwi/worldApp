@@ -2,6 +2,7 @@ import {
     IcosahedronGeometry, 
     TorusGeometry, 
     PlaneGeometry,
+    BoxGeometry,
     Mesh, 
     MeshStandardMaterial, 
     MeshToonMaterial,
@@ -19,6 +20,7 @@ function createCube(first){
     const geometry3 = new PlaneGeometry(600, 600, 100, 100);
     const geometry4 = new PlaneGeometry(600, 100);
     const geometry5 = new PlaneGeometry(120,120);
+    const geometry6 = new BoxGeometry(6, 20, 6);
     const textureLoader = new TextureLoader();
     const texture = textureLoader.load(
         '/src/World/components/assets/space-cruiser-panels2-unity/space-cruiser-panels2_albedo.png',
@@ -32,12 +34,18 @@ function createCube(first){
     const crossTexture = textureLoader.load(
         '/src/World/components/assets/crosshair.png'
     )
+    const fireTexture = textureLoader.load(
+        '/src/World/components/assets/fire1.png'
+    )
     wallTexture.wrapS = RepeatWrapping;
     wallTexture.wrapT = RepeatWrapping;
     wallTexture.repeat.set(12,2)
     floorTexture.wrapS = RepeatWrapping;
     floorTexture.wrapT = RepeatWrapping;
     floorTexture.repeat.set(20,20)
+    texture.wrapS = RepeatWrapping;
+    texture.wrapT = RepeatWrapping;
+    texture.repeat.set(1,4)
     const material = new MeshStandardMaterial({
         //color: 0x0000ff2f,
         wireframe: false,
@@ -70,6 +78,10 @@ function createCube(first){
         map: crossTexture,
         //color:'white',
     })
+    const material6 = new MeshBasicMaterial({
+        map: fireTexture,
+        
+    })
     const toon = new MeshToonMaterial({
         color: 'blue',
         
@@ -79,8 +91,11 @@ function createCube(first){
     const plane = new Mesh(geometry3, material3);
     const wall1 = new Mesh(geometry4, material4);
     const crossHair = new Mesh(geometry5, material5);
+    const fire = new Mesh(geometry5, material6);
+    const box = new Mesh(geometry6, material);
     cube.position.set(0,10,0);
     cube2.position.set(0, 10, 0);
+    box.position.set(100,10,100);
     //cube2.rotation.y = 2.4;
     plane.rotation.x = ((Math.PI*2)/(360/90));
     //plane.position.set(0, -10, 0)
@@ -88,6 +103,9 @@ function createCube(first){
     wall1.material.side = DoubleSide;
     crossHair.material.side = DoubleSide;
     crossHair.material.transparent = true;
+    fire.material.side = DoubleSide;
+    fire.material.transparent = true;
+    fire.material.opacity = 0.5;
     if(first == true){
         return (cube);
     }
@@ -102,6 +120,12 @@ function createCube(first){
     }
     else if(first == 'cross'){
         return(crossHair)
+    }
+    else if(first == 'fire'){
+        return(fire)
+    }
+    else if(first == 'box'){
+        return(box)
     }
 }
 export{createCube};
