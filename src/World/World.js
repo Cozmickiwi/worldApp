@@ -23,6 +23,7 @@ import{
     LoopOnce,
     LoopRepeat,
     Matrix4,
+    Vector3,
 } from '../../node_modules/three/build/three.module.js';
 
 const gltfLoader = new GLTFLoader();
@@ -39,10 +40,16 @@ let action;
 let shootAction;
 let walkAction;
 let runAction;
+let fireImg;
 let walking = false;
 let clock = new Clock();
 let shoot = false;
 let movementStatus;
+let pos;
+let boxPos;
+let cube;
+let box;
+let shotSound = new Audio('/src/World/components/assets/gunsound2.mp3')
 //let canvas = document.querySelector('canvas');
 let gunMaterial = new MeshBasicMaterial({
 
@@ -70,7 +77,7 @@ class World{
                 locked = false;
             }
         })
-        const cube = createCube(true);
+        cube = createCube(true);
         const cube2 = createCube(false);
         const floor = createCube('floor');
         const wall1 = createCube('wall1');
@@ -78,6 +85,10 @@ class World{
         const wall3 = createCube('wall1');
         const wall4 = createCube('wall1');
         const crossHair = createCube('cross');
+        const fire = createCube('fire');
+        box = createCube('box');
+        fire.name = 'fireFlash';
+        
         cube.name = 'cube1';
         cube2.name = 'cube2';
         //cube.translateZ(-80);
@@ -93,7 +104,7 @@ class World{
             wall4.rotation.set(0,-(Math.PI)/(360/180),0);
         }
         walls()
-        scene.add(cube, cube2, floor, wall1, wall2, wall3, wall4, light, light3);
+        scene.add(cube, cube2, floor, wall1, wall2, wall3, wall4, box, light, light3);
         gltfLoader.load(
             //'/src/World/components/assets/ultrakillgun/silahful2.glb',
             '/src/World/components/assets/gunAnim/source/untitled.glb',
@@ -109,9 +120,6 @@ class World{
                 gun1.position.set(150,3020,1)
                 gun1.name = 'gun';
                 const textureLoader = new TextureLoader();
-                const texture = textureLoader.load(
-                    '/src/World/components/assets/ultrakillgun/textures/gltf_embedded_0.png',
-                );
                 
                 
                 //texture.flipY = false;
@@ -154,9 +162,15 @@ class World{
                     mixer.clipAction( clip ).play();
                 } );
                 */
-                crossHair.position.set(0,0,-500)
-                orthoScene.add(gltf.scene, crossHair, light2);
-
+                crossHair.position.set(0,0,-500);
+                fire.position.set(480,270,-850);
+                fire.scale.set(1.5,1.5,1.5)
+                fireImg = fire;
+                fire.visible = false;
+                
+                //fire.scale.set(-100000,-100000,-100000)
+                orthoScene.add(gltf.scene, crossHair, fire, light2);
+                
             }
         )
         const resizer = new Resizer(container, camera, renderer);
@@ -167,10 +181,35 @@ class World{
             if(gunModelLoaded == true){
                 //walkAction.setLoop(LoopRepeat);
                 if(shoot == true){
+                    pos = new Vector3( 0, 0, -(Math.sqrt((camera.position.z**2)+(camera.position.x**2))) ).applyQuaternion( camera.quaternion ).add( camera.position );
+                    boxPos = new Vector3( 0, 0, -(Math.sqrt(((camera.position.z-100)**2)+((camera.position.x-100)**2))) ).applyQuaternion( camera.quaternion ).add( camera.position );
+                    console.log(scene);
+                    console.log(pos);
+                    if((pos.z<(2) && pos.z>(-2))&&(pos.x<(2) && pos.x>(-2))&&(pos.y<12.5&&pos.y>7.5)){
+                        cube.visible = false;
+                        setTimeout(() => {
+                            cube.visible = true;
+                        }, 1000);
+                    }
+                    if((boxPos.z<(103) && boxPos.z>(97))&&(boxPos.x<(103) && boxPos.x>(97)) && (boxPos.y>0 && boxPos.y<=20)){
+                        box.visible = false;
+                        setTimeout(() => {
+                            box.visible = true;
+                        }, 1000);
+                    }
+                    //console.log(camera.getWorldDirection( ))
+                    shotSound.load();
                     shootAction.play();
+                    shotSound.play();
+                    fireImg.visible = true;
+                    setTimeout(() => {
+                        fireImg.visible = false;
+                    }, 50);
+                    console.log(camera)
                     shootAction.setLoop(LoopOnce);
                     shootAction.reset();
                     shoot = false;
+                    fireImg.rotation.z = (Math.random()*(Math.PI));
                 }
                 else if(movementStatus == 'walk'){
                     walkAction.play();
