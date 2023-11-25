@@ -21,8 +21,8 @@ import {
 function createCube(first){
     const geometry = new IcosahedronGeometry(2.5);
     const geometry2 = new TorusGeometry(6.5, .7);
-    const geometry3 = new PlaneGeometry(600, 600, 100, 100);
-    const geometry4 = new PlaneGeometry(600, 100);
+    const geometry3 = new PlaneGeometry(600, 600);
+    const geometry4 = new BoxGeometry(600, 100, 3);
     const geometry5 = new PlaneGeometry(120,120);
     const geometry6 = new BoxGeometry(6, 20, 6);
     const playerBox = new BoxGeometry(6, 10, 6);
