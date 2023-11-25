@@ -23,6 +23,7 @@ function createCube(first){
     const geometry2 = new TorusGeometry(6.5, .7);
     const geometry3 = new PlaneGeometry(600, 600);
     const geometry4 = new BoxGeometry(600, 100, 3);
+    const geometry2a = new BoxGeometry(3, 100, 600);
     const geometry5 = new PlaneGeometry(120,120);
     const geometry6 = new BoxGeometry(6, 20, 6);
     const playerBox = new BoxGeometry(6, 10, 6);
@@ -96,18 +97,40 @@ function createCube(first){
     const cube2 = new Mesh(geometry2, material2);
     const plane = new Mesh(geometry3, material3);
     const wall1 = new Mesh(geometry4, material4);
+    const wall2 = new Mesh(geometry2a, material4);
+    const wall3 = new Mesh(geometry4, material4);
+    const wall4 = new Mesh(geometry2a, material4);
     const crossHair = new Mesh(geometry5, material5);
     const fire = new Mesh(geometry5, material6);
     const pBox = new Mesh(playerBox, material7);
     const box = new Mesh(geometry6, material);
     let boxBB = new Box3(new Vector3(), new Vector3());
     let playerBB = new Box3(new Vector3(), new Vector3());
+    let wall1BB = new Box3(new Vector3(), new Vector3());
+    let wall2BB = new Box3(new Vector3(), new Vector3());
+    let wall3BB = new Box3(new Vector3(), new Vector3());
+    let wall4BB = new Box3(new Vector3(), new Vector3());
     cube.position.set(0,10,0);
-    
     cube2.position.set(0, 10, 0);
     box.position.set(100,10,100);
+    wall1.position.set(0,0,-300);
+    wall3.position.set(0,0,300);
+    wall2.position.set(300,0,0);
+    //wall2.rotation.set(0,(Math.PI)/(360/180),0);
+    wall4.position.set(-300,0,0);
+    //wall4.rotation.set(0,-(Math.PI)/(360/180),0);
     boxBB.setFromObject(box);
     playerBB.setFromObject(pBox);
+    wall1BB.setFromObject(wall1);
+    wall2BB.setFromObject(wall2);
+    wall3BB.setFromObject(wall3);
+    wall4BB.setFromObject(wall4);
+    box.ignoreSides = false;
+    wall1.ignoreSides = ['east', 'west'];
+    wall3.ignoreSides = ['east', 'west'];
+    wall2.ignoreSides = ['north', 'south'];
+    wall4.ignoreSides = ['north', 'south'];
+    //wall1BB.translate(0,0,-300);
     //console.log(boxBB);
     console.log(playerBB);
     //cube2.rotation.y = 2.4;
@@ -135,6 +158,15 @@ function createCube(first){
     else if(first == 'wall1'){
         return(wall1)
     }
+    else if(first == 'wall2'){
+        return(wall2)
+    }
+    else if(first == 'wall3'){
+        return(wall3)
+    }
+    else if(first == 'wall4'){
+        return(wall4)
+    }
     else if(first == 'cross'){
         return(crossHair)
     }
@@ -152,6 +184,9 @@ function createCube(first){
     }
     else if(first == 'pbb'){
         return(playerBB)
+    }
+    else if(first == 'wbb'){
+        return([wall1BB, wall2BB, wall3BB, wall4BB])
     }
 }
 export{createCube};
