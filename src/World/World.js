@@ -57,7 +57,7 @@ let playerBox;
 let playerBB;
 let boxBB;
 let box;
-let enemyCollision = false;
+let enemyCollision = true;
 let shotSound = new Audio('/src/World/components/assets/gunsound2.mp3')
 let personPos;
 let personDmg = 0;
@@ -202,6 +202,7 @@ class World{
                 console.log(gltf.animations)
                 personAction.timeScale = 1.25;
                 scene.add(person);
+                /*
                 setInterval(() => {
                     if((person.position.x < (camera.position.x-15) || person.position.x > (camera.position.x+15))
                     ||(person.position.z < (camera.position.z-15)|| person.position.z > (camera.position.z+15))){
@@ -210,7 +211,7 @@ class World{
                     else{
                         enemyCollision = true;
                     }
-                }, 200);
+                }, 200);*/
             }
         )
         const resizer = new Resizer(container, camera, renderer);
