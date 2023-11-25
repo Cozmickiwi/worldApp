@@ -78,11 +78,12 @@ let closestObj;
 let arrowLoaded = false;
 let dir;
 let arrowHelper;
+let closestFace;
 //let canvas = document.querySelector('canvas');
 let gunMaterial = new MeshBasicMaterial({
 
 })
-function objInfo(posX, posZ, xLen, zLen){
+function objInfo(posX, posZ, xLen, zLen, obj){
     /*
     let xStart = pos-(xLen/2);
     let xEnd = pos+(xLen/2);
@@ -93,20 +94,35 @@ function objInfo(posX, posZ, xLen, zLen){
         z: [Zstart, zEnd],
     };
     */
-    let westStart = [(posX+(xLen/2)), (posZ-(zLen/2))]
-    let westEnd = [(posX+(xLen/2)), (posZ+(zLen/2))]
-    let northStart = [(posX-(xLen/2)), (posZ+(zLen/2))]
-    let northEnd = [(posX+(xLen/2)), (posZ+(zLen/2))]
-    let eastStart = [(posX-(xLen/2)), (posZ-(zLen/2))]
-    let eastEnd = [(posX-(xLen/2)), (posZ+(zLen/2))]
-    let southStart = [(posX-(xLen/2)), (posZ-(zLen/2))]
-    let soundEnd = [(posX+(xLen/2)), (posZ-(zLen/2))]
+    let info = {};
+    if(obj.ignoreSides == false || (!(obj.ignoreSides).includes('west'))){
+        let westStart = [(posX+(xLen/2)), (posZ-(zLen/2))]
+        let westEnd = [(posX+(xLen/2)), (posZ+(zLen/2))]
+        info.west = [westStart, westEnd]
+    }
+    if(obj.ignoreSides == false || !(obj.ignoreSides).includes('north')){
+        let northStart = [(posX-(xLen/2)), (posZ+(zLen/2))]
+        let northEnd = [(posX+(xLen/2)), (posZ+(zLen/2))]
+        info.north = [northStart, northEnd]
+    }
+    if(obj.ignoreSides == false || !(obj.ignoreSides).includes('east')){
+        let eastStart = [(posX-(xLen/2)), (posZ-(zLen/2))]
+        let eastEnd = [(posX-(xLen/2)), (posZ+(zLen/2))]
+        info.east = [eastStart, eastEnd]
+    }
+    if(obj.ignoreSides == false || !(obj.ignoreSides).includes('south')){
+        let southStart = [(posX-(xLen/2)), (posZ-(zLen/2))]
+        let soundEnd = [(posX+(xLen/2)), (posZ-(zLen/2))]
+        info.south = [southStart, soundEnd]
+    }
+    /*
     let info = {
         west: [westStart, westEnd],
         north: [northStart, northEnd],
         east: [eastStart, eastEnd],
         south: [southStart, soundEnd],
     }
+    */
     return(info);
 }
 //let orthoCamera;
@@ -175,8 +191,8 @@ class World{
             
         }
         //walls()
-        boxInfo = objInfo(box.position.x, box.position.z, 6, 6);
-        wall1Info = objInfo(wall1.position.x, wall1.position.z, 600, 3);
+        //boxInfo = objInfo(box.position.x, box.position.z, 6, 6);
+        //wall1Info = objInfo(wall1.position.x, wall1.position.z, 600, 3);
         console.log(wall1Info);
         //console.log(wall1.position.)
         //console.log(boxInfo);
@@ -231,10 +247,10 @@ class World{
                     arrObj = i;
                 }
             }
-            let closestObjSides = objInfo((objArr[arrObj].position.x), (objArr[arrObj].position.z), (objArr[arrObj].geometry.parameters.width), (objArr[arrObj].geometry.parameters.depth));
+            let closestObjSides = objInfo((objArr[arrObj].position.x), (objArr[arrObj].position.z), (objArr[arrObj].geometry.parameters.width), (objArr[arrObj].geometry.parameters.depth), objArr[arrObj]);
             for(const directions in closestObjSides){
                 let obj = new Vector3((((((closestObjSides[directions])[0])[0])+(((closestObjSides[directions])[1])[0]))/2), 0, 
-                (((((closestObjSides[directions])[1])[0])+(((closestObjSides[directions])[1])[1]))/2));
+                (((((closestObjSides[directions])[0])[1])+(((closestObjSides[directions])[1])[1]))/2));
                 //dir.normalize();
                 let distance = cam.distanceTo(obj);
                 if(prevDistance1 == undefined || distance<prevDistance1){
@@ -243,6 +259,7 @@ class World{
                 }
             }
             closestObj = [objArr[arrObj].name, objArr[arrObj], prevDistance, arrObj1];
+            closestFace = arrObj1;
         }, 100);
         /*
             setInterval(() => {
@@ -449,7 +466,7 @@ class World{
                 //console.log(person.position);
                 //action = baseAction;
             }
-            movementStatus = animateMod(scene, camera, controls, playerBB, boxBB, [wall1BB, wall2BB, wall3BB, wall4BB], quad);
+            movementStatus = animateMod(scene, camera, controls, playerBB, boxBB, [wall1BB, wall2BB, wall3BB, wall4BB], quad, closestFace);
             if(gunModelLoaded == true){
                 mixer.update(clock.getDelta());
                 mixer2.update(clock2.getDelta());
