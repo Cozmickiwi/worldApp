@@ -297,7 +297,65 @@ function cameraAnim(timeScale){
                 worldPosZRev = false;
         }
         else if(cameraBack == true){
-            cameraBackInt = true;
+                worldPosX = cameraMod.getWorldDirection(vector).x;
+                worldPosZ = cameraMod.getWorldDirection(vector).z;
+                if(cameraMod.position.x < cameraMod.position.z){
+                    if(cameraMod.position.x < 95){
+                        if(deg(cameraMod.rotation.y)>0){
+                            /*
+                            if(worldPosX<worldPosZ){
+                                selectedWorldPos = worldPosX;
+                                }
+                            else{
+                                selectedWorldPos = worldPosZ
+                            }
+                            */
+                            selectedWorldPos = worldPosZ;
+                        }
+                        else{
+                            cameraSkipSide = true;
+                        }
+                    }
+                    else{
+                        if((cameraMod.rotation.x > 1.6 ||cameraMod.rotation.x < -1.6 )){
+                            selectedWorldPos = worldPosX;
+                        }
+                        else{
+                            
+                            cameraSkipSide = true;
+                        }
+                    }
+                }
+                else{
+                    if(cameraMod.position.x > 104){
+                        if(deg(cameraMod.rotation.y)<0){
+                            selectedWorldPos = (worldPosZ*-1);
+                        }
+                        else{
+                            cameraSkipSide = true;
+                        }
+                    }
+                    else{
+                        if(deg(cameraMod.rotation.z)<30 && deg(cameraMod.rotation.z)>-30){
+                            selectedWorldPos = (worldPosX * -1);
+                            
+                        }
+                        else{
+                            cameraSkipSide = true;
+                            
+                        }
+                    }
+                }
+                if(cameraSkipSide==false){
+                    cameraMod.translateX(.25*selectedWorldPos);
+                    //cameraMod.translateZ(.25*(selectedWorldPos*selectedWorldPos));
+                }
+                else{
+                    cameraMod.translateZ(.25);
+                    cameraSkipSide = false;
+                }
+                worldPosXRev = false;
+                worldPosZRev = false;
         }
         else if(cameraPosX == true){
             cameraRightInt = true;
