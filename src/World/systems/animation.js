@@ -65,6 +65,11 @@ const clock = new Clock();
 let controls;
 let playerBB;
 let boxBB;
+let wall1BB;
+let wall2BB;
+let wall3BB;
+let wall4BB;
+let wallInt = false;
 let worldPosX;
 let worldPosZ;
 let prevWorldPosX;
@@ -77,6 +82,8 @@ let cameraFowardInt = false;
 let cameraBackInt = false;
 let cameraLeftInt = false;
 let cameraRightInt = false;
+let quadrant;
+let closestFace;
 const renderer = new createRenderer;
 function rad(num){
     return((Math.PI)/(360/num));
@@ -163,13 +170,17 @@ function settings(){
         cameraBobAmount = 0.024;
     })();
 }
-function init(scene, camera, pBB, bBB){
+function init(scene, camera, pBB, bBB, wbbArr){
     cube = scene.getObjectByName('cube1');
     cube2 = scene.getObjectByName('cube2');
     playerBox = scene.getObjectByName('playerBox');
     cameraMod = camera;
     playerBB = pBB;
     boxBB = bBB;
+    wall1BB = wbbArr[0]
+    wall2BB = wbbArr[1]
+    wall3BB = wbbArr[2]
+    wall4BB = wbbArr[3]
     settings();
 }
 function shape1(timeScale){
@@ -204,6 +215,10 @@ function cameraAnim(timeScale){
             cameraBob -= (cameraBobAmount*timeScale);
         }
     }
+    if(playerBB.intersectsBox(wall1BB) || playerBB.intersectsBox(wall2BB)
+    || playerBB.intersectsBox(wall3BB) || playerBB.intersectsBox(wall4BB)){
+        wallInt = true;
+    }
     if(doomControls == true){
         if(cameraPosX == true){
         cameraMod.rotateY(-(rad(rightSensitivity) * timeScale));
@@ -213,18 +228,18 @@ function cameraAnim(timeScale){
         }
     }
     else if(doomControls == false){
-        if(cameraPosX == true && !(playerBB.intersectsBox(boxBB))){
+        if(cameraPosX == true && !(playerBB.intersectsBox(boxBB)) && wallInt == false){
             control1.moveRight(.25);
             cameraPosXRev = false;
             cameraBobFun(false);
         }
-        else if(cameraPosXRev == true && !(playerBB.intersectsBox(boxBB))){
+        else if(cameraPosXRev == true && !(playerBB.intersectsBox(boxBB)) && wallInt == false){
             control1.moveRight(-.25);
             cameraPosX = false;
             cameraBobFun(false);
         }
     }
-        if(cameraFoward == true && !(playerBB.intersectsBox(boxBB))){
+        if(cameraFoward == true && !(playerBB.intersectsBox(boxBB)) && wallInt == false){
         if(doomControls == false){
             control1.moveForward(.5)
             cameraBobFun(false);
@@ -234,7 +249,7 @@ function cameraAnim(timeScale){
         cameraBobFun(false);
     }
 }
-    else if(cameraBack == true && !(playerBB.intersectsBox(boxBB))){
+    else if(cameraBack == true && !(playerBB.intersectsBox(boxBB)) && wallInt == false){
         if(doomControls == false){
             control1.moveForward(-.5)
             cameraBobFun(false);
@@ -245,7 +260,7 @@ function cameraAnim(timeScale){
     }
     }
     if(playerBB.intersectsBox(boxBB)){
-        collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, cameraMod, cameraBobAmount)
+        collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, cameraMod, cameraBobAmount, closestFace);
         /*
         if(cameraFoward == true){
                 worldPosX = cameraMod.getWorldDirection(vector).x;
@@ -456,6 +471,22 @@ function cameraAnim(timeScale){
         }
         */
     }
+    else if(wallInt == true){
+        if(playerBB.intersectsBox(wall1BB)){
+            //console.log('wall1')
+            collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, cameraMod, cameraBobAmount, closestFace);
+            //console.log(quadrant)
+        }
+        if(playerBB.intersectsBox(wall2BB)){
+            collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, cameraMod, cameraBobAmount, closestFace);
+        }
+        if(playerBB.intersectsBox(wall3BB)){
+            collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, cameraMod, cameraBobAmount, closestFace);
+        }
+        if(playerBB.intersectsBox(wall4BB)){
+            collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, cameraMod, cameraBobAmount, closestFace);
+        }
+    }
     if(cameraBob > 0 && (cameraFoward == false && cameraBack == false && cameraPosX == false && cameraPosXRev == false ||
     doomControls == true && cameraFoward == false && cameraBack == false)){
         cameraBobFun(true);
@@ -490,16 +521,21 @@ function cameraAnim(timeScale){
     yP.textContent = (`y:${deg(cameraMod.rotation.y)} z:${deg(cameraMod.rotation.z)}`);
     playerBox.position.set(cameraMod.position.x, 5, cameraMod.position.z);
     playerBB.copy(playerBox.geometry.boundingBox).applyMatrix4(playerBox.matrixWorld);
+    if(wallInt == true){
+        wallInt = false;
+    }
     //console.log(playerBB);
 
 }
-export function animateMod(scene, camera, controls, pBB, bBB){
+export function animateMod(scene, camera, controls, pBB, bBB, wbbArr, quad, face){
     control1 = controls;
     const delta = clock.getDelta();
-    init(scene, camera, pBB, bBB);
+    quadrant = quad;
+    closestFace = face;
     //controls.update();
     //controlupd = controls;
     if(listCont == false){
+        init(scene, camera, pBB, bBB, wbbArr);
         list.push(shape1);
         list.push(shape2);
         list.push(cameraAnim);
