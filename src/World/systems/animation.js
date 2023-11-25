@@ -200,35 +200,12 @@ function cameraAnim(timeScale){
             cameraBob -= (cameraBobAmount*timeScale);
         }
     }
-    /*
-    cameraMod.rotation.z += (cameraZRot * timeScale);
-    if(cameraRev == false && (cameraZStatus)<cameraZMax){
-        cameraMod.position.z += (cameraZMov * timeScale);
-        cameraZStatus += (cameraZMov * timeScale);
-    }
-    else{
-        cameraRev = true;
-        cameraMod.position.z -= (cameraZRevMov * timeScale);
-        cameraZStatus -= (cameraZRevMov * timeScale);
-        if((cameraZStatus)<cameraZMin){
-            cameraRev = false;
-        }
-    }
-    */
     if(doomControls == true){
         if(cameraPosX == true){
-        cameraMod.rotation.y -= (rad(rightSensitivity) * timeScale);
-        currentCamPos -= (rightSensitivity * timeScale)/2;
-            if(currentCamPos<=-360){
-                currentCamPos += 360;
-            }
+        cameraMod.rotateY(-(rad(rightSensitivity) * timeScale));
         }
         if(cameraPosXRev == true){
-            cameraMod.rotation.y += (rad(leftSensitivity) * timeScale);
-            currentCamPos += (leftSensitivity * timeScale)/2;
-            if(currentCamPos>=360){
-                currentCamPos -= 360;
-            }
+            cameraMod.rotateY((rad(rightSensitivity) * timeScale));
         }
     }
     else if(doomControls == false){
@@ -242,120 +219,14 @@ function cameraAnim(timeScale){
             cameraPosX = false;
             cameraBobFun(false);
         }
-        //console.log(deg(cameraMod.rotation._y))
-        //currentCamPos = deg(cameraMod.rotation._y);
-        /*
-        controls = createControls(cameraMod, renderer.domElement);
-        //controls.current.connect();
-        //controls.current.lock();
-        document.addEventListener('click', () => {
-            controls.lock();
-        })
-        
-        controls.addEventListener('change', () =>{
-            console.log(controls);
-        })
-        
-        if(mouseMovementX < 0){
-            cameraMod.rotation.y += (rad((leftSensitivity*(-1*(mouseMovementX)))) * timeScale);
-            currentCamPos += (((leftSensitivity*(-1*(mouseMovementX)))))/2;
-            console.log(xPos);
-            console.log(zPos);
-            /*
-            if(xPos<=zPos &&(zPos>=0 && xPos>=0)){
-                xPos += (((leftSensitivity*(-1*(mouseMovementX)))))/2;
-            }
-            else if(xPos>zPos&&(zPos>=0 && xPos>=0)){
-                zPos -= (((leftSensitivity*(-1*(mouseMovementX)))))/2;
-            }
-            else if(xPos>zPos &&(zPos<0 && xPos>=0)){
-                xPos -= (((leftSensitivity*(-1*(mouseMovementX)))))/2;
-            }
-            else{
-                zPos += (((leftSensitivity*(-1*(mouseMovementX)))))/2;
-                if(zPos >= 100 && xPos<=0){
-                    xPos = 0;
-                    zPos = 360;
-                }
-            }
-            //depth += (((leftSensitivity*(-1*(mouseMovementX)))))/2;
-            cameraMod.lookAt(xPos,mouseYPos/2,zPos);
-            
-            if(currentCamPos>=720){
-                currentCamPos -= 720;
-            }
-            mouseMovementX = 0;
-        }
-        else if(mouseMovementX > 0){
-            cameraMod.rotation.y += (rad((leftSensitivity*(-1*(mouseMovementX)))) * timeScale);
-            currentCamPos += (((leftSensitivity*(-1*(mouseMovementX)))))/2;
-            depth -= (((leftSensitivity*(-1*(mouseMovementX)))))/2;
-            //cameraMod.lookAt(-(currentCamPos),mouseYPos/2,-currentCamPos);
-            console.log(currentCamPos)
-            if(currentCamPos<=-360000){
-                currentCamPos += 3600;
-            }
-            mouseMovementX = 0;
-        }
-        if((mouseMovementY>0 || mouseMovementY<0)){// && mouseYPos <= 90 && mouseYPos >= -90){
-            //cameraMod.rotation.z = 0;
-            cameraMod.rotation.x += (rad((leftSensitivity*(-1*(mouseMovementY)))) * timeScale);
-            //cameraMod.rotation.z += (rad((leftSensitivity*(-1*(mouseMovementY)))) * timeScale);
-            //cameraMod.up.set(0,0,10)
-            mouseYPos += (((leftSensitivity*(-1*(mouseMovementY)))) * timeScale)/2;
-            //depth += (((leftSensitivity*(-1*(mouseMovementY)))) * timeScale)/2;
-            console.log(currentCamPos);
-            //cameraMod.lookAt((-(currentCamPos)), mouseYPos/2, 1);
-            //cameraMod.lookAt(xPos,mouseYPos/2,zPos)
-            mouseMovementY = 0;
-        }
-        */
     }
-    //if(cameraFoward == true && !((cameraMod.position.x>96&&cameraMod.position.x<104)&&(cameraMod.position.z>96&&cameraMod.position.z<104))){
         if(cameraFoward == true && !(playerBB.intersectsBox(boxBB))){
         if(doomControls == false){
             control1.moveForward(.5)
             cameraBobFun(false);
         }
         else{
-        console.log(currentCamPos)
-        if(currentCamPos == 0){
-            cameraMod.position.z -= (fowardSpeed * timeScale);
-        }
-        else if(currentCamPos<0 && currentCamPos>-90){
-            let direction = (90+currentCamPos)*.01;
-            cameraMod.position.z -= ((fowardSpeed*direction) * timeScale);
-            cameraMod.position.x += ((fowardSpeed-(fowardSpeed*direction)) * timeScale);
-            //console.log((0.2*direction) * timeScale);
-            //console.log((0.2-(0.2*direction)) * timeScale);
-        }
-        else if(currentCamPos>0 && currentCamPos<90){
-            let direction = (90-currentCamPos)*.01;
-            cameraMod.position.z -= ((fowardSpeed*direction) * timeScale);
-            cameraMod.position.x -= ((fowardSpeed-(fowardSpeed*direction)) * timeScale);
-            //console.log((0.2*direction) * timeScale);
-            //console.log((0.2-(0.2*direction)) * timeScale);
-        }
-        else if(currentCamPos>90 && currentCamPos<180){
-            let direction = (90-currentCamPos)*.01;
-            cameraMod.position.z -= ((fowardSpeed*direction) * timeScale);
-            cameraMod.position.x -= ((fowardSpeed+(fowardSpeed*direction)) * timeScale);
-            //console.log((0.2*direction) * timeScale);
-            //console.log((0.2+(0.2*direction)) * timeScale);
-        }
-        else if(currentCamPos<-90 && currentCamPos>-180){
-            let direction = (90+currentCamPos)*.01;
-            cameraMod.position.z -= ((fowardSpeed*direction) * timeScale);
-            cameraMod.position.x += ((fowardSpeed+(fowardSpeed*direction)) * timeScale);
-            //console.log((0.2*direction) * timeScale);
-            //console.log((0.2+(0.2*direction)) * timeScale);
-        }
-        if(currentCamPos <= -180){
-            currentCamPos = (180-((currentCamPos*(-1))-180));
-        }
-        else if(currentCamPos >= 180){
-            currentCamPos = (-1*(180+(180-currentCamPos)));
-        }
+        cameraMod.translateZ(-.5);
         cameraBobFun(false);
     }
 }
@@ -365,76 +236,14 @@ function cameraAnim(timeScale){
             cameraBobFun(false);
         }
         else{
-        console.log(currentCamPos)
-        if(currentCamPos == 0){
-            cameraMod.position.z += (backSpeed * timeScale);
-        }
-        else if(currentCamPos<0 && currentCamPos>-90){
-            let direction = (90+currentCamPos)*.01;
-            cameraMod.position.z += ((backSpeed*direction) * timeScale);
-            cameraMod.position.x -= ((backSpeed-(backSpeed*direction)) * timeScale);
-            //console.log((0.2*direction) * timeScale);
-            //console.log((0.2-(0.2*direction)) * timeScale);
-        }
-        else if(currentCamPos>0 && currentCamPos<90){
-            let direction = (90-currentCamPos)*.01;
-            cameraMod.position.z += ((backSpeed*direction) * timeScale);
-            cameraMod.position.x += ((backSpeed-(backSpeed*direction)) * timeScale);
-            //console.log((0.2*direction) * timeScale);
-            //console.log((0.2-(0.2*direction)) * timeScale);
-        }
-        else if(currentCamPos>90 && currentCamPos<180){
-            let direction = (90-currentCamPos)*.01;
-            cameraMod.position.z += ((backSpeed*direction) * timeScale);
-            cameraMod.position.x += ((backSpeed+(backSpeed*direction)) * timeScale);
-            //console.log((0.2*direction) * timeScale);
-            //console.log((0.2+(0.2*direction)) * timeScale);
-        }
-        else if(currentCamPos<-90 && currentCamPos>-180){
-            let direction = (90+currentCamPos)*.01;
-            cameraMod.position.z += ((backSpeed*direction) * timeScale);
-            cameraMod.position.x -= ((backSpeed+(backSpeed*direction)) * timeScale);
-            //console.log((0.2*direction) * timeScale);
-            //console.log((0.2+(0.2*direction)) * timeScale);
-        }
-        if(currentCamPos <= -180){
-            currentCamPos = (180-((currentCamPos*(-1))-180));
-        }
-        else if(currentCamPos >= 180){
-            currentCamPos = (-1*(180+(180-currentCamPos)));
-        }
+        cameraMod.translateZ(.5);
         cameraBobFun(false);
     }
-    
     }
     if(playerBB.intersectsBox(boxBB)){
         if(cameraFoward == true){
-            //cameraFowardInt = true;
-            if(doomControls == false){
                 worldPosX = cameraMod.getWorldDirection(vector).x;
                 worldPosZ = cameraMod.getWorldDirection(vector).z;
-                /*
-                if(worldPosX<0){
-                    worldPosX *= -1;
-                    worldPosXRev = true;
-                }
-                if(worldPosZ<0){
-                    worldPosZ *= -1;
-                    worldPosZRev = true;
-                }
-                if(worldPosX>worldPosZ){
-                    if(worldPosZRev == true && worldPosXRev == false ){
-                        worldPosZ *= -1;
-                    }
-                    selectedWorldPos = worldPosZ;
-                }
-                else{
-                    if(worldPosXRev == true && worldPosZRev == true){
-                        worldPosX *= -1;
-                    }
-                    selectedWorldPos = worldPosX;
-                }
-                */
                 if(cameraMod.position.x < cameraMod.position.z){
                     if(cameraMod.position.x < 95){
                         if(deg(cameraMod.rotation.y)>0){
@@ -456,7 +265,6 @@ function cameraAnim(timeScale){
                         else{
                             selectedWorldPos = worldPosX;
                         }
-                        
                     }
                 }
                 else{
@@ -475,35 +283,18 @@ function cameraAnim(timeScale){
                         else{
                             selectedWorldPos = (worldPosX * -1);
                         }
-                        
                     }
                 }
                 if(cameraSkipSide==false){
-                    control1.moveRight(.25*selectedWorldPos);
-                    control1.moveForward(.25*(selectedWorldPos*selectedWorldPos));
+                    cameraMod.translateX(.25*selectedWorldPos);
+                    cameraMod.translateZ(-.25*(selectedWorldPos*selectedWorldPos));
                 }
                 else{
-                    control1.moveForward(.25);
+                    cameraMod.translateZ(-.25);
                     cameraSkipSide = false;
                 }
-                
-                
-                console.log(selectedWorldPos);
                 worldPosXRev = false;
                 worldPosZRev = false;
-                /*
-                if((worldPosX>0)){
-                    control1.moveRight(.25*worldPosZ);
-                    control1.moveForward(.25*(worldPosZ*worldPosZ));
-                }
-                else{
-                    control1.moveForward(0.5)
-                }
-                */
-                
-                prevWorldPosX = cameraMod.getWorldDirection(vector).x;
-                prevWorldPosZ = cameraMod.getWorldDirection(vector).x;
-            }
         }
         else if(cameraBack == true){
             cameraBackInt = true;
