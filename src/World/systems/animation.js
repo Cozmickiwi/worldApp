@@ -65,6 +65,7 @@ const clock = new Clock();
 let controls;
 let playerBB;
 let boxBB;
+let wallArr;
 let wall1BB;
 let wall2BB;
 let wall3BB;
@@ -181,6 +182,7 @@ function init(scene, camera, pBB, bBB, wbbArr){
     wall2BB = wbbArr[1]
     wall3BB = wbbArr[2]
     wall4BB = wbbArr[3]
+    wallArr = wbbArr;
     settings();
 }
 function shape1(timeScale){
@@ -261,230 +263,12 @@ function cameraAnim(timeScale){
     }
     if(playerBB.intersectsBox(boxBB)){
         collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, cameraMod, cameraBobAmount, closestFace);
-        /*
-        if(cameraFoward == true){
-                worldPosX = cameraMod.getWorldDirection(vector).x;
-                worldPosZ = cameraMod.getWorldDirection(vector).z;
-                if(cameraMod.position.x < cameraMod.position.z){
-                    if(cameraMod.position.x < 95){
-                        if(deg(cameraMod.rotation.y)>0){
-                            cameraSkipSide = true;
-                        }
-                        else{
-                            if(worldPosX<worldPosZ){
-                                selectedWorldPos = worldPosX;
-                                }
-                            else{
-                                selectedWorldPos = worldPosZ
-                            }
-                        }
-                    }
-                    else{
-                        if(cameraMod.rotation.x > 1.6 ||cameraMod.rotation.x < -1.6 ){
-                            cameraSkipSide = true;
-                        }
-                        else{
-                            selectedWorldPos = worldPosX;
-                        }
-                    }
-                }
-                else{
-                    if(cameraMod.position.x > 105){
-                        if(deg(cameraMod.rotation.y)<0){
-                            cameraSkipSide = true;
-                        }
-                        else{
-                            selectedWorldPos = (worldPosZ * -1);
-                        }
-                    }
-                    else{
-                        if(deg(cameraMod.rotation.z)<30 && deg(cameraMod.rotation.z)>-30){
-                            cameraSkipSide = true;
-                        }
-                        else{
-                            selectedWorldPos = (worldPosX * -1);
-                        }
-                    }
-                }
-                if(cameraSkipSide==false){
-                    cameraMod.translateX(.25*selectedWorldPos);
-                    cameraMod.translateZ(-.25*(selectedWorldPos*selectedWorldPos));
-                }
-                else{
-                    cameraMod.translateZ(-.25);
-                    cameraSkipSide = false;
-                }
-                worldPosXRev = false;
-                worldPosZRev = false;
-        }
-        else if(cameraBack == true){
-                worldPosX = cameraMod.getWorldDirection(vector).x;
-                worldPosZ = cameraMod.getWorldDirection(vector).z;
-                if(cameraMod.position.x < cameraMod.position.z){
-                    if(cameraMod.position.x < 95){
-                        if(deg(cameraMod.rotation.y)>0){
-                            selectedWorldPos = worldPosZ;
-                        }
-                        else{
-                            cameraSkipSide = true;
-                        }
-                    }
-                    else{
-                        if((cameraMod.rotation.x > 1.6 ||cameraMod.rotation.x < -1.6 )){
-                            selectedWorldPos = worldPosX;
-                        }
-                        else{
-                            cameraSkipSide = true;
-                        }
-                    }
-                }
-                else{
-                    if(cameraMod.position.x > 104){
-                        if(deg(cameraMod.rotation.y)<0){
-                            selectedWorldPos = (worldPosZ*-1);
-                        }
-                        else{
-                            cameraSkipSide = true;
-                        }
-                    }
-                    else{
-                        if(deg(cameraMod.rotation.z)<30 && deg(cameraMod.rotation.z)>-30){
-                            selectedWorldPos = (worldPosX * -1);
-                        }
-                        else{
-                            cameraSkipSide = true;
-                        }
-                    }
-                }
-                if(cameraSkipSide==false){
-                    cameraMod.translateX(.25*selectedWorldPos);
-                }
-                else{
-                    cameraMod.translateZ(.25);
-                    cameraSkipSide = false;
-                }
-                worldPosXRev = false;
-                worldPosZRev = false;
-        }
-        else if(cameraPosX == true){
-            worldPosX = cameraMod.getWorldDirection(vector).x;
-                worldPosZ = cameraMod.getWorldDirection(vector).z;
-                if(cameraMod.position.x < cameraMod.position.z){
-                    if(cameraMod.position.x < 95){
-                        if(cameraMod.rotation.x > 1.6 ||cameraMod.rotation.x < -1.6 ){
-                            cameraSkipSide = true;
-                        }
-                        else{
-                            selectedWorldPos = worldPosX;
-                        }
-                    }
-                    else{
-                        if(deg(cameraMod.rotation.y)>0){
-                            selectedWorldPos = (worldPosZ * -1);
-                        }
-                        else{
-                            cameraSkipSide = true;
-                        }
-                    }
-                }
-                else{
-                    if(cameraMod.position.x > 105){
-                            if(deg(cameraMod.rotation.z)<30 && deg(cameraMod.rotation.z)>-30){
-                            cameraSkipSide = true;
-                        }
-                        else{
-                            selectedWorldPos = (worldPosX * -1);
-                        }
-                    }
-                    else{
-                        if(deg(cameraMod.rotation.y)<0){
-                            selectedWorldPos = worldPosZ;
-                        }
-                        else{
-                            cameraSkipSide = true;
-                        }
-                    }
-                }
-                if(cameraSkipSide==false){
-                    cameraMod.translateZ(.25*selectedWorldPos);
-                    cameraMod.translateX(.25*(selectedWorldPos*selectedWorldPos));
-                }
-                else{
-                    cameraMod.translateX(.25);
-                    cameraSkipSide = false;
-                }
-                worldPosXRev = false;
-                worldPosZRev = false;
-                cameraMod.position.y = cameraBobAmount+10;
-        }
-        else if(cameraPosXRev == true){
-            worldPosX = cameraMod.getWorldDirection(vector).x;
-                worldPosZ = cameraMod.getWorldDirection(vector).z;
-                if(cameraMod.position.x < cameraMod.position.z){
-                    if(cameraMod.position.x < 95){
-                        //if(deg(cameraMod.rotation.y)>0){
-                        if(cameraMod.rotation.x > 1.6 ||cameraMod.rotation.x < -1.6 ){
-                                selectedWorldPos = (worldPosX * -1);
-                        }
-                        else{
-                            cameraSkipSide = true;
-                        }
-                    }
-                    else{
-                        if(deg(cameraMod.rotation.y)<0){
-                            selectedWorldPos = worldPosZ;
-                        }
-                        else{
-                            cameraSkipSide = true;
-                        }
-                    }
-                }
-                else{
-                    if(cameraMod.position.x > 105){
-                            if(deg(cameraMod.rotation.z)<30 && deg(cameraMod.rotation.z)>-30){
-                            selectedWorldPos = worldPosX;
-                        }
-                        else{
-                            cameraSkipSide = true;
-                        }
-                    }
-                    else{
-                        if(deg(cameraMod.rotation.y)<0){
-                            cameraSkipSide = true;
-                        }
-                        else{
-                            selectedWorldPos = (worldPosZ * -1);
-                        }
-                    }
-                }
-                if(cameraSkipSide==false){
-                    cameraMod.translateZ(-.25*selectedWorldPos);
-                    cameraMod.translateX(-.25*(selectedWorldPos*selectedWorldPos));
-                }
-                else{
-                    cameraMod.translateX(-.25);
-                    cameraSkipSide = false;
-                }
-                //worldPosXRev = false;
-                //worldPosZRev = false;
-                cameraMod.position.y = cameraBobAmount+10;
-        }
-        */
     }
     else if(wallInt == true){
-        if(playerBB.intersectsBox(wall1BB)){
-            //console.log('wall1')
-            collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, cameraMod, cameraBobAmount, closestFace);
-            //console.log(quadrant)
-        }
-        if(playerBB.intersectsBox(wall2BB)){
-            collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, cameraMod, cameraBobAmount, closestFace);
-        }
-        if(playerBB.intersectsBox(wall3BB)){
-            collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, cameraMod, cameraBobAmount, closestFace);
-        }
-        if(playerBB.intersectsBox(wall4BB)){
-            collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, cameraMod, cameraBobAmount, closestFace);
+        for(let i=0;i<wallArr.length;i++){
+            if(playerBB.intersectsBox(wallArr[i])){
+                collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, cameraMod, cameraBobAmount, closestFace);
+            }
         }
     }
     if(cameraBob > 0 && (cameraFoward == false && cameraBack == false && cameraPosX == false && cameraPosXRev == false ||
@@ -514,10 +298,7 @@ function cameraAnim(timeScale){
     else{
         yP.textContent = (`${currentCamPos}`);
     }*/
-    //console.log(cameraMod.getWorldDirection(vector))
     zP.textContent = (`Position: X=${cameraMod.position.x} Y=${cameraMod.position.y} Z=${cameraMod.position.z}`);
-    //console.log(sce);
-    //console.log(cameraMod.position.x)
     yP.textContent = (`y:${deg(cameraMod.rotation.y)} z:${deg(cameraMod.rotation.z)}`);
     playerBox.position.set(cameraMod.position.x, 5, cameraMod.position.z);
     playerBB.copy(playerBox.geometry.boundingBox).applyMatrix4(playerBox.matrixWorld);
@@ -532,8 +313,6 @@ export function animateMod(scene, camera, controls, pBB, bBB, wbbArr, quad, face
     const delta = clock.getDelta();
     quadrant = quad;
     closestFace = face;
-    //controls.update();
-    //controlupd = controls;
     if(listCont == false){
         init(scene, camera, pBB, bBB, wbbArr);
         list.push(shape1);
