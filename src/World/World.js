@@ -24,6 +24,7 @@ import{
     LoopRepeat,
     Matrix4,
     Vector3,
+    ArrowHelper,
 } from '../../node_modules/three/build/three.module.js';
 
 const gltfLoader = new GLTFLoader();
@@ -56,15 +57,58 @@ let cube;
 let playerBox;
 let playerBB;
 let boxBB;
+let wall1BB;
+let wall2BB;
+let wall3BB;
+let wall4BB;
 let box;
 let enemyCollision = true;
 let shotSound = new Audio('/src/World/components/assets/gunsound2.mp3')
 let personPos;
 let personDmg = 0;
+let wbbArr;
+let quad = 'xz';
+let boxInfo;
+let wall1Info;
+let wall2Info;
+let wall3Info;
+let wall4Info;
+let objArr = [];
+let closestObj;
+let arrowLoaded = false;
+let dir;
+let arrowHelper;
 //let canvas = document.querySelector('canvas');
 let gunMaterial = new MeshBasicMaterial({
 
 })
+function objInfo(posX, posZ, xLen, zLen){
+    /*
+    let xStart = pos-(xLen/2);
+    let xEnd = pos+(xLen/2);
+    let Zstart = pos-(zLen/2);
+    let zEnd = pos+(zLen/2);
+    let info = {
+        x: [xStart, xEnd],
+        z: [Zstart, zEnd],
+    };
+    */
+    let westStart = [(posX+(xLen/2)), (posZ-(zLen/2))]
+    let westEnd = [(posX+(xLen/2)), (posZ+(zLen/2))]
+    let northStart = [(posX-(xLen/2)), (posZ+(zLen/2))]
+    let northEnd = [(posX+(xLen/2)), (posZ+(zLen/2))]
+    let eastStart = [(posX-(xLen/2)), (posZ-(zLen/2))]
+    let eastEnd = [(posX-(xLen/2)), (posZ+(zLen/2))]
+    let southStart = [(posX-(xLen/2)), (posZ-(zLen/2))]
+    let soundEnd = [(posX+(xLen/2)), (posZ-(zLen/2))]
+    let info = {
+        west: [westStart, westEnd],
+        north: [northStart, northEnd],
+        east: [eastStart, eastEnd],
+        south: [southStart, soundEnd],
+    }
+    return(info);
+}
 //let orthoCamera;
 class World{
     constructor(container){
@@ -92,13 +136,18 @@ class World{
         const cube2 = createCube(false);
         const floor = createCube('floor');
         const wall1 = createCube('wall1');
-        const wall2 = createCube('wall1');
-        const wall3 = createCube('wall1');
-        const wall4 = createCube('wall1');
+        const wall2 = createCube('wall2');
+        const wall3 = createCube('wall3');
+        const wall4 = createCube('wall4');
+        wall1.name = 'wall1'
+        wall2.name = 'wall2'
+        wall3.name = 'wall3'
+        wall4.name = 'wall4'
         const crossHair = createCube('cross');
         const fire = createCube('fire');
         playerBox = createCube('playerBox');
         box = createCube('box');
+        box.name = 'box';
         playerBB = createCube('pbb');
         boxBB = createCube('bbb')
         fire.name = 'fireFlash';
@@ -106,6 +155,12 @@ class World{
         cube2.name = 'cube2';
         playerBox.name = 'playerBox';
         console.log(playerBB);
+        wbbArr = createCube('wbb');
+        objArr.push(box, wall1, wall2, wall3, wall4);
+        wall1BB = wbbArr[0]
+        wall2BB = wbbArr[1]
+        wall3BB = wbbArr[2]
+        wall4BB = wbbArr[3]
         //cube.translateZ(-80);
         const light = createLights(false);
         const light2 = createLights(true);
@@ -117,10 +172,97 @@ class World{
             wall3.rotation.set(0,(Math.PI)/(360/180),0);
             wall4.position.set(-300,0,0);
             wall4.rotation.set(0,-(Math.PI)/(360/180),0);
+            
         }
-        walls()
+        //walls()
+        boxInfo = objInfo(box.position.x, box.position.z, 6, 6);
+        wall1Info = objInfo(wall1.position.x, wall1.position.z, 600, 3);
+        console.log(wall1Info);
+        //console.log(wall1.position.)
+        //console.log(boxInfo);
         scene.add(cube, cube2, floor, wall1, wall2, wall3, wall4, box, playerBox, light, light3);
+        //console.log(box.position);
+        /*
+            wall1BB.copy(wall1.geometry.boundingBox).applyMatrix4(wall1.matrixWorld);
+            wall2BB.copy(wall2.geometry.boundingBox).applyMatrix4(wall2.matrixWorld);
+            wall3BB.copy(wall3.geometry.boundingBox).applyMatrix4(wall3.matrixWorld);
+            wall4BB.copy(wall4.geometry.boundingBox).applyMatrix4(wall4.matrixWorld);
+            console.log(wall1.geometry.boundingBox);
+            //wall1BB.position.set(0,0,-300)
+            console.log(wall1BB);
+            */
         //playerBB = scene.getObjectByName('playerBB')
+        setInterval(() => {
+            /*
+            if(camera.position.x >=0 && camera.position.z >=0){
+                quad = 'xz';
+            }
+            else if(camera.position.x <0 && camera.position.z >=0){
+                quad = '-xz';
+            }
+            else if(camera.position.x <0 && camera.position.z <0){
+                quad = '-x-z';
+            }
+            else if(camera.position.x >=0 && camera.position.z <0){
+                quad = 'x-z';
+            }
+            */
+            //let origin = new Vector3(camera.position);
+            let prevDistance;
+            let prevDistance1;
+            let arrObj;
+            let arrObj1;
+            let cam = new Vector3(camera.position.x, camera.position.y, camera.position.z);
+            for(let i=0; i<objArr.length; i++){
+                //let dir = new Vector3(objArr[1].position);
+                let objX = objArr[i].position.x;
+                let objZ = objArr[i].position.z;
+                if(camera.position.z<(objZ+(objArr[i].geometry.parameters.depth/2)) && camera.position.z>(objZ-(objArr[i].geometry.parameters.depth/2))){
+                    objZ = camera.position.z;
+                }
+                if(camera.position.x<(objX+(objArr[i].geometry.parameters.width/2)) && camera.position.x>(objX-(objArr[i].geometry.parameters.width/2))){
+                    objX = camera.position.x;
+                }
+                let obj = new Vector3(objX, objArr[i].position.y, objZ);
+                //dir.normalize();
+                let distance = cam.distanceTo(obj);
+                if(prevDistance == undefined || distance<prevDistance){
+                    prevDistance = distance;
+                    arrObj = i;
+                }
+            }
+            let closestObjSides = objInfo((objArr[arrObj].position.x), (objArr[arrObj].position.z), (objArr[arrObj].geometry.parameters.width), (objArr[arrObj].geometry.parameters.depth));
+            for(const directions in closestObjSides){
+                let obj = new Vector3((((((closestObjSides[directions])[0])[0])+(((closestObjSides[directions])[1])[0]))/2), 0, 
+                (((((closestObjSides[directions])[1])[0])+(((closestObjSides[directions])[1])[1]))/2));
+                //dir.normalize();
+                let distance = cam.distanceTo(obj);
+                if(prevDistance1 == undefined || distance<prevDistance1){
+                    prevDistance1 = distance;
+                    arrObj1 = directions;
+                }
+            }
+            closestObj = [objArr[arrObj].name, objArr[arrObj], prevDistance, arrObj1];
+        }, 100);
+        /*
+            setInterval(() => {
+                if(closestObj != undefined){
+                    if(arrowLoaded == false){
+                        dir = new Vector3(closestObj[1].position.x, closestObj[1].position.y, closestObj[1].position.z);
+                        dir.normalize();
+                        let origin = new Vector3(camera.position.x, camera.position.y, camera.position.z);
+                        arrowHelper = new ArrowHelper(dir, origin, 2);
+                        scene.add(arrowHelper);
+                        arrowLoaded = true;
+                    }
+                    else{
+                        dir = new Vector3(closestObj[1].position.x, closestObj[1].position.y, closestObj[1].position.z);
+                        //dir = new Vector3( 0, 0, -(Math.sqrt(((camera.position.z-(closestObj[1].position.z))**2)+((camera.position.x-(closestObj[1].position.x))**2))) ).applyQuaternion( camera.quaternion ).add( camera.position );
+                        dir.normalize();
+                        arrowHelper.setDirection(dir);
+                    }
+                }
+            }, 50);*/
         gltfLoader.load(
             //'/src/World/components/assets/ultrakillgun/silahful2.glb',
             '/src/World/components/assets/gunAnim/source/untitled.glb',
@@ -186,7 +328,7 @@ class World{
                 
                 //fire.scale.set(-100000,-100000,-100000)
                 orthoScene.add(gltf.scene, crossHair, fire, light2);
-                
+
             }
         )
         gltfLoader.load(
@@ -255,6 +397,8 @@ class World{
                     }
                     //console.log(camera.getWorldDirection( ))
                     console.log(playerBB);
+                    console.log(closestObj);
+                    console.log(closestObj[1].geometry.parameters);
                     shootAction.play();
                     shotSound.load();
                     shotSound.play();
@@ -305,7 +449,7 @@ class World{
                 //console.log(person.position);
                 //action = baseAction;
             }
-            movementStatus = animateMod(scene, camera, controls, playerBB, boxBB);
+            movementStatus = animateMod(scene, camera, controls, playerBB, boxBB, [wall1BB, wall2BB, wall3BB, wall4BB], quad);
             if(gunModelLoaded == true){
                 mixer.update(clock.getDelta());
                 mixer2.update(clock2.getDelta());
