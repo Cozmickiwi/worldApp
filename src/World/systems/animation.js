@@ -321,7 +321,6 @@ function cameraAnim(timeScale){
                             selectedWorldPos = worldPosX;
                         }
                         else{
-                            
                             cameraSkipSide = true;
                         }
                     }
@@ -338,11 +337,9 @@ function cameraAnim(timeScale){
                     else{
                         if(deg(cameraMod.rotation.z)<30 && deg(cameraMod.rotation.z)>-30){
                             selectedWorldPos = (worldPosX * -1);
-                            
                         }
                         else{
                             cameraSkipSide = true;
-                            
                         }
                     }
                 }
@@ -358,10 +355,119 @@ function cameraAnim(timeScale){
                 worldPosZRev = false;
         }
         else if(cameraPosX == true){
-            cameraRightInt = true;
+            worldPosX = cameraMod.getWorldDirection(vector).x;
+                worldPosZ = cameraMod.getWorldDirection(vector).z;
+                if(cameraMod.position.x < cameraMod.position.z){
+                    if(cameraMod.position.x < 95){
+                        //if(deg(cameraMod.rotation.y)>0){
+                        if(cameraMod.rotation.x > 1.6 ||cameraMod.rotation.x < -1.6 ){
+                            cameraSkipSide = true;
+                        }
+                        else{
+                            selectedWorldPos = worldPosX;
+                        }
+                    }
+                    else{
+                        //if(cameraMod.rotation.x > 1.6 ||cameraMod.rotation.x < -1.6 ){
+                        if(deg(cameraMod.rotation.y)>0){
+                            selectedWorldPos = (worldPosZ * -1);
+                        }
+                        else{
+                            cameraSkipSide = true;
+                        }
+                    }
+                }
+                else{
+                    if(cameraMod.position.x > 105){
+                        //if(deg(cameraMod.rotation.y)<0){
+                            if(deg(cameraMod.rotation.z)<30 && deg(cameraMod.rotation.z)>-30){
+
+                            cameraSkipSide = true;
+                        }
+                        else{
+                            selectedWorldPos = (worldPosX * -1);
+                            
+                        }
+                    }
+                    else{
+                        //if(deg(cameraMod.rotation.z)<30 && deg(cameraMod.rotation.z)>-30){
+                        if(deg(cameraMod.rotation.y)<0){
+                            selectedWorldPos = worldPosZ;
+                        }
+                        else{
+                            
+                            cameraSkipSide = true;
+                        }
+                    }
+                }
+                if(cameraSkipSide==false){
+                    cameraMod.translateZ(.25*selectedWorldPos);
+                    cameraMod.translateX(.25*(selectedWorldPos*selectedWorldPos));
+                }
+                else{
+                    cameraMod.translateX(.25);
+                    cameraSkipSide = false;
+                }
+                worldPosXRev = false;
+                worldPosZRev = false;
+                cameraMod.position.y = cameraBobAmount+10;
         }
         else if(cameraPosXRev == true){
-            cameraLeftInt = true;
+            worldPosX = cameraMod.getWorldDirection(vector).x;
+                worldPosZ = cameraMod.getWorldDirection(vector).z;
+                if(cameraMod.position.x < cameraMod.position.z){
+                    if(cameraMod.position.x < 95){
+                        //if(deg(cameraMod.rotation.y)>0){
+                        if(cameraMod.rotation.x > 1.6 ||cameraMod.rotation.x < -1.6 ){
+                                selectedWorldPos = (worldPosX * -1);
+                        }
+                        else{
+                            
+                            cameraSkipSide = true;
+                        }
+                    }
+                    else{
+                        //if(cameraMod.rotation.x > 1.6 ||cameraMod.rotation.x < -1.6 ){
+                        if(deg(cameraMod.rotation.y)<0){
+                            selectedWorldPos = worldPosZ;
+                        }
+                        else{
+                            cameraSkipSide = true;
+                        }
+                    }
+                }
+                else{
+                    if(cameraMod.position.x > 105){
+                        //if(deg(cameraMod.rotation.y)<0){
+                            if(deg(cameraMod.rotation.z)<30 && deg(cameraMod.rotation.z)>-30){
+                            selectedWorldPos = worldPosX;
+                        }
+                        else{
+                            
+                            cameraSkipSide = true;
+                        }
+                    }
+                    else{
+                        //if(deg(cameraMod.rotation.z)<30 && deg(cameraMod.rotation.z)>-30){
+                        if(deg(cameraMod.rotation.y)<0){
+                            cameraSkipSide = true;
+                        }
+                        else{
+                            selectedWorldPos = (worldPosZ * -1);
+                        }
+                    }
+                }
+                if(cameraSkipSide==false){
+                    cameraMod.translateZ(-.25*selectedWorldPos);
+                    cameraMod.translateX(-.25*(selectedWorldPos*selectedWorldPos));
+                }
+                else{
+                    cameraMod.translateX(-.25);
+                    cameraSkipSide = false;
+                }
+                worldPosXRev = false;
+                worldPosZRev = false;
+                cameraMod.position.y = cameraBobAmount+10;
         }
     }
     if(cameraBob > 0 && (cameraFoward == false && cameraBack == false && cameraPosX == false && cameraPosXRev == false ||
