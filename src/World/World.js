@@ -61,6 +61,7 @@ let wall1BB;
 let wall2BB;
 let wall3BB;
 let wall4BB;
+let cbbarr;
 let box;
 let enemyCollision = true;
 let shotSound = new Audio('/src/World/components/assets/gunsound2.mp3')
@@ -79,6 +80,7 @@ let arrowLoaded = false;
 let dir;
 let arrowHelper;
 let closestFace;
+let wall1_2BB;
 //let canvas = document.querySelector('canvas');
 let gunMaterial = new MeshBasicMaterial({
 
@@ -172,11 +174,13 @@ class World{
         playerBox.name = 'playerBox';
         console.log(playerBB);
         wbbArr = createCube('wbb');
+        cbbarr = createCube('cbb')
         objArr.push(box, wall1, wall2, wall3, wall4);
         wall1BB = wbbArr[0]
         wall2BB = wbbArr[1]
         wall3BB = wbbArr[2]
         wall4BB = wbbArr[3]
+        //wall1_2BB = wbbArr[4];
         //cube.translateZ(-80);
         const light = createLights(false);
         const light2 = createLights(true);
@@ -197,6 +201,7 @@ class World{
         //console.log(wall1.position.)
         //console.log(boxInfo);
         scene.add(cube, cube2, floor, wall1, wall2, wall3, wall4, box, playerBox, light, light3);
+        cbbarr.push(playerBB);
         //console.log(box.position);
         /*
             wall1BB.copy(wall1.geometry.boundingBox).applyMatrix4(wall1.matrixWorld);
@@ -260,7 +265,7 @@ class World{
             }
             closestObj = [objArr[arrObj].name, objArr[arrObj], prevDistance, arrObj1];
             closestFace = arrObj1;
-        }, 100);
+        }, 10);
         /*
             setInterval(() => {
                 if(closestObj != undefined){
@@ -419,6 +424,7 @@ class World{
                     shootAction.play();
                     shotSound.load();
                     shotSound.play();
+                    console.log(cbbarr)
                     console.log(playerBox)
                     console.log(camera.getWorldDirection(vector))
                     fireImg.visible = true;
@@ -466,7 +472,7 @@ class World{
                 //console.log(person.position);
                 //action = baseAction;
             }
-            movementStatus = animateMod(scene, camera, controls, playerBB, boxBB, [wall1BB, wall2BB, wall3BB, wall4BB], quad, closestFace);
+            movementStatus = animateMod(scene, camera, controls, playerBB, boxBB, [wall1BB, wall2BB, wall3BB, wall4BB], quad, closestFace, cbbarr);
             if(gunModelLoaded == true){
                 mixer.update(clock.getDelta());
                 mixer2.update(clock2.getDelta());

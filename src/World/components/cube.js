@@ -12,11 +12,50 @@ import {
     MeshBasicMaterial,
     Box3,
     Vector3,
+    Box3Helper,
 } from '../../../node_modules/three/build/three.module.js';
 
 import {
     GLTFLoader,
 } from '../../../node_modules/three/examples/jsm/loaders/GLTFLoader.js';
+
+function ignorePositions(object){
+    let positions = [];
+    if(object.direction == 'wide'){
+        let lowPos = (object.position.x-(object.geometry.parameters.width/2));
+        let highPos = (object.position.x+(object.geometry.parameters.width/2));
+        if(lowPos<0){
+            positions[0] = (lowPos+(object.geometry.parameters.depth)+0)//+.25;
+        }
+        else{
+            positions[0] = (lowPos-(object.geometry.parameters.depth)-0)//-.25;
+        }
+        if(highPos<0){
+            positions[1] = (highPos+(object.geometry.parameters.depth)+0)//+.25;
+        }
+        else{
+            positions[1] = (highPos-(object.geometry.parameters.depth)-0)//-.25;
+        }
+    }
+    else if(object.direction == 'long'){
+        let lowPos = (object.position.z-(object.geometry.parameters.depth/2));
+        let highPos = (object.position.z+(object.geometry.parameters.depth/2));
+        if(lowPos<0){
+            positions[0] = (lowPos+(object.geometry.parameters.width)+0);
+        }
+        else{
+            positions[0] = (lowPos-(object.geometry.parameters.width)-0);
+        }
+        if(highPos<0){
+            positions[1] = (highPos+(object.geometry.parameters.width)+0);
+        }
+        else{
+            positions[1] = (highPos-(object.geometry.parameters.width)-0);
+        }
+    }
+    return(positions);
+}
+
 
 function createCube(first){
     const geometry = new IcosahedronGeometry(2.5);
@@ -130,9 +169,40 @@ function createCube(first){
     wall3.ignoreSides = ['east', 'west'];
     wall2.ignoreSides = ['north', 'south'];
     wall4.ignoreSides = ['north', 'south'];
+    wall1BB.direction = 'wide';
+    wall2BB.direction = 'long';
+    wall3BB.direction = 'wide';
+    wall4BB.direction = 'long';
+    wall1.direction = 'wide';
+    wall2.direction = 'long';
+    wall3.direction = 'wide';
+    wall4.direction = 'long';
+    wall1BB.ignorePositions = ignorePositions(wall1);
+    wall2BB.ignorePositions = ignorePositions(wall2);
+    wall3BB.ignorePositions = ignorePositions(wall3);
+    wall4BB.ignorePositions = ignorePositions(wall4);
+    wall1BB.position = wall1.position;
+    wall2BB.position = wall2.position;
+    wall3BB.position = wall3.position;
+    wall4BB.position = wall4.position;
+    let wall1and2CornerBB = new Box3(new Vector3(), new Vector3());
+    wall1and2CornerBB.setFromCenterAndSize(new Vector3(300, 0, -300), new Vector3(6, 30, 6));
+    let wall2and3CornerBB = new Box3(new Vector3(), new Vector3());
+    wall2and3CornerBB.setFromCenterAndSize(new Vector3(300, 0, 300), new Vector3(6, 30, 6));
+    let wall3and4CornerBB = new Box3(new Vector3(), new Vector3());
+    wall3and4CornerBB.setFromCenterAndSize(new Vector3(-300, 0, 300), new Vector3(6, 30, 6));
+    let wall4and1CornerBB = new Box3(new Vector3(), new Vector3());
+    wall4and1CornerBB.setFromCenterAndSize(new Vector3(-300, 0, -300), new Vector3(6, 30, 6));
+    wall1and2CornerBB.placement = ['north', 'east'];
+    wall2and3CornerBB.placement = ['east', 'south'];
+    wall3and4CornerBB.placement = ['south', 'west'];
+    wall4and1CornerBB.placement = ['west', 'north'];
+    //let wall1and2CornerBBHelper = new Box3Helper(wall1and2CornerBB);
+    //cornerBBCreator(wall1, wall2, wall1and2CornerBB);
+    console.log(wall2);
     //wall1BB.translate(0,0,-300);
     //console.log(boxBB);
-    console.log(playerBB);
+    console.log(wall3BB);
     //cube2.rotation.y = 2.4;
     plane.rotation.x = ((Math.PI*2)/(360/90));
     //plane.position.set(0, -10, 0)
@@ -187,6 +257,9 @@ function createCube(first){
     }
     else if(first == 'wbb'){
         return([wall1BB, wall2BB, wall3BB, wall4BB])
+    }
+    else if(first == 'cbb'){
+        return([wall1and2CornerBB, wall2and3CornerBB, wall3and4CornerBB, wall4and1CornerBB]);
     }
 }
 export{createCube};

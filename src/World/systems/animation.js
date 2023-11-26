@@ -85,6 +85,7 @@ let cameraLeftInt = false;
 let cameraRightInt = false;
 let quadrant;
 let closestFace;
+let cbbarr;
 const renderer = new createRenderer;
 function rad(num){
     return((Math.PI)/(360/num));
@@ -168,10 +169,10 @@ function settings(){
         backSpeed = 0.4;
     })();
     (function bobSettings(){
-        cameraBobAmount = 0.024;
+        cameraBobAmount = 0.012;
     })();
 }
-function init(scene, camera, pBB, bBB, wbbArr){
+function init(scene, camera, pBB, bBB, wbbArr, cbb){
     cube = scene.getObjectByName('cube1');
     cube2 = scene.getObjectByName('cube2');
     playerBox = scene.getObjectByName('playerBox');
@@ -183,6 +184,7 @@ function init(scene, camera, pBB, bBB, wbbArr){
     wall3BB = wbbArr[2]
     wall4BB = wbbArr[3]
     wallArr = wbbArr;
+    cbbarr = cbb;
     settings();
 }
 function shape1(timeScale){
@@ -202,7 +204,7 @@ function gunAnimation(){
 
 function cameraAnim(timeScale){
     function cameraBobFun(end){
-        if(cameraBob<=.8 && cameraBobDown == false && end == false){
+        if(cameraBob<=.5 && cameraBobDown == false && end == false){
             cameraMod.position.y += (cameraBobAmount*timeScale);
             cameraBob += (cameraBobAmount*timeScale);
         }
@@ -262,12 +264,14 @@ function cameraAnim(timeScale){
     }
     }
     if(playerBB.intersectsBox(boxBB)){
-        collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, cameraMod, cameraBobAmount, closestFace);
+        collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, cameraMod, cameraBobAmount, closestFace, cameraMod.position.y, false);
+        cameraBobFun(false);
     }
     else if(wallInt == true){
         for(let i=0;i<wallArr.length;i++){
             if(playerBB.intersectsBox(wallArr[i])){
-                collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, cameraMod, cameraBobAmount, closestFace);
+                collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, cameraMod, cameraBobAmount, closestFace, cameraMod.position.y, true, wallArr[i], cbbarr);
+                cameraBobFun(false);
             }
         }
     }
@@ -308,13 +312,13 @@ function cameraAnim(timeScale){
     //console.log(playerBB);
 
 }
-export function animateMod(scene, camera, controls, pBB, bBB, wbbArr, quad, face){
+export function animateMod(scene, camera, controls, pBB, bBB, wbbArr, quad, face, cbb){
     control1 = controls;
     const delta = clock.getDelta();
     quadrant = quad;
     closestFace = face;
     if(listCont == false){
-        init(scene, camera, pBB, bBB, wbbArr);
+        init(scene, camera, pBB, bBB, wbbArr, cbb);
         list.push(shape1);
         list.push(shape2);
         list.push(cameraAnim);
