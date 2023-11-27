@@ -56,6 +56,131 @@ function ignorePositions(object){
     return(positions);
 }
 
+function building(){
+    let arr = [];
+    const wallMaterial = new MeshStandardMaterial({
+        color: 'LightSteelBlue',
+        //wireframe: true,
+        //roughness: 0.1,
+        //map: wallTexture,
+    });
+    function entranceHall(){
+        const southWall = new BoxGeometry(7, 50, 3);
+        const sideWall = new BoxGeometry(3, 50, 60);
+        const entSouthWall1 = new Mesh(southWall, wallMaterial);
+        entSouthWall1.position.set(-8, 0, -30);
+        const entSouthWall2 = new Mesh(southWall, wallMaterial);
+        entSouthWall2.position.set(8, 0, -30);
+        const entSideWall1 = new Mesh(sideWall, wallMaterial);
+        entSideWall1.position.set(-10, 0, -61.5);
+        const entSideWall2 = new Mesh(sideWall, wallMaterial);
+        entSideWall2.position.set(10, 0, -61.5);
+        arr.push(entSouthWall1, entSouthWall2, entSideWall1, entSideWall2);
+    }
+    entranceHall();
+    function room1(){
+        const southWall = new BoxGeometry(50, 50, 3);
+        const northWall = new BoxGeometry(120, 50, 3)
+        const sideWall = new BoxGeometry(3, 50, 35);
+        const rm1SouthWall1 = new Mesh(southWall, wallMaterial);
+        const rm1SouthWall2 = new Mesh(southWall, wallMaterial);
+        rm1SouthWall1.position.set(-35, 0, -90);
+        rm1SouthWall2.position.set(35, 0, -90);
+        const rm1SideWall1 = new Mesh(sideWall, wallMaterial);
+        const rm1SideWall2 = new Mesh(sideWall, wallMaterial);
+        const rm1SideWall3 = new Mesh(sideWall, wallMaterial);
+        const rm1SideWall4 = new Mesh(sideWall, wallMaterial);
+        rm1SideWall1.position.set(-60, 0, -107.5);
+        rm1SideWall2.position.set(-60, 0, -152.5);
+        rm1SideWall3.position.set(60, 0, -107.5);
+        rm1SideWall4.position.set(60, 0, -152.5);
+        const rm1NorthWall = new Mesh(northWall, wallMaterial);
+        rm1NorthWall.position.set(0, 0, -170);
+        arr.push(rm1SouthWall1, rm1SouthWall2, rm1SideWall1, rm1SideWall2, rm1SideWall3, rm1SideWall4, rm1NorthWall);
+    }
+    room1();
+    function westernHall(){
+        const eastWall = new BoxGeometry(3, 50, 60);
+        const northWall = new BoxGeometry(60, 50, 3);
+        const southWall = new BoxGeometry(80, 50, 3);
+        const westWall = new BoxGeometry(3, 50, 100);
+        const wHSouthWall1 = new Mesh(southWall, wallMaterial);
+        const wHSouthWall2 = new Mesh(northWall, wallMaterial);
+        wHSouthWall1.position.set(-100, 0, -120);
+        wHSouthWall2.position.set(-90, 0, -200);
+        const wHEastWall = new Mesh(eastWall, wallMaterial);
+        wHEastWall.position.set(-120, 0, -170);
+        const wHNorthWall = new Mesh(northWall, wallMaterial);
+        wHNorthWall.position.set(-90, 0, -140);
+        const wHWestWall = new Mesh(westWall, wallMaterial);
+        wHWestWall.position.set(-140, 0, -170);
+        arr.push(wHNorthWall, wHEastWall, wHSouthWall1, wHSouthWall2, wHWestWall);
+    }
+    westernHall();
+    function nWRoom(){
+        const westWall = new BoxGeometry(3, 50, 60);
+        const southWall1 = new BoxGeometry(85, 50, 3);
+        const southWall2 = new BoxGeometry(25, 50, 3);
+        const nWRWestWall = new Mesh(westWall, wallMaterial);
+        nWRWestWall.position.set(-180, 0, -250);
+        const nWRSouthWall1 = new Mesh(southWall1, wallMaterial);
+        const nWRSouthWall2 = new Mesh(southWall2, wallMaterial);
+        nWRSouthWall1.position.set(-137.5, 0, -220);
+        nWRSouthWall2.position.set(-72.5, 0, -220);
+        arr.push(nWRSouthWall1, nWRSouthWall2, nWRWestWall);
+    }
+    nWRoom();
+    function nRoom(){
+        const westWall1 = new BoxGeometry(3, 50, 20);
+        const westWall2 = new BoxGeometry(3, 50, 35);
+        const westWall3 = new BoxGeometry(3, 50, 25);
+        const northWall = new BoxGeometry(430, 50, 3);
+        const eastWall1 = new BoxGeometry(3, 50, 15);
+        const eastWall2 = new BoxGeometry(3, 50, 85);
+        const nRWestWall1 = new Mesh(westWall1, wallMaterial);
+        const nRWestWall2 = new Mesh(westWall2, wallMaterial);
+        const nRWestWall3 = new Mesh(westWall3, wallMaterial);
+        nRWestWall1.position.set(-60, 0, -270);
+        nRWestWall2.position.set(-60, 0, -232.5);
+        nRWestWall3.position.set(-60 , 0, -192.5);
+        const nRNorthWall = new Mesh(northWall, wallMaterial);
+        nRNorthWall.position.set(35, 0, -280);
+        const nREastWall1 = new Mesh(eastWall1, wallMaterial);
+        const nREastWall2 = new Mesh(eastWall2, wallMaterial);
+        nREastWall1.position.set(60 , 0, -272.5);
+        nREastWall2.position.set(60 , 0, -212.5);
+        arr.push(nREastWall1, nREastWall2, nRNorthWall, nRWestWall1, nRWestWall2, nRWestWall3);
+    }
+    nRoom();
+    function nERoom(){
+        const eastWall = new BoxGeometry(3, 50, 60);
+        const southWall1 = new BoxGeometry(70, 50, 3);
+        const southWall2 = new BoxGeometry(110, 50, 3);
+        const nEEastWall = new Mesh(eastWall, wallMaterial);
+        nEEastWall.position.set(250, 0, -250);
+        const nESouthWall1 = new Mesh(southWall1, wallMaterial);
+        const nESouthWall2 = new Mesh(southWall2, wallMaterial);
+        nESouthWall1.position.set(95, 0, -220);
+        nESouthWall2.position.set(195, 0, -220);
+        arr.push(nEEastWall, nESouthWall1, nESouthWall2);
+    }
+    nERoom();
+    function eRoom(){
+        const westWall = new BoxGeometry(3, 50, 40);
+        const southWall = new BoxGeometry(150, 50, 3);
+        const eastWall = new BoxGeometry(3, 50, 170);
+        const eWestWall = new Mesh(westWall, wallMaterial);
+        eWestWall.position.set(60, 0, -70);
+        const eSouthWall = new Mesh(southWall, wallMaterial);
+        eSouthWall.position.set(135, 0, -50);
+        const eEastWall = new Mesh(eastWall, wallMaterial);
+        eEastWall.position.set(210, 0, -135);
+        arr.push(eEastWall, eSouthWall, eWestWall);
+    }
+    eRoom();
+    return(arr);
+}
+
 
 function createCube(first){
     const geometry = new IcosahedronGeometry(2.5);
@@ -260,6 +385,9 @@ function createCube(first){
     }
     else if(first == 'cbb'){
         return([wall1and2CornerBB, wall2and3CornerBB, wall3and4CornerBB, wall4and1CornerBB]);
+    }
+    else if(first == 'building'){
+        return(building());
     }
 }
 export{createCube};
