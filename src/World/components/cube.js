@@ -186,13 +186,13 @@ function createCube(first){
     wall3BB.position = wall3.position;
     wall4BB.position = wall4.position;
     let wall1and2CornerBB = new Box3(new Vector3(), new Vector3());
-    wall1and2CornerBB.setFromCenterAndSize(new Vector3(300, 0, -300), new Vector3(6, 30, 6));
+    wall1and2CornerBB.setFromCenterAndSize(new Vector3(300, 0, -300), new Vector3(3, 30, 3));
     let wall2and3CornerBB = new Box3(new Vector3(), new Vector3());
-    wall2and3CornerBB.setFromCenterAndSize(new Vector3(300, 0, 300), new Vector3(6, 30, 6));
+    wall2and3CornerBB.setFromCenterAndSize(new Vector3(300, 0, 300), new Vector3(3, 30, 3));
     let wall3and4CornerBB = new Box3(new Vector3(), new Vector3());
-    wall3and4CornerBB.setFromCenterAndSize(new Vector3(-300, 0, 300), new Vector3(6, 30, 6));
+    wall3and4CornerBB.setFromCenterAndSize(new Vector3(-300, 0, 300), new Vector3(3, 30, 3));
     let wall4and1CornerBB = new Box3(new Vector3(), new Vector3());
-    wall4and1CornerBB.setFromCenterAndSize(new Vector3(-300, 0, -300), new Vector3(6, 30, 6));
+    wall4and1CornerBB.setFromCenterAndSize(new Vector3(-300, 0, -300), new Vector3(3, 30, 3));
     wall1and2CornerBB.placement = ['north', 'east'];
     wall2and3CornerBB.placement = ['east', 'south'];
     wall3and4CornerBB.placement = ['south', 'west'];

@@ -78,38 +78,38 @@ function collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, ca
             */
             if(cornerCol.placement[0] == 'north' && cornerCol.placement[1] == 'east'){
                 //console.log('int!');
-                if((deg(cameraMod.rotation.y)<0) && worldPosZ>0){
-                        cameraMod.position.z += .5;
+                if(worldPosX>0 && worldPosZ>0){
+                        cameraMod.position.z += .25*worldPosZ;
                 }
-                else if((deg(cameraMod.rotation.y)>0)){
-                    cameraMod.position.x -= .5;
+                else if(worldPosX<0){
+                    cameraMod.position.x -= .25*(worldPosX * -1);
                 }
                 return;
             }
             else if(cornerCol.placement[0] == 'east' && cornerCol.placement[1] == 'south'){
                 if(worldPosZ>0 && worldPosX<0){
-                    cameraMod.position.x -= .5;
+                    cameraMod.position.x -= .25*(worldPosX * -1);
                 }
                 else if(worldPosZ<0){
-                    cameraMod.position.z -= .5;
+                    cameraMod.position.z -= .25*(worldPosZ * -1);
                 }
                 return
             }
             else if(cornerCol.placement[0] == 'south' && cornerCol.placement[1] == 'west'){
                 if(worldPosZ<0 && worldPosX<0){
-                    cameraMod.position.z -= .5;
+                    cameraMod.position.z -= .25*(worldPosZ * -1);
                 }
-                else if(worldPosX<0){
-                    cameraMod.position.x += .5;
+                else if(worldPosX>0){
+                    cameraMod.position.x += .25*worldPosX;
                 }
                 return
             }
             else if(cornerCol.placement[0] == 'west' && cornerCol.placement[1] == 'north'){
                 if(worldPosZ<0 && worldPosX>0){
-                    cameraMod.position.x += .5;
+                    cameraMod.position.x += .25*worldPosX;
                 }
                 else if(worldPosZ>0){
-                    cameraMod.position.z += .5;
+                    cameraMod.position.z += .25*worldPosZ;
                 }
                 return
             }
