@@ -163,6 +163,7 @@ class World{
         wall4.name = 'wall4'
         const crossHair = createCube('cross');
         const fire = createCube('fire');
+        const ceiling = createCube('ceiling');
         playerBox = createCube('playerBox');
         box = createCube('box');
         box.name = 'box';
@@ -184,6 +185,7 @@ class World{
         */
         //wall1_2BB = wbbArr[4];
         //cube.translateZ(-80);
+        
         const buildingArr = createCube('building');
         const light = createLights(false);
         const light2 = createLights(true);
@@ -203,7 +205,7 @@ class World{
         console.log(wall1Info);
         //console.log(wall1.position.)
         //console.log(boxInfo);
-        scene.add(cube, cube2, floor, wall1, wall2, wall3, wall4, box, playerBox, light, light3);
+        scene.add(cube, cube2, floor, wall1, wall2, wall3, wall4, box, playerBox, ceiling, light, light3);
         for(let i=0; i<buildingArr.length; i++){
             scene.add(buildingArr[i]);
             objArr.push(buildingArr[i]);
