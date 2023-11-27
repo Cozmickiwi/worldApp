@@ -114,14 +114,14 @@ function collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, ca
         }
         if(cameraSkipSide==false){
             if(face == 'south' || face == 'north'){
-                cameraMod.position.x += ((.25*(selectedWorldPos*1.5))*multiplyAmount);
+                cameraMod.position.x += ((.5*(selectedWorldPos*1))*multiplyAmount);
             }
             else{
-                cameraMod.position.z += ((.25*(selectedWorldPos*1.5))*multiplyAmount);
+                cameraMod.position.z += ((.5*(selectedWorldPos*1))*multiplyAmount);
             }
         }
         else{
-            cameraMod.translateZ(-.25);
+            cameraMod.translateZ(-.5);
             cameraSkipSide = false;
         }
     }
