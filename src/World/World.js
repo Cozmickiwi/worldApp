@@ -240,8 +240,15 @@ class World{
             let prevDistance1;
             let arrObj;
             let arrObj1;
+            let chosenObj;
             let cam = new Vector3(camera.position.x, camera.position.y, camera.position.z);
-            for(let i=0; i<objArr.length; i++){
+            for(let a=0; a<wbbArr.length; a++){
+                if(playerBB.intersectsBox(wbbArr[a])){
+                    chosenObj = wbbArr[a].object;
+                }
+            }
+            if(chosenObj == undefined){
+                for(let i=0; i<objArr.length; i++){
                 //let dir = new Vector3(objArr[1].position);
                 let objX = objArr[i].position.x;
                 let objZ = objArr[i].position.z;
@@ -257,12 +264,28 @@ class World{
                 if(prevDistance == undefined || distance<prevDistance){
                     prevDistance = distance;
                     arrObj = i;
+                    chosenObj = objArr[arrObj];
                 }
             }
-            let closestObjSides = objInfo((objArr[arrObj].position.x), (objArr[arrObj].position.z), (objArr[arrObj].geometry.parameters.width), (objArr[arrObj].geometry.parameters.depth), objArr[arrObj]);
+            }
+            
+            let closestObjSides = objInfo((chosenObj.position.x), (chosenObj.position.z), (chosenObj.geometry.parameters.width), (chosenObj.geometry.parameters.depth), chosenObj);
             for(const directions in closestObjSides){
-                let obj = new Vector3((((((closestObjSides[directions])[0])[0])+(((closestObjSides[directions])[1])[0]))/2), 0, 
-                (((((closestObjSides[directions])[0])[1])+(((closestObjSides[directions])[1])[1]))/2));
+                let zVal;
+                let xVal;
+                if(camera.position.z > (((closestObjSides[directions])[0])[1]-1.5) && camera.position.z < (((closestObjSides[directions])[1])[1]+1.5)){
+                    zVal = camera.position.z;
+                }
+                else{
+                    zVal = (((((closestObjSides[directions])[0])[1])+(((closestObjSides[directions])[1])[1]))/2);
+                }
+                if(camera.position.x > (((closestObjSides[directions])[0])[0]-1.5) && camera.position.x < (((closestObjSides[directions])[1])[0]+1.5)){
+                    xVal = camera.position.x;
+                }
+                else{
+                    xVal = (((((closestObjSides[directions])[0])[0])+(((closestObjSides[directions])[1])[0]))/2);
+                }
+                let obj = new Vector3(xVal, 0, zVal);
                 //dir.normalize();
                 let distance = cam.distanceTo(obj);
                 if(prevDistance1 == undefined || distance<prevDistance1){
@@ -270,7 +293,7 @@ class World{
                     arrObj1 = directions;
                 }
             }
-            closestObj = [objArr[arrObj].name, objArr[arrObj], prevDistance, arrObj1];
+            closestObj = [chosenObj.name, chosenObj, prevDistance, arrObj1];
             closestFace = arrObj1;
         }, 10);
         /*

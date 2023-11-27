@@ -20,6 +20,8 @@ import {
 } from '../../../node_modules/three/examples/jsm/loaders/GLTFLoader.js';
 
 let wbbArr = [];
+let cbbArr = [];
+
 
 function ignorePositions(object){
     let positions = [];
@@ -92,8 +94,8 @@ function building(){
         const rm1SouthWall2 = new Mesh(southWall, wallMaterial);
         rm1SouthWall1.position.set(-35, 0, -90);
         rm1SouthWall2.position.set(35, 0, -90);
-        rm1SouthWall1.ignoreSides = ['east'];
-        rm1SouthWall2.ignoreSides = ['west'];
+        rm1SouthWall1.ignoreSides = ['east', 'west'];
+        rm1SouthWall2.ignoreSides = ['east', 'west'];
         const rm1SideWall1 = new Mesh(sideWall, wallMaterial);
         const rm1SideWall2 = new Mesh(sideWall, wallMaterial);
         const rm1SideWall3 = new Mesh(sideWall, wallMaterial);
@@ -102,13 +104,26 @@ function building(){
         rm1SideWall2.position.set(-60, 0, -152.5);
         rm1SideWall3.position.set(60, 0, -107.5);
         rm1SideWall4.position.set(60, 0, -152.5);
-        rm1SideWall1.ignoreSides = ['south'];
-        rm1SideWall2.ignoreSides = ['north'];
-        rm1SideWall3.ignoreSides = ['south'];
-        rm1SideWall4.ignoreSides = ['north'];
+        rm1SideWall1.ignoreSides = ['north'];
+        rm1SideWall2.ignoreSides = ['south'];
+        rm1SideWall3.ignoreSides = ['north'];
+        rm1SideWall4.ignoreSides = ['south'];
         const rm1NorthWall = new Mesh(northWall, wallMaterial);
         rm1NorthWall.position.set(0, 0, -170);
         rm1NorthWall.ignoreSides = ['east', 'west'];
+        let room1NEBB = new Box3(new Vector3(), new Vector3());
+        room1NEBB.setFromCenterAndSize(new Vector3(59, 0, -169), new Vector3(1, 30, 1));
+        room1NEBB.placement = ['north', 'east'];
+        let room1ESBB = new Box3(new Vector3(), new Vector3());
+        room1ESBB.setFromCenterAndSize(new Vector3(59, 0, -91), new Vector3(1, 30, 1));
+        room1ESBB.placement = ['east', 'south'];
+        let room1SWBB = new Box3(new Vector3(), new Vector3());
+        room1SWBB.setFromCenterAndSize(new Vector3(-59, 0, -91), new Vector3(1, 30, 1));
+        room1SWBB.placement = ['south', 'west'];
+        let room1WNBB = new Box3(new Vector3(), new Vector3());
+        room1WNBB.setFromCenterAndSize(new Vector3(-59, 0, -169), new Vector3(1, 30, 1));
+        room1WNBB.placement = ['west', 'north'];
+        cbbArr.push(room1NEBB, room1ESBB, room1SWBB, room1WNBB);
         arr.push(rm1SouthWall1, rm1SouthWall2, rm1SideWall1, rm1SideWall2, rm1SideWall3, rm1SideWall4, rm1NorthWall);
     }
     room1();
@@ -132,6 +147,25 @@ function building(){
         const wHWestWall = new Mesh(westWall, wallMaterial);
         wHWestWall.position.set(-140, 0, -170);
         wHWestWall.ignoreSides = ['north', 'south'];
+        let wHNEBB1 = new Box3(new Vector3(), new Vector3());
+        wHNEBB1.setFromCenterAndSize(new Vector3(-61.5, 0, -139), new Vector3(3, 30, 4.75));
+        wHNEBB1.placement = ['north', 'east'];
+        let wHNEBB2 = new Box3(new Vector3(), new Vector3());
+        wHNEBB2.setFromCenterAndSize(new Vector3(-61.5, 0, -219), new Vector3(3, 30, 4.75));
+        wHNEBB2.placement = ['north', 'east'];
+        let wHESBB1 = new Box3(new Vector3(), new Vector3());
+        wHESBB1.setFromCenterAndSize(new Vector3(-61.5, 0, -121), new Vector3(3, 30, 4.75));
+        wHESBB1.placement = ['east', 'south'];
+        let wHESBB2 = new Box3(new Vector3(), new Vector3());
+        wHESBB2.setFromCenterAndSize(new Vector3(-61.5, 0, -201), new Vector3(3, 30, 4.75));
+        wHESBB2.placement = ['east', 'south'];
+        let wHWNBB = new Box3(new Vector3(), new Vector3());
+        wHWNBB.setFromCenterAndSize(new Vector3(-139, 0, -219), new Vector3(1, 30, 1));
+        wHWNBB.placement = ['west', 'north'];
+        let wHSWBB = new Box3(new Vector3(), new Vector3());
+        wHSWBB.setFromCenterAndSize(new Vector3(-139, 0, -121), new Vector3(1, 30, 1));
+        wHSWBB.placement = ['south', 'west'];
+        cbbArr.push(wHESBB1, wHESBB2, wHNEBB1, wHNEBB2, wHSWBB, wHWNBB)
         arr.push(wHNorthWall, wHEastWall, wHSouthWall1, wHSouthWall2, wHWestWall);
     }
     westernHall();
@@ -144,10 +178,23 @@ function building(){
         nWRWestWall.ignoreSides = ['north', 'south'];
         const nWRSouthWall1 = new Mesh(southWall1, wallMaterial);
         const nWRSouthWall2 = new Mesh(southWall2, wallMaterial);
-        nWRSouthWall1.ignoreSides = ['west'];
-        nWRSouthWall2.ignoreSides = ['east'];
+        nWRSouthWall1.ignoreSides = ['east'];
+        nWRSouthWall2.ignoreSides = ['west'];
         nWRSouthWall1.position.set(-137.5, 0, -220);
         nWRSouthWall2.position.set(-72.5, 0, -220);
+        let nWRNEBB = new Box3(new Vector3(), new Vector3());
+        nWRNEBB.setFromCenterAndSize(new Vector3(-61, 0, -279), new Vector3(1, 30, 1));
+        nWRNEBB.placement = ['north', 'east'];
+        let nWRESBB = new Box3(new Vector3(), new Vector3());
+        nWRESBB.setFromCenterAndSize(new Vector3(-61, 0, -221), new Vector3(1, 30, 1));
+        nWRESBB.placement = ['east', 'south'];
+        let nWRSWBB = new Box3(new Vector3(), new Vector3());
+        nWRSWBB.setFromCenterAndSize(new Vector3(-179, 0, -221), new Vector3(1, 30, 1));
+        nWRSWBB.placement = ['south', 'west'];
+        let nWRWNBB = new Box3(new Vector3(), new Vector3());
+        nWRWNBB.setFromCenterAndSize(new Vector3(-179, 0, -279), new Vector3(1, 30, 1));
+        nWRWNBB.placement = ['west', 'north'];
+        cbbArr.push(nWRESBB, nWRNEBB, nWRSWBB, nWRWNBB)
         arr.push(nWRSouthWall1, nWRSouthWall2, nWRWestWall);
     }
     nWRoom();
@@ -164,18 +211,40 @@ function building(){
         nRWestWall1.position.set(-60, 0, -270);
         nRWestWall2.position.set(-60, 0, -232.5);
         nRWestWall3.position.set(-60 , 0, -192.5);
-        nRWestWall1.ignoreSides = ['north'];
-        nRWestWall2.ignoreSides = false;
+        nRWestWall1.ignoreSides = ['south'];
+        nRWestWall2.ignoreSides = [false];
         nRWestWall3.ignoreSides = false;
         const nRNorthWall = new Mesh(northWall, wallMaterial);
         nRNorthWall.position.set(35, 0, -280);
         nRNorthWall.ignoreSides = ['east', 'west'];
         const nREastWall1 = new Mesh(eastWall1, wallMaterial);
         const nREastWall2 = new Mesh(eastWall2, wallMaterial);
-        nREastWall1.position.set(60 , 0, -272.5);
+        nREastWall1.position.set(60 , 0, -270);
         nREastWall2.position.set(60 , 0, -212.5);
-        nREastWall1.ignoreSides = ['north'];
-        nREastWall2.ignoreSides = ['south'];
+        nREastWall1.ignoreSides = ['south'];
+        nREastWall2.ignoreSides = ['north'];
+        let nRNEBB = new Box3(new Vector3(), new Vector3());
+        nRNEBB.setFromCenterAndSize(new Vector3(59, 0, -279), new Vector3(1, 30, 1));
+        nRNEBB.placement = ['north', 'east'];
+        let nRESBB = new Box3(new Vector3(), new Vector3());
+        nRESBB.setFromCenterAndSize(new Vector3(59, 0, -171), new Vector3(1, 30, 1));
+        nRESBB.placement = ['east', 'south'];
+        let nRWNBB = new Box3(new Vector3(), new Vector3());
+        nRWNBB.setFromCenterAndSize(new Vector3(-59, 0, -279), new Vector3(1, 30, 1));
+        nRWNBB.placement = ['west', 'north'];
+        let nWRNEBB1 = new Box3(new Vector3(), new Vector3());
+        nWRNEBB1.setFromCenterAndSize(new Vector3(-61, 0, -199), new Vector3(1, 30, 1));
+        nWRNEBB1.placement = ['north', 'east'];
+        let nWRESBB1 = new Box3(new Vector3(), new Vector3());
+        nWRESBB1.setFromCenterAndSize(new Vector3(-61, 0, -141), new Vector3(1, 30, 1));
+        nWRESBB1.placement = ['east', 'south'];
+        let nWRSWBB1 = new Box3(new Vector3(), new Vector3());
+        nWRSWBB1.setFromCenterAndSize(new Vector3(-119, 0, -141), new Vector3(1, 30, 1));
+        nWRSWBB1.placement = ['south', 'west'];
+        let nWRWNBB1 = new Box3(new Vector3(), new Vector3());
+        nWRWNBB1.setFromCenterAndSize(new Vector3(-119, 0, -199), new Vector3(1, 30, 1));
+        nWRWNBB1.placement = ['west', 'north'];
+        cbbArr.push(nRESBB, nRNEBB, nRWNBB, nWRESBB1, nWRNEBB1, nWRSWBB1, nWRWNBB1);
         arr.push(nREastWall1, nREastWall2, nRNorthWall, nRWestWall1, nRWestWall2, nRWestWall3);
     }
     nRoom();
@@ -190,8 +259,21 @@ function building(){
         const nESouthWall2 = new Mesh(southWall2, wallMaterial);
         nESouthWall1.position.set(95, 0, -220);
         nESouthWall2.position.set(195, 0, -220);
-        nESouthWall1.ignoreSides = ['west'];
-        nESouthWall2.ignoreSides = ['east'];
+        nESouthWall1.ignoreSides = ['east'];
+        nESouthWall2.ignoreSides = ['west'];
+        let neRNEBB = new Box3(new Vector3(), new Vector3());
+        neRNEBB.setFromCenterAndSize(new Vector3(249, 0, -279), new Vector3(1, 30, 1));
+        neRNEBB.placement = ['north', 'east'];
+        let neRESBB = new Box3(new Vector3(), new Vector3());
+        neRESBB.setFromCenterAndSize(new Vector3(249, 0, -221), new Vector3(1, 30, 1));
+        neRESBB.placement = ['east', 'south'];
+        let neRSWBB = new Box3(new Vector3(), new Vector3());
+        neRSWBB.setFromCenterAndSize(new Vector3(61, 0, -221), new Vector3(1, 30, 1));
+        neRSWBB.placement = ['south', 'west'];
+        let neRWNBB = new Box3(new Vector3(), new Vector3());
+        neRWNBB.setFromCenterAndSize(new Vector3(61, 0, -279), new Vector3(1, 30, 1));
+        neRWNBB.placement = ['west', 'north'];
+        cbbArr.push(neRESBB, neRNEBB, neRSWBB, neRWNBB);
         arr.push(nEEastWall, nESouthWall1, nESouthWall2);
     }
     nERoom();
@@ -201,13 +283,26 @@ function building(){
         const eastWall = new BoxGeometry(3, 50, 170);
         const eWestWall = new Mesh(westWall, wallMaterial);
         eWestWall.position.set(60, 0, -70);
-        eWestWall.ignoreSides = ['south'];
+        eWestWall.ignoreSides = ['north'];
         const eSouthWall = new Mesh(southWall, wallMaterial);
         eSouthWall.position.set(135, 0, -50);
         eSouthWall.ignoreSides = ['east', 'west'];
         const eEastWall = new Mesh(eastWall, wallMaterial);
         eEastWall.position.set(210, 0, -135);
         eEastWall.ignoreSides = ['north', 'south'];
+        let eRNEBB = new Box3(new Vector3(), new Vector3());
+        eRNEBB.setFromCenterAndSize(new Vector3(209, 0, -219), new Vector3(1, 30, 1));
+        eRNEBB.placement = ['north', 'east'];
+        let eRESBB = new Box3(new Vector3(), new Vector3());
+        eRESBB.setFromCenterAndSize(new Vector3(209, 0, -51), new Vector3(1, 30, 1));
+        eRESBB.placement = ['east', 'south'];
+        let eRSWBB = new Box3(new Vector3(), new Vector3());
+        eRSWBB.setFromCenterAndSize(new Vector3(61, 0, -51), new Vector3(1, 30, 1));
+        eRSWBB.placement = ['south', 'west'];
+        let eRWNBB = new Box3(new Vector3(), new Vector3());
+        eRWNBB.setFromCenterAndSize(new Vector3(61, 0, -219), new Vector3(1, 30, 1));
+        eRWNBB.placement = ['west', 'north'];
+        cbbArr.push(eRESBB, eRNEBB, eRSWBB, eRWNBB);
         arr.push(eEastWall, eSouthWall, eWestWall);
     }
     eRoom();
@@ -222,6 +317,7 @@ function building(){
         }
         wbb.ignorePositions = ignorePositions(arr[i]);
         wbb.position = arr[i].position;
+        wbb.object = arr[i];
         wbbArr.push(wbb);
     }
     return(arr);
@@ -330,11 +426,17 @@ function createCube(first){
     wall4.position.set(-300,0,0);
     //wall4.rotation.set(0,-(Math.PI)/(360/180),0);
     boxBB.setFromObject(box);
+    boxBB.object = box
     playerBB.setFromObject(pBox);
+    playerBB.object = pBox
     wall1BB.setFromObject(wall1);
+    wall1BB.object = wall1
     wall2BB.setFromObject(wall2);
+    wall2BB.object = wall2
     wall3BB.setFromObject(wall3);
+    wall3BB.object = wall3
     wall4BB.setFromObject(wall4);
+    wall4.object = wall4
     box.ignoreSides = false;
     wall1.ignoreSides = ['east', 'west'];
     wall3.ignoreSides = ['east', 'west'];
@@ -431,7 +533,8 @@ function createCube(first){
         return(wbbArr);
     }
     else if(first == 'cbb'){
-        return([wall1and2CornerBB, wall2and3CornerBB, wall3and4CornerBB, wall4and1CornerBB]);
+        cbbArr.push(wall1and2CornerBB, wall2and3CornerBB, wall3and4CornerBB, wall4and1CornerBB)
+        return(cbbArr);
     }
     else if(first == 'building'){
         return(building());
