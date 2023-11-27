@@ -19,6 +19,8 @@ import {
     GLTFLoader,
 } from '../../../node_modules/three/examples/jsm/loaders/GLTFLoader.js';
 
+let wbbArr = [];
+
 function ignorePositions(object){
     let positions = [];
     if(object.direction == 'wide'){
@@ -75,6 +77,10 @@ function building(){
         entSideWall1.position.set(-10, 0, -61.5);
         const entSideWall2 = new Mesh(sideWall, wallMaterial);
         entSideWall2.position.set(10, 0, -61.5);
+        entSouthWall1.ignoreSides = ['east'];
+        entSouthWall2.ignoreSides = ['west'];
+        entSideWall1.ignoreSides = ['north', 'south'];
+        entSideWall2.ignoreSides = ['north', 'south'];
         arr.push(entSouthWall1, entSouthWall2, entSideWall1, entSideWall2);
     }
     entranceHall();
@@ -86,6 +92,8 @@ function building(){
         const rm1SouthWall2 = new Mesh(southWall, wallMaterial);
         rm1SouthWall1.position.set(-35, 0, -90);
         rm1SouthWall2.position.set(35, 0, -90);
+        rm1SouthWall1.ignoreSides = ['east'];
+        rm1SouthWall2.ignoreSides = ['west'];
         const rm1SideWall1 = new Mesh(sideWall, wallMaterial);
         const rm1SideWall2 = new Mesh(sideWall, wallMaterial);
         const rm1SideWall3 = new Mesh(sideWall, wallMaterial);
@@ -94,8 +102,13 @@ function building(){
         rm1SideWall2.position.set(-60, 0, -152.5);
         rm1SideWall3.position.set(60, 0, -107.5);
         rm1SideWall4.position.set(60, 0, -152.5);
+        rm1SideWall1.ignoreSides = ['south'];
+        rm1SideWall2.ignoreSides = ['north'];
+        rm1SideWall3.ignoreSides = ['south'];
+        rm1SideWall4.ignoreSides = ['north'];
         const rm1NorthWall = new Mesh(northWall, wallMaterial);
         rm1NorthWall.position.set(0, 0, -170);
+        rm1NorthWall.ignoreSides = ['east', 'west'];
         arr.push(rm1SouthWall1, rm1SouthWall2, rm1SideWall1, rm1SideWall2, rm1SideWall3, rm1SideWall4, rm1NorthWall);
     }
     room1();
@@ -108,12 +121,17 @@ function building(){
         const wHSouthWall2 = new Mesh(northWall, wallMaterial);
         wHSouthWall1.position.set(-100, 0, -120);
         wHSouthWall2.position.set(-90, 0, -200);
+        wHSouthWall1.ignoreSides = ['east', 'west'];
+        wHSouthWall2.ignoreSides = ['east', 'west'];
         const wHEastWall = new Mesh(eastWall, wallMaterial);
         wHEastWall.position.set(-120, 0, -170);
+        wHEastWall.ignoreSides = ['north', 'south'];
         const wHNorthWall = new Mesh(northWall, wallMaterial);
         wHNorthWall.position.set(-90, 0, -140);
+        wHNorthWall.ignoreSides = ['east', 'west'];
         const wHWestWall = new Mesh(westWall, wallMaterial);
         wHWestWall.position.set(-140, 0, -170);
+        wHWestWall.ignoreSides = ['north', 'south'];
         arr.push(wHNorthWall, wHEastWall, wHSouthWall1, wHSouthWall2, wHWestWall);
     }
     westernHall();
@@ -123,8 +141,11 @@ function building(){
         const southWall2 = new BoxGeometry(25, 50, 3);
         const nWRWestWall = new Mesh(westWall, wallMaterial);
         nWRWestWall.position.set(-180, 0, -250);
+        nWRWestWall.ignoreSides = ['north', 'south'];
         const nWRSouthWall1 = new Mesh(southWall1, wallMaterial);
         const nWRSouthWall2 = new Mesh(southWall2, wallMaterial);
+        nWRSouthWall1.ignoreSides = ['west'];
+        nWRSouthWall2.ignoreSides = ['east'];
         nWRSouthWall1.position.set(-137.5, 0, -220);
         nWRSouthWall2.position.set(-72.5, 0, -220);
         arr.push(nWRSouthWall1, nWRSouthWall2, nWRWestWall);
@@ -143,12 +164,18 @@ function building(){
         nRWestWall1.position.set(-60, 0, -270);
         nRWestWall2.position.set(-60, 0, -232.5);
         nRWestWall3.position.set(-60 , 0, -192.5);
+        nRWestWall1.ignoreSides = ['north'];
+        nRWestWall2.ignoreSides = false;
+        nRWestWall3.ignoreSides = false;
         const nRNorthWall = new Mesh(northWall, wallMaterial);
         nRNorthWall.position.set(35, 0, -280);
+        nRNorthWall.ignoreSides = ['east', 'west'];
         const nREastWall1 = new Mesh(eastWall1, wallMaterial);
         const nREastWall2 = new Mesh(eastWall2, wallMaterial);
         nREastWall1.position.set(60 , 0, -272.5);
         nREastWall2.position.set(60 , 0, -212.5);
+        nREastWall1.ignoreSides = ['north'];
+        nREastWall2.ignoreSides = ['south'];
         arr.push(nREastWall1, nREastWall2, nRNorthWall, nRWestWall1, nRWestWall2, nRWestWall3);
     }
     nRoom();
@@ -158,10 +185,13 @@ function building(){
         const southWall2 = new BoxGeometry(110, 50, 3);
         const nEEastWall = new Mesh(eastWall, wallMaterial);
         nEEastWall.position.set(250, 0, -250);
+        nEEastWall.ignoreSides = ['north', 'south'];
         const nESouthWall1 = new Mesh(southWall1, wallMaterial);
         const nESouthWall2 = new Mesh(southWall2, wallMaterial);
         nESouthWall1.position.set(95, 0, -220);
         nESouthWall2.position.set(195, 0, -220);
+        nESouthWall1.ignoreSides = ['west'];
+        nESouthWall2.ignoreSides = ['east'];
         arr.push(nEEastWall, nESouthWall1, nESouthWall2);
     }
     nERoom();
@@ -171,13 +201,29 @@ function building(){
         const eastWall = new BoxGeometry(3, 50, 170);
         const eWestWall = new Mesh(westWall, wallMaterial);
         eWestWall.position.set(60, 0, -70);
+        eWestWall.ignoreSides = ['south'];
         const eSouthWall = new Mesh(southWall, wallMaterial);
         eSouthWall.position.set(135, 0, -50);
+        eSouthWall.ignoreSides = ['east', 'west'];
         const eEastWall = new Mesh(eastWall, wallMaterial);
         eEastWall.position.set(210, 0, -135);
+        eEastWall.ignoreSides = ['north', 'south'];
         arr.push(eEastWall, eSouthWall, eWestWall);
     }
     eRoom();
+    for(let i=0; i<arr.length; i++){
+        let wbb = new Box3(new Vector3(), new Vector3());
+        wbb.setFromObject(arr[i]);
+        if(arr[i].geometry.parameters.width>=arr[i].geometry.parameters.depth){
+            wbb.direction = 'wide';
+        }
+        else{
+            wbb.direction = 'long';
+        }
+        wbb.ignorePositions = ignorePositions(arr[i]);
+        wbb.position = arr[i].position;
+        wbbArr.push(wbb);
+    }
     return(arr);
 }
 
@@ -381,7 +427,8 @@ function createCube(first){
         return(playerBB)
     }
     else if(first == 'wbb'){
-        return([wall1BB, wall2BB, wall3BB, wall4BB])
+        wbbArr.push(wall1BB, wall2BB, wall3BB, wall4BB)
+        return(wbbArr);
     }
     else if(first == 'cbb'){
         return([wall1and2CornerBB, wall2and3CornerBB, wall3and4CornerBB, wall4and1CornerBB]);

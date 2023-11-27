@@ -86,6 +86,7 @@ let cameraRightInt = false;
 let quadrant;
 let closestFace;
 let cbbarr;
+let boxInt;
 const renderer = new createRenderer;
 function rad(num){
     return((Math.PI)/(360/num));
@@ -179,10 +180,12 @@ function init(scene, camera, pBB, bBB, wbbArr, cbb){
     cameraMod = camera;
     playerBB = pBB;
     boxBB = bBB;
+    /*
     wall1BB = wbbArr[0]
     wall2BB = wbbArr[1]
     wall3BB = wbbArr[2]
     wall4BB = wbbArr[3]
+    */
     wallArr = wbbArr;
     cbbarr = cbb;
     settings();
@@ -219,9 +222,11 @@ function cameraAnim(timeScale){
             cameraBob -= (cameraBobAmount*timeScale);
         }
     }
-    if(playerBB.intersectsBox(wall1BB) || playerBB.intersectsBox(wall2BB)
-    || playerBB.intersectsBox(wall3BB) || playerBB.intersectsBox(wall4BB)){
-        wallInt = true;
+    for(let i=0; i<wallArr.length; i++){
+        if(playerBB.intersectsBox(wallArr[i])){
+            wallInt = true;
+            boxInt = wallInt[i];
+        }
     }
     if(doomControls == true){
         if(cameraPosX == true){
@@ -268,12 +273,9 @@ function cameraAnim(timeScale){
         cameraBobFun(false);
     }
     else if(wallInt == true){
-        for(let i=0;i<wallArr.length;i++){
-            if(playerBB.intersectsBox(wallArr[i])){
-                collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, cameraMod, cameraBobAmount, closestFace, cameraMod.position.y, true, wallArr[i], cbbarr);
+                collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, cameraMod, cameraBobAmount, closestFace, cameraMod.position.y, true, boxInt, cbbarr);
                 cameraBobFun(false);
-            }
-        }
+                boxInt = undefined;
     }
     if(cameraBob > 0 && (cameraFoward == false && cameraBack == false && cameraPosX == false && cameraPosXRev == false ||
     doomControls == true && cameraFoward == false && cameraBack == false)){

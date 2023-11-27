@@ -176,12 +176,15 @@ class World{
         wbbArr = createCube('wbb');
         cbbarr = createCube('cbb')
         objArr.push(box, wall1, wall2, wall3, wall4);
+        /*
         wall1BB = wbbArr[0]
         wall2BB = wbbArr[1]
         wall3BB = wbbArr[2]
         wall4BB = wbbArr[3]
+        */
         //wall1_2BB = wbbArr[4];
         //cube.translateZ(-80);
+        const buildingArr = createCube('building');
         const light = createLights(false);
         const light2 = createLights(true);
         const light3 = createLights('amb');
@@ -201,6 +204,10 @@ class World{
         //console.log(wall1.position.)
         //console.log(boxInfo);
         scene.add(cube, cube2, floor, wall1, wall2, wall3, wall4, box, playerBox, light, light3);
+        for(let i=0; i<buildingArr.length; i++){
+            scene.add(buildingArr[i]);
+            objArr.push(buildingArr[i]);
+        }
         cbbarr.push(playerBB);
         //console.log(box.position);
         /*
@@ -472,7 +479,7 @@ class World{
                 //console.log(person.position);
                 //action = baseAction;
             }
-            movementStatus = animateMod(scene, camera, controls, playerBB, boxBB, [wall1BB, wall2BB, wall3BB, wall4BB], quad, closestFace, cbbarr);
+            movementStatus = animateMod(scene, camera, controls, playerBB, boxBB, wbbArr, quad, closestFace, cbbarr);
             if(gunModelLoaded == true){
                 mixer.update(clock.getDelta());
                 mixer2.update(clock2.getDelta());
