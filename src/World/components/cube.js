@@ -22,7 +22,9 @@ import {
 let wbbArr = [];
 let cbbArr = [];
 
-
+const ceilingTexture1 = new TextureLoader().load(
+        'src/World/components/assets/43419803ee9ecad5c8ce7c0ae409796dafec3bb1.png'
+)
 function ignorePositions(object){
     let positions = [];
     if(object.direction == 'wide'){
@@ -60,24 +62,36 @@ function ignorePositions(object){
     return(positions);
 }
 
+function setTextureRepeat(x, y){
+    let doomTexture1 = new TextureLoader().load('/src/World/components/assets/0mclwsft47f8.png');
+    let repeatX = x;
+    let repeatY = y;
+    doomTexture1.wrapS = RepeatWrapping;
+    doomTexture1.wrapT = RepeatWrapping;
+    doomTexture1.repeat.set(repeatX, repeatY);
+    return(new MeshStandardMaterial({map: doomTexture1,}));
+}
+
 function building(){
     let arr = [];
+    //let doomTexture1 = new TextureLoader().load('/src/World/components/assets/0mclwsft47f8.png')
     const wallMaterial = new MeshStandardMaterial({
-        color: 'LightSteelBlue',
+        //color: 'LightSteelBlue',
         //wireframe: true,
         //roughness: 0.1,
         //map: wallTexture,
+        //map: doomTexture1,
     });
     function entranceHall(){
         const southWall = new BoxGeometry(7, 50, 3);
         const sideWall = new BoxGeometry(3, 50, 60);
-        const entSouthWall1 = new Mesh(southWall, wallMaterial);
+        const entSouthWall1 = new Mesh(southWall, setTextureRepeat(.7, 5));
         entSouthWall1.position.set(-8, 0, -30);
-        const entSouthWall2 = new Mesh(southWall, wallMaterial);
+        const entSouthWall2 = new Mesh(southWall, setTextureRepeat(.7, 5));
         entSouthWall2.position.set(8, 0, -30);
-        const entSideWall1 = new Mesh(sideWall, wallMaterial);
+        const entSideWall1 = new Mesh(sideWall, setTextureRepeat(6, 5));
         entSideWall1.position.set(-10, 0, -61.5);
-        const entSideWall2 = new Mesh(sideWall, wallMaterial);
+        const entSideWall2 = new Mesh(sideWall, setTextureRepeat(6, 5));
         entSideWall2.position.set(10, 0, -61.5);
         entSouthWall1.ignoreSides = ['east'];
         entSouthWall2.ignoreSides = ['west'];
@@ -90,16 +104,16 @@ function building(){
         const southWall = new BoxGeometry(50, 50, 3);
         const northWall = new BoxGeometry(120, 50, 3)
         const sideWall = new BoxGeometry(3, 50, 35);
-        const rm1SouthWall1 = new Mesh(southWall, wallMaterial);
-        const rm1SouthWall2 = new Mesh(southWall, wallMaterial);
+        const rm1SouthWall1 = new Mesh(southWall, setTextureRepeat(5, 5));
+        const rm1SouthWall2 = new Mesh(southWall, setTextureRepeat(5, 5));
         rm1SouthWall1.position.set(-35, 0, -90);
         rm1SouthWall2.position.set(35, 0, -90);
         rm1SouthWall1.ignoreSides = ['east', 'west'];
         rm1SouthWall2.ignoreSides = ['east', 'west'];
-        const rm1SideWall1 = new Mesh(sideWall, wallMaterial);
-        const rm1SideWall2 = new Mesh(sideWall, wallMaterial);
-        const rm1SideWall3 = new Mesh(sideWall, wallMaterial);
-        const rm1SideWall4 = new Mesh(sideWall, wallMaterial);
+        const rm1SideWall1 = new Mesh(sideWall, setTextureRepeat(3.5, 5));
+        const rm1SideWall2 = new Mesh(sideWall, setTextureRepeat(3.5, 5));
+        const rm1SideWall3 = new Mesh(sideWall, setTextureRepeat(3.5, 5));
+        const rm1SideWall4 = new Mesh(sideWall, setTextureRepeat(3.5, 5));
         rm1SideWall1.position.set(-60, 0, -107.5);
         rm1SideWall2.position.set(-60, 0, -152.5);
         rm1SideWall3.position.set(60, 0, -107.5);
@@ -108,7 +122,7 @@ function building(){
         rm1SideWall2.ignoreSides = ['south'];
         rm1SideWall3.ignoreSides = ['north'];
         rm1SideWall4.ignoreSides = ['south'];
-        const rm1NorthWall = new Mesh(northWall, wallMaterial);
+        const rm1NorthWall = new Mesh(northWall, setTextureRepeat(12, 5));
         rm1NorthWall.position.set(0, 0, -170);
         rm1NorthWall.ignoreSides = ['east', 'west'];
         let room1NEBB = new Box3(new Vector3(), new Vector3());
@@ -132,19 +146,19 @@ function building(){
         const northWall = new BoxGeometry(60, 50, 3);
         const southWall = new BoxGeometry(80, 50, 3);
         const westWall = new BoxGeometry(3, 50, 100);
-        const wHSouthWall1 = new Mesh(southWall, wallMaterial);
-        const wHSouthWall2 = new Mesh(northWall, wallMaterial);
+        const wHSouthWall1 = new Mesh(southWall, setTextureRepeat(8, 5));
+        const wHSouthWall2 = new Mesh(northWall, setTextureRepeat(6, 5));
         wHSouthWall1.position.set(-100, 0, -120);
         wHSouthWall2.position.set(-90, 0, -200);
         wHSouthWall1.ignoreSides = ['east', 'west'];
         wHSouthWall2.ignoreSides = ['east', 'west'];
-        const wHEastWall = new Mesh(eastWall, wallMaterial);
+        const wHEastWall = new Mesh(eastWall, setTextureRepeat(6, 5));
         wHEastWall.position.set(-120, 0, -170);
         wHEastWall.ignoreSides = ['north', 'south'];
-        const wHNorthWall = new Mesh(northWall, wallMaterial);
+        const wHNorthWall = new Mesh(northWall, setTextureRepeat(6, 5));
         wHNorthWall.position.set(-90, 0, -140);
         wHNorthWall.ignoreSides = ['east', 'west'];
-        const wHWestWall = new Mesh(westWall, wallMaterial);
+        const wHWestWall = new Mesh(westWall, setTextureRepeat(10, 5));
         wHWestWall.position.set(-140, 0, -170);
         wHWestWall.ignoreSides = ['north', 'south'];
         let wHNEBB1 = new Box3(new Vector3(), new Vector3());
@@ -173,11 +187,11 @@ function building(){
         const westWall = new BoxGeometry(3, 50, 60);
         const southWall1 = new BoxGeometry(85, 50, 3);
         const southWall2 = new BoxGeometry(25, 50, 3);
-        const nWRWestWall = new Mesh(westWall, wallMaterial);
+        const nWRWestWall = new Mesh(westWall, setTextureRepeat(6, 5));
         nWRWestWall.position.set(-180, 0, -250);
         nWRWestWall.ignoreSides = ['north', 'south'];
-        const nWRSouthWall1 = new Mesh(southWall1, wallMaterial);
-        const nWRSouthWall2 = new Mesh(southWall2, wallMaterial);
+        const nWRSouthWall1 = new Mesh(southWall1, setTextureRepeat(8.5, 5));
+        const nWRSouthWall2 = new Mesh(southWall2, setTextureRepeat(2.5, 5));
         nWRSouthWall1.ignoreSides = ['east'];
         nWRSouthWall2.ignoreSides = ['west'];
         nWRSouthWall1.position.set(-137.5, 0, -220);
@@ -205,21 +219,21 @@ function building(){
         const northWall = new BoxGeometry(430, 50, 3);
         const eastWall1 = new BoxGeometry(3, 50, 15);
         const eastWall2 = new BoxGeometry(3, 50, 85);
-        const nRWestWall1 = new Mesh(westWall1, wallMaterial);
-        const nRWestWall2 = new Mesh(westWall2, wallMaterial);
-        const nRWestWall3 = new Mesh(westWall3, wallMaterial);
+        const nRWestWall1 = new Mesh(westWall1, setTextureRepeat(2, 5));
+        const nRWestWall2 = new Mesh(westWall2, setTextureRepeat(3.5, 5));
+        const nRWestWall3 = new Mesh(westWall3, setTextureRepeat(2.5, 5));
         nRWestWall1.position.set(-60, 0, -270);
         nRWestWall2.position.set(-60, 0, -232.5);
         nRWestWall3.position.set(-60 , 0, -192.5);
         nRWestWall1.ignoreSides = ['south'];
         nRWestWall2.ignoreSides = [false];
         nRWestWall3.ignoreSides = false;
-        const nRNorthWall = new Mesh(northWall, wallMaterial);
+        const nRNorthWall = new Mesh(northWall, setTextureRepeat(43, 5));
         nRNorthWall.position.set(35, 0, -280);
         nRNorthWall.ignoreSides = ['east', 'west'];
-        const nREastWall1 = new Mesh(eastWall1, wallMaterial);
-        const nREastWall2 = new Mesh(eastWall2, wallMaterial);
-        nREastWall1.position.set(60 , 0, -270);
+        const nREastWall1 = new Mesh(eastWall1, setTextureRepeat(1.5, 5));
+        const nREastWall2 = new Mesh(eastWall2, setTextureRepeat(8.5, 5));
+        nREastWall1.position.set(60 , 0, -272.5);
         nREastWall2.position.set(60 , 0, -212.5);
         nREastWall1.ignoreSides = ['south'];
         nREastWall2.ignoreSides = ['north'];
@@ -252,11 +266,11 @@ function building(){
         const eastWall = new BoxGeometry(3, 50, 60);
         const southWall1 = new BoxGeometry(70, 50, 3);
         const southWall2 = new BoxGeometry(110, 50, 3);
-        const nEEastWall = new Mesh(eastWall, wallMaterial);
+        const nEEastWall = new Mesh(eastWall, setTextureRepeat(6, 5));
         nEEastWall.position.set(250, 0, -250);
         nEEastWall.ignoreSides = ['north', 'south'];
-        const nESouthWall1 = new Mesh(southWall1, wallMaterial);
-        const nESouthWall2 = new Mesh(southWall2, wallMaterial);
+        const nESouthWall1 = new Mesh(southWall1, setTextureRepeat(7, 5));
+        const nESouthWall2 = new Mesh(southWall2, setTextureRepeat(11, 5));
         nESouthWall1.position.set(95, 0, -220);
         nESouthWall2.position.set(195, 0, -220);
         nESouthWall1.ignoreSides = ['east'];
@@ -281,13 +295,13 @@ function building(){
         const westWall = new BoxGeometry(3, 50, 40);
         const southWall = new BoxGeometry(150, 50, 3);
         const eastWall = new BoxGeometry(3, 50, 170);
-        const eWestWall = new Mesh(westWall, wallMaterial);
+        const eWestWall = new Mesh(westWall, setTextureRepeat(4, 5));
         eWestWall.position.set(60, 0, -70);
-        eWestWall.ignoreSides = ['north'];
-        const eSouthWall = new Mesh(southWall, wallMaterial);
+        eWestWall.ignoreSides = ['north', 'south'];
+        const eSouthWall = new Mesh(southWall, setTextureRepeat(15, 5));
         eSouthWall.position.set(135, 0, -50);
         eSouthWall.ignoreSides = ['east', 'west'];
-        const eEastWall = new Mesh(eastWall, wallMaterial);
+        const eEastWall = new Mesh(eastWall, setTextureRepeat(17, 5));
         eEastWall.position.set(210, 0, -135);
         eEastWall.ignoreSides = ['north', 'south'];
         let eRNEBB = new Box3(new Vector3(), new Vector3());
@@ -319,6 +333,7 @@ function building(){
         wbb.position = arr[i].position;
         wbb.object = arr[i];
         wbbArr.push(wbb);
+        //setTextureRepeat(arr[i].geometry.parameters, doomTexture1);
     }
     return(arr);
 }
@@ -333,6 +348,7 @@ function createCube(first){
     const geometry5 = new PlaneGeometry(120,120);
     const geometry6 = new BoxGeometry(6, 20, 6);
     const playerBox = new BoxGeometry(6, 10, 6);
+    const ceiling = new PlaneGeometry(430, 430);
     const textureLoader = new TextureLoader();
     const texture = textureLoader.load(
         '/src/World/components/assets/space-cruiser-panels2-unity/space-cruiser-panels2_albedo.png',
@@ -349,6 +365,10 @@ function createCube(first){
     const fireTexture = textureLoader.load(
         '/src/World/components/assets/fire1.png'
     )
+    
+    ceilingTexture1.wrapS = RepeatWrapping;
+    ceilingTexture1.wrapT = RepeatWrapping;
+    ceilingTexture1.repeat.set(43,43)
     wallTexture.wrapS = RepeatWrapping;
     wallTexture.wrapT = RepeatWrapping;
     wallTexture.repeat.set(12,2)
@@ -399,6 +419,9 @@ function createCube(first){
         color: 'blue',
         
     })
+    const ceilingTexture = new MeshStandardMaterial({
+        map: ceilingTexture1,
+    })
     const cube = new Mesh(geometry, material);
     const cube2 = new Mesh(geometry2, material2);
     const plane = new Mesh(geometry3, material3);
@@ -410,12 +433,15 @@ function createCube(first){
     const fire = new Mesh(geometry5, material6);
     const pBox = new Mesh(playerBox, material7);
     const box = new Mesh(geometry6, material);
+    const buildingCeiling = new Mesh(ceiling, ceilingTexture);
     let boxBB = new Box3(new Vector3(), new Vector3());
     let playerBB = new Box3(new Vector3(), new Vector3());
     let wall1BB = new Box3(new Vector3(), new Vector3());
     let wall2BB = new Box3(new Vector3(), new Vector3());
     let wall3BB = new Box3(new Vector3(), new Vector3());
     let wall4BB = new Box3(new Vector3(), new Vector3());
+    buildingCeiling.position.set(35, 25, -65);
+    buildingCeiling.rotation.x = (Math.PI/2)
     cube.position.set(0,10,0);
     cube2.position.set(0, 10, 0);
     box.position.set(100,10,100);
@@ -538,6 +564,9 @@ function createCube(first){
     }
     else if(first == 'building'){
         return(building());
+    }
+    else if(first == 'ceiling'){
+        return(buildingCeiling);
     }
 }
 export{createCube};
