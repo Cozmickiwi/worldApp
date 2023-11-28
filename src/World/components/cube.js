@@ -13,14 +13,30 @@ import {
     Box3,
     Vector3,
     Box3Helper,
+    ShapeGeometry,
+    Group,
+
 } from '../../../node_modules/three/build/three.module.js';
+
+
+import {
+    SVGLoader
+} from '../../../node_modules/three/examples/jsm/loaders/SVGLoader.js'
 
 import {
     GLTFLoader,
 } from '../../../node_modules/three/examples/jsm/loaders/GLTFLoader.js';
 
+import{createScene} from '../components/scene.js'
+
+import{objArr} from '../systems/pixelArtConvert.js'
+
+
+let scene = new createScene(false);
 let wbbArr = [];
 let cbbArr = [];
+let iteration = 0;
+
 
 const ceilingTexture1 = new TextureLoader().load(
         'src/World/components/assets/43419803ee9ecad5c8ce7c0ae409796dafec3bb1.png'
@@ -415,7 +431,7 @@ function createCube(first){
         
     })
     const material7 = new MeshStandardMaterial();
-    const toon = new MeshToonMaterial({
+    const pixelMaterial = new MeshStandardMaterial({
         color: 'blue',
         
     })
@@ -448,6 +464,7 @@ function createCube(first){
     wall1.position.set(0,0,-300);
     wall3.position.set(0,0,300);
     wall2.position.set(300,0,0);
+    console.log(objArr)
     //wall2.rotation.set(0,(Math.PI)/(360/180),0);
     wall4.position.set(-300,0,0);
     //wall4.rotation.set(0,-(Math.PI)/(360/180),0);
@@ -476,6 +493,10 @@ function createCube(first){
     wall2.direction = 'long';
     wall3.direction = 'wide';
     wall4.direction = 'long';
+    //wall1.visible = false;
+    //wall2.visible = false;
+    //wall3.visible = false;
+    //wall4.visible = false;
     wall1BB.ignorePositions = ignorePositions(wall1);
     wall2BB.ignorePositions = ignorePositions(wall2);
     wall3BB.ignorePositions = ignorePositions(wall3);
@@ -515,6 +536,74 @@ function createCube(first){
     //pBox.material.side = DoubleSide;
     pBox.material.visible = false;
     playerBB.name = 'playerBB'
+    let pixelMeshArr = [];
+    for(let i=0; i<objArr.length; i++){
+        let width;
+        let depth;
+        if(objArr[i].direction == 'long'){
+            width = 3;
+            depth = objArr[i].size;
+        }
+        else if(objArr[i].direction == 'wide'){
+            width = objArr[i].size;
+            depth = 3;
+        }
+        let objGeometry = new BoxGeometry(width, 50, depth);
+        let obj = new Mesh(objGeometry, pixelMaterial);
+        obj.position.set(objArr[i].objPosition[0], 0, objArr[i].objPosition[1]);
+        pixelMeshArr.push(obj);
+        let wbb = new Box3(new Vector3(), new Vector3());
+        wbb.setFromObject(obj);
+        wbb.ignorePositions = false;
+        wbb.position = obj.position;
+        wbb.object = obj;
+        wbbArr.push(wbb);
+    }
+    console.log(pixelMeshArr);
+    
+    
+    // instantiate a loader
+    /*
+const loader = new SVGLoader();
+
+// load a SVG resource
+loader.load(
+	// resource URL
+	'/src/World/components/assets/graph (2).svg',
+	// called when the resource is loaded
+	function ( data ) {
+		const paths = data.paths;
+		const group = new Group();
+		for ( let i = 0; i < paths.length; i ++ ) {
+			const path = paths[ i ];
+			const material = new MeshBasicMaterial( {
+				color: path.color,
+				side: DoubleSide,
+				depthWrite: false
+			} );
+			const shapes = SVGLoader.createShapes( path );
+			for ( let j = 0; j < shapes.length; j ++ ) {
+				const shape = shapes[ j ];
+				const geometry = new ShapeGeometry( shape );
+				const mesh = new Mesh( geometry, material );
+				group.add( mesh );
+			}
+		}
+        group.position.y = 50;
+        group.rotation.x = Math.PI/2
+        group.scale.set(.1,.1,.1)
+		scene.add( group );
+        console.log(group)
+	},
+	// called when loading is in progresses
+	function ( xhr ) {
+		console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+	},
+	// called when loading has errors
+	function ( error ) {
+		console.log( 'An error happened' );
+	}
+);*/
     if(first == true){
         return (cube);
     }
@@ -556,6 +645,7 @@ function createCube(first){
     }
     else if(first == 'wbb'){
         wbbArr.push(wall1BB, wall2BB, wall3BB, wall4BB)
+        //console.log()
         return(wbbArr);
     }
     else if(first == 'cbb'){
@@ -564,9 +654,13 @@ function createCube(first){
     }
     else if(first == 'building'){
         return(building());
+        //return(pixelMeshArr);
     }
     else if(first == 'ceiling'){
         return(buildingCeiling);
+    }
+    else if(first == 'pixel'){
+        return(pixelMeshArr);
     }
 }
 export{createCube};
