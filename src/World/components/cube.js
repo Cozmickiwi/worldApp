@@ -358,7 +358,7 @@ function building(){
 function createCube(first){
     const geometry = new IcosahedronGeometry(2.5);
     const geometry2 = new TorusGeometry(6.5, .7);
-    const geometry3 = new PlaneGeometry(600, 600);
+    const geometry3 = new PlaneGeometry(1000, 1000);
     const geometry4 = new BoxGeometry(600, 100, 3);
     const geometry2a = new BoxGeometry(3, 100, 600);
     const geometry5 = new PlaneGeometry(120,120);
@@ -435,6 +435,10 @@ function createCube(first){
         color: 'blue',
         
     })
+    const pixelMaterial2 = new MeshStandardMaterial({
+        color: 'red',
+        
+    })
     const ceilingTexture = new MeshStandardMaterial({
         map: ceilingTexture1,
     })
@@ -458,15 +462,16 @@ function createCube(first){
     let wall4BB = new Box3(new Vector3(), new Vector3());
     buildingCeiling.position.set(35, 25, -65);
     buildingCeiling.rotation.x = (Math.PI/2)
+    buildingCeiling.visible = false;
     cube.position.set(0,10,0);
     cube2.position.set(0, 10, 0);
     box.position.set(100,10,100);
-    wall1.position.set(0,0,-300);
-    wall3.position.set(0,0,300);
-    wall2.position.set(300,0,0);
+    wall1.position.set(0,0,-500);
+    wall3.position.set(0,0,500);
+    wall2.position.set(500,0,0);
     console.log(objArr)
     //wall2.rotation.set(0,(Math.PI)/(360/180),0);
-    wall4.position.set(-300,0,0);
+    wall4.position.set(-500,0,0);
     //wall4.rotation.set(0,-(Math.PI)/(360/180),0);
     boxBB.setFromObject(box);
     boxBB.object = box
@@ -506,13 +511,13 @@ function createCube(first){
     wall3BB.position = wall3.position;
     wall4BB.position = wall4.position;
     let wall1and2CornerBB = new Box3(new Vector3(), new Vector3());
-    wall1and2CornerBB.setFromCenterAndSize(new Vector3(300, 0, -300), new Vector3(3, 30, 3));
+    wall1and2CornerBB.setFromCenterAndSize(new Vector3(500, 0, -500), new Vector3(3, 30, 3));
     let wall2and3CornerBB = new Box3(new Vector3(), new Vector3());
-    wall2and3CornerBB.setFromCenterAndSize(new Vector3(300, 0, 300), new Vector3(3, 30, 3));
+    wall2and3CornerBB.setFromCenterAndSize(new Vector3(500, 0, 500), new Vector3(3, 30, 3));
     let wall3and4CornerBB = new Box3(new Vector3(), new Vector3());
-    wall3and4CornerBB.setFromCenterAndSize(new Vector3(-300, 0, 300), new Vector3(3, 30, 3));
+    wall3and4CornerBB.setFromCenterAndSize(new Vector3(-500, 0, 500), new Vector3(3, 30, 3));
     let wall4and1CornerBB = new Box3(new Vector3(), new Vector3());
-    wall4and1CornerBB.setFromCenterAndSize(new Vector3(-300, 0, -300), new Vector3(3, 30, 3));
+    wall4and1CornerBB.setFromCenterAndSize(new Vector3(-500, 0, -500), new Vector3(3, 30, 3));
     wall1and2CornerBB.placement = ['north', 'east'];
     wall2and3CornerBB.placement = ['east', 'south'];
     wall3and4CornerBB.placement = ['south', 'west'];
@@ -541,15 +546,16 @@ function createCube(first){
         let width;
         let depth;
         if(objArr[i].direction == 'long'){
-            width = 3;
+            width = 10;
             depth = objArr[i].size;
         }
         else if(objArr[i].direction == 'wide'){
             width = objArr[i].size;
-            depth = 3;
+            depth = 10;
         }
         let objGeometry = new BoxGeometry(width, 50, depth);
-        let obj = new Mesh(objGeometry, pixelMaterial);
+        let obj
+        obj = new Mesh(objGeometry, pixelMaterial);
         obj.position.set(objArr[i].objPosition[0], 0, objArr[i].objPosition[1]);
         pixelMeshArr.push(obj);
         let wbb = new Box3(new Vector3(), new Vector3());
@@ -653,7 +659,7 @@ loader.load(
         return(cbbArr);
     }
     else if(first == 'building'){
-        return(building());
+        //return(building());
         //return(pixelMeshArr);
     }
     else if(first == 'ceiling'){

@@ -186,7 +186,7 @@ class World{
         //wall1_2BB = wbbArr[4];
         //cube.translateZ(-80);
         
-        const buildingArr = createCube('building');
+        //const buildingArr = createCube('building');
         const pixelArr = createCube('pixel');
         //buildingArr.push(pixelArr);
         const light = createLights(false);
@@ -208,12 +208,12 @@ class World{
         //console.log(wall1.position.)
         //console.log(boxInfo);
         scene.add(cube, cube2, floor, wall1, wall2, wall3, wall4, box, playerBox, ceiling, light, light3);
-        
+        /*
         for(let i=0; i<buildingArr.length; i++){
             //buildingArr[i].ignoreSides = false;
             scene.add(buildingArr[i]);
             objArr.push(buildingArr[i]);
-        }
+        }*/
         for(let i=0; i<pixelArr.length; i++){
             pixelArr[i].ignoreSides = false;
             scene.add(pixelArr[i]);

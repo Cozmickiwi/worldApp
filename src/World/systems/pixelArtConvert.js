@@ -135,7 +135,7 @@ else{
 }
 xPlacements.push([((sum/(pixelArr2[i].length)))-500, ((((pixelArr2[i])[0])[1])*10)-500])
 let xObj = {
-    objPosition: [(Math.ceil(sum/(pixelArr2[i].length)))-350, ((((pixelArr2[i])[0])[1])*10)-550],
+    objPosition: [(Math.ceil(sum/(pixelArr2[i].length)))-320, ((((pixelArr2[i])[0])[1])*10)-350],
     size: ((pixelArr2[i].length+1)*10),
     direction: dir,
 }
@@ -162,7 +162,7 @@ if(yArr2[i].length>1){
         size = ((yArr2[i])[yArr2[i].length]);
     }
 let yObj = {
-    objPosition: [((((yArr2[i])[0])[0])*10)-350, ((sum/(yArr2[i].length)))-550],
+    objPosition: [((((yArr2[i])[0])[0])*10)-320, ((sum/(yArr2[i].length)))-350],
     //size: Math.ceil((size-((yArr2[i])[0])[1]+1)*10),
     size: ((yArr2[i].length)*10),
     direction: dir,
