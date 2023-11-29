@@ -29,14 +29,17 @@ import {
 
 import{createScene} from '../components/scene.js'
 
-import{objArr} from '../systems/pixelArtConvert.js'
+import{
+    objArr,
+    cornerPositons
+} from '../systems/pixelArtConvert.js'
 
 
 let scene = new createScene(false);
 let wbbArr = [];
 let cbbArr = [];
 let iteration = 0;
-
+let pixelMeshes = [];
 
 const ceilingTexture1 = new TextureLoader().load(
         'src/World/components/assets/43419803ee9ecad5c8ce7c0ae409796dafec3bb1.png'
@@ -354,6 +357,33 @@ function building(){
     return(arr);
 }
 
+function pixelCorners(){
+    for(let i=0; i<cornerPositons.length; i++){
+        let xLoc;
+        let yLoc;
+        let location = cornerPositons[i].direction;
+        if(location[0] == 'west' && location[1] == 'north'){
+            xLoc = (cornerPositons[i].location)[0]-4.5;
+            yLoc = (cornerPositons[i].location)[1]-4.5;
+        }
+        else if(location[0] == 'north' && location[1] == 'east'){
+            xLoc = (cornerPositons[i].location)[0]+4.5;
+            yLoc = (cornerPositons[i].location)[1]-4.5;
+        }
+        else if(location[0] == 'east' && location[1] == 'south'){
+            xLoc = (cornerPositons[i].location)[0]+4.5;
+            yLoc = (cornerPositons[i].location)[1]+4.5;
+        }
+        else if(location[0] == 'south' && location[1] == 'west'){
+            xLoc = (cornerPositons[i].location)[0]-4.5;
+            yLoc = (cornerPositons[i].location)[1]+4.5;
+        }
+        let cBB = new Box3(new Vector3(), new Vector3());
+        cBB.setFromCenterAndSize(new Vector3(xLoc, 0, yLoc), new Vector3(.1, 30, .1));
+        cBB.placement = location;
+        cbbArr.push(cBB);
+    }
+}
 
 function createCube(first){
     const geometry = new IcosahedronGeometry(2.5);
@@ -431,10 +461,6 @@ function createCube(first){
         
     })
     const material7 = new MeshStandardMaterial();
-    const pixelMaterial = new MeshStandardMaterial({
-        color: 'blue',
-        
-    })
     const pixelMaterial2 = new MeshStandardMaterial({
         color: 'red',
         
@@ -553,8 +579,23 @@ function createCube(first){
             width = objArr[i].size;
             depth = 10;
         }
-        let objGeometry = new BoxGeometry(width, 50, depth);
-        let obj
+        let objGeometry = new BoxGeometry(width, 40, depth);
+        let obj;
+        let texture = textureLoader.load('/src/World/components/assets/wall0016.png');
+        texture.wrapS = RepeatWrapping;
+        texture.wrapT = RepeatWrapping;
+        texture.repeat.set((objArr[i].size/10), 4)
+        let color;
+        if(objArr[i].direction == 'wide'){
+            color = 'blue';
+        }
+        else{
+            color = 'red';
+        }
+        const pixelMaterial = new MeshStandardMaterial({
+            //color: color,
+            map: texture,
+        })
         obj = new Mesh(objGeometry, pixelMaterial);
         obj.position.set(objArr[i].objPosition[0], 0, objArr[i].objPosition[1]);
         pixelMeshArr.push(obj);
@@ -564,6 +605,13 @@ function createCube(first){
         wbb.position = obj.position;
         wbb.object = obj;
         wbbArr.push(wbb);
+        if(objArr[i].direction == 'wide'){
+            wbb.orientation = 'wide';
+        }
+        else{
+            wbb.orientation = 'long';
+        }
+        pixelMeshes.push(wbb);
     }
     console.log(pixelMeshArr);
     
@@ -610,6 +658,8 @@ loader.load(
 		console.log( 'An error happened' );
 	}
 );*/
+
+
     if(first == true){
         return (cube);
     }
@@ -655,7 +705,9 @@ loader.load(
         return(wbbArr);
     }
     else if(first == 'cbb'){
+        pixelCorners();
         cbbArr.push(wall1and2CornerBB, wall2and3CornerBB, wall3and4CornerBB, wall4and1CornerBB)
+        console.log(cbbArr)
         return(cbbArr);
     }
     else if(first == 'building'){
@@ -668,5 +720,37 @@ loader.load(
     else if(first == 'pixel'){
         return(pixelMeshArr);
     }
+
+
 }
 export{createCube};
+
+/*
+let pointArr = [];
+for(let i=0; i<10000; i++){
+    pointArr[i] = 0;
+}
+let x=0;
+let y=1
+let arr2 = []
+function cornerFinder(){
+    for(let a=0; a<pixelMeshes.length; a++){
+        for(let b=0; b<pointArr.length; b++){
+            x++;
+            if(x>100){
+                y++;
+                x=1;
+            }
+            let vector = new Vector3((x*10)-320, 0, (y*10)-350);
+            if(pixelMeshes[a].containsPoint(vector)){
+                arr2.push([x,y]);
+                pointArr[b] = 1;
+            }
+        }
+        x=0;
+        y=1;
+    }
+    console.log(arr2);
+    console.log(pointArr)
+}
+//cornerFinder();*/
