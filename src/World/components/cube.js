@@ -15,6 +15,8 @@ import {
     Box3Helper,
     ShapeGeometry,
     Group,
+    Vector2,
+    CubeTextureLoader
 
 } from '../../../node_modules/three/build/three.module.js';
 
@@ -40,6 +42,8 @@ let wbbArr = [];
 let cbbArr = [];
 let iteration = 0;
 let pixelMeshes = [];
+let wbbArr2 = [];
+let pixelMeshArr = [];
 
 const ceilingTexture1 = new TextureLoader().load(
         'src/World/components/assets/43419803ee9ecad5c8ce7c0ae409796dafec3bb1.png'
@@ -379,11 +383,13 @@ function pixelCorners(){
             yLoc = (cornerPositons[i].location)[1]+4.5;
         }
         let cBB = new Box3(new Vector3(), new Vector3());
-        cBB.setFromCenterAndSize(new Vector3(xLoc, 0, yLoc), new Vector3(.1, 30, .1));
+        cBB.setFromCenterAndSize(new Vector3(xLoc, 0, yLoc), new Vector3(3, 30, 3));
         cBB.placement = location;
         cbbArr.push(cBB);
     }
 }
+
+
 
 function createCube(first){
     const geometry = new IcosahedronGeometry(2.5);
@@ -394,7 +400,7 @@ function createCube(first){
     const geometry5 = new PlaneGeometry(120,120);
     const geometry6 = new BoxGeometry(6, 20, 6);
     const playerBox = new BoxGeometry(6, 10, 6);
-    const ceiling = new PlaneGeometry(430, 430);
+    const ceiling = new PlaneGeometry(1000, 1000);
     const textureLoader = new TextureLoader();
     const texture = textureLoader.load(
         '/src/World/components/assets/space-cruiser-panels2-unity/space-cruiser-panels2_albedo.png',
@@ -440,11 +446,12 @@ function createCube(first){
         wireframeLinecap: 'round',
         roughness: .8,
     });
-    const material3 = new MeshStandardMaterial({
-        color: 'grey',
+    const material3 = new MeshBasicMaterial({
+        //color: 'grey',
         //wireframe: true,
         //roughness: 1,
-        map: floorTexture,
+        //map: floorTexture,
+        color: 'skyblue'
     });
     const material4 = new MeshStandardMaterial({
         color: 'LightSteelBlue',
@@ -465,8 +472,9 @@ function createCube(first){
         color: 'red',
         
     })
-    const ceilingTexture = new MeshStandardMaterial({
-        map: ceilingTexture1,
+    const ceilingTexture = new MeshBasicMaterial({
+        //map: ceilingTexture1,
+        color: 'skyblue'
     })
     const cube = new Mesh(geometry, material);
     const cube2 = new Mesh(geometry2, material2);
@@ -488,7 +496,7 @@ function createCube(first){
     let wall4BB = new Box3(new Vector3(), new Vector3());
     buildingCeiling.position.set(35, 25, -65);
     buildingCeiling.rotation.x = (Math.PI/2)
-    buildingCeiling.visible = false;
+    //buildingCeiling.visible = false;
     cube.position.set(0,10,0);
     cube2.position.set(0, 10, 0);
     box.position.set(100,10,100);
@@ -567,8 +575,12 @@ function createCube(first){
     //pBox.material.side = DoubleSide;
     pBox.material.visible = false;
     playerBB.name = 'playerBB'
-    let pixelMeshArr = [];
+    //let pixelMeshArr = [];
+    function addPixelMeshes(){
+    wbbArr = [];
+    wbbArr2 = [];
     for(let i=0; i<objArr.length; i++){
+        
         let width;
         let depth;
         if(objArr[i].direction == 'long'){
@@ -582,6 +594,107 @@ function createCube(first){
         let objGeometry = new BoxGeometry(width, 40, depth);
         let obj;
         let texture = textureLoader.load('/src/World/components/assets/wall0016.png');
+        /*
+        let materialLeft = new TextureLoader().load('/src/World/components/assets/wall0016.png');
+        materialLeft.repeat.set(new Vector2(1, 4))
+        let materialRight = new TextureLoader().load('/src/World/components/assets/wall0016.png');
+        materialRight.repeat.set(new Vector2(1, 4))
+        let materialBack = new TextureLoader().load('/src/World/components/assets/wall0016.png');
+        materialBack.repeat.set(new Vector2((objArr[i].size/10), 4))
+        let materialFront = new TextureLoader().load('/src/World/components/assets/wall0016.png');
+        materialFront.repeat.set(new Vector2((objArr[i].size/10), 4))
+        let materialTop = new TextureLoader().load('/src/World/components/assets/wall0016.png');
+        materialTop.repeat.set(new Vector2((objArr[i].size/10), 4))
+        let materialBottom = new TextureLoader().load('/src/World/components/assets/wall0016.png');
+        materialBottom.repeat.set(new Vector2((objArr[i].size/10), 4))
+        let textureArr;
+        if(objArr[i].direction == 'long'){
+            textureArr = [
+                materialFront,
+                materialBack,
+                materialTop,
+                materialBottom,
+                materialLeft,
+                materialRight,
+            ]
+            for(let g=0; g<textureArr.length; g++){
+                textureArr[g].wrapS = RepeatWrapping;
+                textureArr[g].wrapT = RepeatWrapping;
+            }
+        }
+        else{
+            textureArr = [
+                materialLeft,
+                materialRight,
+                materialTop,
+                materialBottom,
+                materialFront,
+                materialBack,
+            ]
+        }
+        for(let c=0; c<textureArr.length; c++){
+            textureArr[c].wrapS = RepeatWrapping;
+            textureArr[c].wrapT = RepeatWrapping;
+        }
+        let materialFront1 = new MeshStandardMaterial({
+            map: materialFront,
+            side: DoubleSide,
+            //color: 'blue'
+        });
+          
+          var materialBack1 = new MeshStandardMaterial({
+            map: materialBack,
+            side: DoubleSide,
+            //color: 'blue'
+          });
+          
+          var materialTop1 = new MeshStandardMaterial({
+           map: materialTop,
+            side: DoubleSide,
+            //color: 'blue'
+          });
+          
+          var materialBottom1 = new MeshStandardMaterial({
+            map: materialBottom,
+            side: DoubleSide,
+            //color: 'blue'
+          });
+          
+          var materialRight1 = new MeshStandardMaterial({
+            map: materialRight,
+            side: DoubleSide,
+            //color: 'blue'
+          });
+          
+          var materialLeft1 = new MeshStandardMaterial({
+            map: materialLeft,
+            side: DoubleSide,
+            transparent: true,
+            //color: 'blue'
+          });
+        
+          var materials1 = [
+            materialFront1,
+            materialBack1,
+            materialTop1,
+            materialBottom1,
+            materialRight1,
+            materialLeft1,
+          ];
+//*/
+          
+
+/*
+
+        let texture1 = new CubeTextureLoader()
+            .load([
+                materialLeft,
+                materialRight,
+                materialTop,
+                materialBottom,
+                materialFront,
+                materialBack,
+            ])*/
         texture.wrapS = RepeatWrapping;
         texture.wrapT = RepeatWrapping;
         texture.repeat.set((objArr[i].size/10), 4)
@@ -595,26 +708,35 @@ function createCube(first){
         const pixelMaterial = new MeshStandardMaterial({
             //color: color,
             map: texture,
+            //siz
         })
-        obj = new Mesh(objGeometry, pixelMaterial);
-        obj.position.set(objArr[i].objPosition[0], 0, objArr[i].objPosition[1]);
-        pixelMeshArr.push(obj);
-        let wbb = new Box3(new Vector3(), new Vector3());
-        wbb.setFromObject(obj);
-        wbb.ignorePositions = false;
-        wbb.position = obj.position;
-        wbb.object = obj;
-        wbbArr.push(wbb);
-        if(objArr[i].direction == 'wide'){
-            wbb.orientation = 'wide';
-        }
-        else{
-            wbb.orientation = 'long';
-        }
-        pixelMeshes.push(wbb);
+        //if(iteration == 0){
+            //wbbArr = [];
+            obj = new Mesh(objGeometry, pixelMaterial);
+            obj.position.set(objArr[i].objPosition[0], 0, objArr[i].objPosition[1]);
+            pixelMeshArr.push(obj);
+            let wbb = new Box3(new Vector3(), new Vector3());
+            wbb.setFromObject(obj);
+            wbb.ignorePositions = false;
+            wbb.position = obj.position;
+            wbb.object = obj;
+            if(objArr[i].direction == 'wide'){
+                wbb.orientation = 'wide';
+            }
+            else{
+                wbb.orientation = 'long';
+            }
+            //wbbArr2.splice(0);
+            wbbArr.push(wbb);
+            pixelMeshes.push(wbb);
+            //iteration++;
+        //}
+        
     }
+    console.log(wbbArr)
+}
     console.log(pixelMeshArr);
-    
+    console.log(wbbArr)
     
     // instantiate a loader
     /*
@@ -659,7 +781,7 @@ loader.load(
 	}
 );*/
 
-
+    console.log(iteration)
     if(first == true){
         return (cube);
     }
@@ -699,16 +821,35 @@ loader.load(
     else if(first == 'pbb'){
         return(playerBB)
     }
+    else if(first == 'pixel'){
+        addPixelMeshes();
+        return(pixelMeshArr);
+    }
     else if(first == 'wbb'){
+        addPixelMeshes();
         wbbArr.push(wall1BB, wall2BB, wall3BB, wall4BB)
-        //console.log()
+        console.log(wbbArr)
+        //console.log(wbbArr[9])
+        //wbbArr.push(wbbArr2)
+        //console.log(wbbArr.length)
         return(wbbArr);
     }
     else if(first == 'cbb'){
         pixelCorners();
+        let cbbArr2 = [];
+        for(let i=0; i<cbbArr.length; i++){
+            let comparitor = cbbArr[i];
+            for(let a=0; a<cbbArr.length; a++){
+                if(a!=i && cbbArr[a].intersectsBox(comparitor)){
+                    cbbArr2.push([comparitor, cbbArr[a]]);
+                }
+            }
+        }
+        console.log(cbbArr2);
         cbbArr.push(wall1and2CornerBB, wall2and3CornerBB, wall3and4CornerBB, wall4and1CornerBB)
         console.log(cbbArr)
         return(cbbArr);
+
     }
     else if(first == 'building'){
         //return(building());
@@ -717,9 +858,7 @@ loader.load(
     else if(first == 'ceiling'){
         return(buildingCeiling);
     }
-    else if(first == 'pixel'){
-        return(pixelMeshArr);
-    }
+    
 
 
 }
