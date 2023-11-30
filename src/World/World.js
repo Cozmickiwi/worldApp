@@ -175,6 +175,7 @@ class World{
         playerBox.name = 'playerBox';
         console.log(playerBB);
         wbbArr = createCube('wbb');
+        console.log(wbbArr)
         cbbarr = createCube('cbb')
         objArr.push(box, wall1, wall2, wall3, wall4);
         /*
