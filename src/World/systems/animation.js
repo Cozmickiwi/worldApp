@@ -329,15 +329,21 @@ function cameraAnim(timeScale){
                 }
                 else if((wallArr[i].containsPoint(vector2a) || wallArr[i].containsPoint(vector2b)) && !(wallArr[i].containsPoint(vector1))){
                     //console.log('hiiiiii')
-                    wallArr2.push(closestFace)
+                    //wallArr2.push(closestFace)
+                    //addEast = 'west';
+                    addEast = true;
                 }
                 else if((wallArr[i].containsPoint(vector3a) || wallArr[i].containsPoint(vector3b)) && !(wallArr[i].containsPoint(vector4))){
                     //console.log('hi')
-                    wallArr2.push(closestFace)
+                    //wallArr2.push(closestFace)
+                    //addEast = 'south';
+                    addEast = true;
                 }
                 else if((wallArr[i].containsPoint(vector4a) || wallArr[i].containsPoint(vector4b)) && !(wallArr[i].containsPoint(vector3))){
                     //console.log('hiiiiii')
-                    wallArr2.push(closestFace)
+                    //wallArr2.push(closestFace)
+                    //addEast = 'north';
+                    addEast = true;
                 }
                 
             }
