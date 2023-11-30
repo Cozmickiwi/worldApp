@@ -214,7 +214,10 @@ function collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, ca
                 return;
             }
             else if(cornerCol[0] == 'west' && cornerCol[1] == 'north'){
-                if(worldPosX<0 && worldPosZ>0){
+                if(worldPosX<0 && worldPosZ<0){
+                    cameraMod.translateZ(.25)
+                }
+                else if(worldPosX<0 && worldPosZ>0){
                     cameraMod.position.x += .25*worldPosZ;
                 }
                 else if(worldPosX>0){
