@@ -92,24 +92,54 @@ function collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, ca
             }
             else{
                 selectedWorldPos = worldPosZ
+                /*
+                if(cameraMod.position.z < obj.min.z){
+                    cameraMod.position.z -= .5//*(worldPosX * -1)
+                    selectedWorldPos = 0;
+                }
+                else if(cameraMod.position.z > obj.max.z){
+                    cameraMod.position.z += .5//*worldPosX
+                    selectedWorldPos = 0;
+                }*/
+                //cameraMod.position.x = obj.min.x-3;
             }
         }
         else if(face == 'north'){
             multiplyAmount = 1;
+            //cameraMod.position.z = obj.max.z+3
             if((cameraMod.rotation.x > 1.6 || cameraMod.rotation.x < -1.6)){
                     cameraSkipSide = true;
             }
             else{
-                selectedWorldPos = worldPosX;
+                selectedWorldPos = worldPosX;/*
+                if(cameraMod.position.x < obj.max.x){
+                    cameraMod.position.x -= .5*(worldPosX * -1)
+                    selectedWorldPos = 0;
+                }
+                else if(cameraMod.position.x > obj.min.x){
+                    //console.log('hi')
+                    cameraMod.position.x += .1
+                    selectedWorldPos = 0;
+                }*/
             }
         }
         else if(face == 'west'){
             multiplyAmount = -1;
+            //console.log('west')
             if(deg(cameraMod.rotation.y)<0){
                 cameraSkipSide = true;
             }
             else{
-                selectedWorldPos = (worldPosZ * -1);
+                selectedWorldPos = (worldPosZ * -1);/*
+                if(cameraMod.position.z < obj.min.z){
+                    cameraMod.position.z -= .5//*(worldPosX * -1)
+                    selectedWorldPos = 0;
+                }
+                else if(cameraMod.position.z > obj.max.z){
+                    cameraMod.position.z += .5//*worldPosX
+                    selectedWorldPos = 0;
+                }*/
+                //cameraMod.position.x = obj.max.x+3;
             }
         }
         else{
@@ -119,6 +149,14 @@ function collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, ca
             }
             else{
                 selectedWorldPos = (worldPosX * -1);
+                if(cameraMod.position.x < obj.min.x){
+                    cameraMod.position.x -= .5*(worldPosX * -1)
+                    selectedWorldPos = 0;
+                }
+                else if(cameraMod.position.x > obj.max.x){
+                    cameraMod.position.x += .5*worldPosX
+                    selectedWorldPos = 0;
+                }
             }
         }
         if(cameraSkipSide==false){
@@ -172,7 +210,7 @@ function collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, ca
                 else if(worldPosX<0){
                     cameraMod.position.x += .25*(worldPosX * -1);
                 }
-                console.log(obj)
+                //console.log(obj)
                 return;
             }
             else if(cornerCol[0] == 'west' && cornerCol[1] == 'north'){
