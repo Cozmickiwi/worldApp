@@ -78,6 +78,31 @@ for(let a=0; a< pixelArr.length; a++){
 }
 //console.log(pixelArr2)
 //console.log(yArr);
+let xList = [];
+
+for(let j=0; j<pixelArr2.length; j++){
+    for(let m=0; m<pixelArr2[j].length; m++){
+        xList.push((pixelArr2[j])[m]);
+    }
+}
+
+console.log(xList);
+
+
+for(let a=0; a<yArr.length; a++){
+    let restart = false;
+    let comparitor = yArr[a];
+    for(let i=0; i<xList.length; i++){
+        if(comparitor[0] == (xList[i])[0] && comparitor[1] == (xList[i])[1]){
+            yArr.splice(a, 1);
+            a=-1;
+            break;
+        }
+    }
+}
+
+
+
 yArr.sort((a, b) => a[0] - b[0])
 let yArr2 = [];
 let yArrSub = [];
@@ -105,7 +130,7 @@ let skipped;
       }
       else{
         //if((yArr[j])[1] == ((yArrSub[yArrSub.length-1])[1]+1) && j != yArr.length-1){
-            if((yArr[j])[1] == ((yArr[j-1])[1]+1) && j != yArr.length-1){
+            if((yArr[j])[1] == ((yArr[j-1])[1]+1) && j != yArr.length-1 && (yArr[j])[0] == (yArr[j-1])[0]){
             yArrSub.push(yArr[j])
         }
         else{
@@ -173,10 +198,11 @@ for(let y=0; y<yArr2.length; y++){
     }
 }
 }
+//filter();
 for(let i=0; i<pixelArr2.length; i++){
 let sum = 0
     for(let a=0; a<pixelArr2[i].length; a++){
-    sum += ((((pixelArr2[i])[a])[0])-.5)*10;
+    sum += ((((pixelArr2[i])[a])[0]))*10;
 }
 let dir;
 if(pixelArr2[i].length<2){
@@ -188,7 +214,7 @@ else{
 xPlacements.push([((sum/(pixelArr2[i].length)))-500, ((((pixelArr2[i])[0])[1])*10)-500])
 let xObj = {
     objPosition: [(Math.ceil(sum/(pixelArr2[i].length)))-320, ((((pixelArr2[i])[0])[1])*10)-350],
-    size: ((pixelArr2[i].length+1)*10),
+    size: ((pixelArr2[i].length)*10),
     direction: dir,
 }
 objArr.push(xObj);
