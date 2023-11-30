@@ -13,11 +13,19 @@ function deg(num){
     return(num * (180/Math.PI));
 }
 
-function collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, cameraMod, cameraBobAmount, face, yPos, connectorWall, obj, cbbarr){
+function collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, cameraMod, cameraBobAmount, face, yPos, connectorWall, obj, cbbarr, wArr2){
     let cornerInt = false;
     let cornerCol;
     let playerBB;
     let n;
+    if(connectorWall == true){
+        if(wArr2.length>1){
+            cornerCol = wArr2;
+            cornerInt = true;
+        }
+    }
+    
+    /*
     if(connectorWall == true){
         n = cbbarr.length-1;
         playerBB = cbbarr[n];
@@ -27,7 +35,7 @@ function collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, ca
                 cornerInt = true;
             }
         }
-    }
+    }*/
     if(cameraMod.position.y < 10){
         cameraMod.position.y = 10;
     }
@@ -38,7 +46,8 @@ function collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, ca
         worldPosX = cameraMod.getWorldDirection(vector).x;
         worldPosZ = cameraMod.getWorldDirection(vector).z;
         if(cornerInt == true){
-            if(cornerCol.placement[0] == 'north' && cornerCol.placement[1] == 'east'){
+            //console.log(cornerCol)
+            if(cornerCol[0] == 'north' && cornerCol[1] == 'east'){
                 if(worldPosX>0 && worldPosZ>0){
                     cameraMod.position.z += .25*worldPosZ;
                 }
@@ -47,7 +56,7 @@ function collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, ca
                 }
                 return;
             }
-            else if(cornerCol.placement[0] == 'east' && cornerCol.placement[1] == 'south'){
+            else if(cornerCol[0] == 'east' && cornerCol[1] == 'south'){
                 if(worldPosZ>0 && worldPosX<0){
                     cameraMod.position.x -= .25*(worldPosX * -1);
                 }
@@ -56,7 +65,7 @@ function collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, ca
                 }
                 return;
             }
-            else if(cornerCol.placement[0] == 'south' && cornerCol.placement[1] == 'west'){
+            else if(cornerCol[0] == 'south' && cornerCol[1] == 'west'){
                 if(worldPosZ<0 && worldPosX<0){
                     cameraMod.position.z -= .25*(worldPosZ * -1);
                 }
@@ -65,7 +74,7 @@ function collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, ca
                 }
                 return;
             }
-            else if(cornerCol.placement[0] == 'west' && cornerCol.placement[1] == 'north'){
+            else if(cornerCol[0] == 'west' && cornerCol[1] == 'north'){
                 if(worldPosZ<0 && worldPosX>0){
                     cameraMod.position.x += .25*worldPosX;
                 }
@@ -129,7 +138,7 @@ function collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, ca
         worldPosX = cameraMod.getWorldDirection(vector).x;
         worldPosZ = cameraMod.getWorldDirection(vector).z;
         if(cornerInt == true){
-            if(cornerCol.placement[0] == 'north' && cornerCol.placement[1] == 'east'){
+            if(cornerCol[0] == 'north' && cornerCol[1] == 'east'){
                 if(worldPosX>0 && worldPosZ<0){
                     cameraMod.translateZ(.25)
                 }
@@ -141,7 +150,7 @@ function collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, ca
                 }
                 return;
             }
-            else if(cornerCol.placement[0] == 'east' && cornerCol.placement[1] == 'south'){
+            else if(cornerCol[0] == 'east' && cornerCol[1] == 'south'){
                 if(worldPosZ>0 && worldPosX>0){
                     cameraMod.translateZ(.25)
                 }
@@ -153,7 +162,7 @@ function collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, ca
                 }
                 return;
             }
-            else if(cornerCol.placement[0] == 'south' && cornerCol.placement[1] == 'west'){
+            else if(cornerCol[0] == 'south' && cornerCol[1] == 'west'){
                 if(worldPosX<0 && worldPosZ>0){
                     cameraMod.translateZ(.25)
                 }
@@ -166,7 +175,7 @@ function collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, ca
                 console.log(obj)
                 return;
             }
-            else if(cornerCol.placement[0] == 'west' && cornerCol.placement[1] == 'north'){
+            else if(cornerCol[0] == 'west' && cornerCol[1] == 'north'){
                 if(worldPosX<0 && worldPosZ>0){
                     cameraMod.position.x += .25*worldPosZ;
                 }
@@ -231,7 +240,7 @@ function collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, ca
         worldPosX = cameraMod.getWorldDirection(vector).x;
         worldPosZ = cameraMod.getWorldDirection(vector).z;
         if(cornerInt == true){
-            if(cornerCol.placement[0] == 'north' && cornerCol.placement[1] == 'east'){
+            if(cornerCol[0] == 'north' && cornerCol[1] == 'east'){
                 if(worldPosX>0 && worldPosZ<0){
                     cameraMod.position.z += .25*worldPosX;
                 }
@@ -240,7 +249,7 @@ function collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, ca
                 }
                 return;
             }
-            else if(cornerCol.placement[0] == 'east' && cornerCol.placement[1] == 'south'){
+            else if(cornerCol[0] == 'east' && cornerCol[1] == 'south'){
                 if(worldPosZ>0 && worldPosX>0){
                     cameraMod.position.x -= .25*worldPosZ;
                 }
@@ -249,7 +258,7 @@ function collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, ca
                 }
                 return;
             }
-            else if(cornerCol.placement[0] == 'south' && cornerCol.placement[1] == 'west'){
+            else if(cornerCol[0] == 'south' && cornerCol[1] == 'west'){
                 if(worldPosZ>0 && worldPosX<0){
                     cameraMod.position.z -= .25*(worldPosX * -1);
                 }
@@ -258,7 +267,7 @@ function collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, ca
                 }
                 return;
             }
-            else if(cornerCol.placement[0] == 'west' && cornerCol.placement[1] == 'north'){
+            else if(cornerCol[0] == 'west' && cornerCol[1] == 'north'){
                 if(worldPosZ<0 && worldPosX<0){
                     cameraMod.position.x += .25*(worldPosX * -1);
                 }
@@ -325,7 +334,7 @@ function collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, ca
         worldPosX = cameraMod.getWorldDirection(vector).x;
         worldPosZ = cameraMod.getWorldDirection(vector).z;
         if(cornerInt == true){
-            if(cornerCol.placement[0] == 'north' && cornerCol.placement[1] == 'east'){
+            if(cornerCol[0] == 'north' && cornerCol[1] == 'east'){
                 if(worldPosX<0 && worldPosZ>0){
                     cameraMod.position.z += .25*(worldPosX * -1);
                 }
@@ -334,7 +343,7 @@ function collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, ca
                 }
                 return;
             }
-            else if(cornerCol.placement[0] == 'east' && cornerCol.placement[1] == 'south'){
+            else if(cornerCol[0] == 'east' && cornerCol[1] == 'south'){
                 if(worldPosZ<0 && worldPosX<0){
                     cameraMod.position.x -= .25*(worldPosZ * -1);
                 }
@@ -343,7 +352,7 @@ function collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, ca
                 }
                 return;
             }
-            else if(cornerCol.placement[0] == 'south' && cornerCol.placement[1] == 'west'){
+            else if(cornerCol[0] == 'south' && cornerCol[1] == 'west'){
                 if(worldPosZ<0 && worldPosX>0){
                     cameraMod.position.z -= .25*worldPosX;
                 }
@@ -352,7 +361,7 @@ function collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, ca
                 }
                 return;
             }
-            else if(cornerCol.placement[0] == 'west' && cornerCol.placement[1] == 'north'){
+            else if(cornerCol[0] == 'west' && cornerCol[1] == 'north'){
                 if(worldPosZ>0 && worldPosX>0){
                     cameraMod.position.x += .25*worldPosZ;
                 }

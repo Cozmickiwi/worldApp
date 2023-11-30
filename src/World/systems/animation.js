@@ -201,10 +201,6 @@ function shape2(timeScale){
     cube2.rotation.z += (shape2ZRot * timeScale);
 }
 
-function gunAnimation(){
-
-}
-
 function cameraAnim(timeScale){
     function cameraBobFun(end){
         if(cameraBob<=.5 && cameraBobDown == false && end == false){
@@ -222,11 +218,35 @@ function cameraAnim(timeScale){
             cameraBob -= (cameraBobAmount*timeScale);
         }
     }
+    let wallArr2 = [];
     for(let i=0; i<wallArr.length; i++){
         if(playerBB.intersectsBox(wallArr[i])){
             wallInt = true;
             boxInt = wallInt[i];
+            let vector1 = new Vector3(playerBB.max.x, 0, playerBox.position.z)
+            let vector2 = new Vector3(playerBB.min.x, 0, playerBox.position.z)
+            let vector3 = new Vector3(playerBox.position.x, 0, playerBB.max.z)
+            let vector4 = new Vector3(playerBox.position.x, 0, playerBB.min.z)
+            if(wallArr[i].containsPoint(vector1) && !(wallArr[i].containsPoint(vector2))){
+                wallArr2.push('east');
+            }
+            else if(wallArr[i].containsPoint(vector2) && !(wallArr[i].containsPoint(vector1))){
+                wallArr2.push('west')
+            }
+            else if(wallArr[i].containsPoint(vector3) && !(wallArr[i].containsPoint(vector4))){
+                wallArr2.push('south')
+            }
+            else if(wallArr[i].containsPoint(vector4) && !(wallArr[i].containsPoint(vector3))){
+                wallArr2.push('north')
+            }
         }
+    }
+    if(wallArr2.length>1){
+        if((wallArr2[0] == 'north' && wallArr2[1] == 'west') || (wallArr2[0] == 'east' && wallArr2[1] == 'north')
+        || (wallArr2[0] == 'south' && wallArr2[1] == 'east') || (wallArr2[0] == 'west' && wallArr2[1] == 'south')){
+            wallArr2.reverse();
+        }
+        //console.log(wallArr2);
     }
     if(doomControls == true){
         if(cameraPosX == true){
@@ -273,9 +293,9 @@ function cameraAnim(timeScale){
         cameraBobFun(false);
     }
     else if(wallInt == true){
-                collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, cameraMod, cameraBobAmount, closestFace, cameraMod.position.y, true, boxInt, cbbarr);
-                cameraBobFun(false);
-                boxInt = undefined;
+        collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, cameraMod, cameraBobAmount, wallArr2[0], cameraMod.position.y, true, boxInt, cbbarr, wallArr2);
+        cameraBobFun(false);
+        boxInt = undefined;
     }
     if(cameraBob > 0 && (cameraFoward == false && cameraBack == false && cameraPosX == false && cameraPosXRev == false ||
     doomControls == true && cameraFoward == false && cameraBack == false)){
