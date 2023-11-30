@@ -219,10 +219,11 @@ function cameraAnim(timeScale){
         }
     }
     let wallArr2 = [];
+    let addEast = false;
     for(let i=0; i<wallArr.length; i++){
         if(playerBB.intersectsBox(wallArr[i])){
             wallInt = true;
-            boxInt = wallInt[i];
+            boxInt = wallArr[i];/*
             let vector1 = new Vector3(playerBB.max.x, 0, playerBB.max.z)
             let vector2 = new Vector3(playerBB.min.x, 0, playerBB.max.z)
             let vector3 = new Vector3(playerBB.max.x, 0, playerBB.max.z)
@@ -231,6 +232,16 @@ function cameraAnim(timeScale){
             let vector2a = new Vector3(playerBB.min.x, 0, playerBB.min.z)
             let vector3a = new Vector3(playerBB.min.x, 0, playerBB.max.z)
             let vector4a = new Vector3(playerBB.min.x, 0, playerBB.min.z)
+            
+            let vector1 = new Vector3(playerBB.max.x, 0, (playerBox.position.z+2.8))
+            let vector2 = new Vector3(playerBB.min.x, 0, (playerBox.position.z+2.8))
+            let vector3 = new Vector3((playerBox.position.x+2.8), 0, playerBB.max.z)
+            let vector4 = new Vector3((playerBox.position.x+2.8), 0, playerBB.min.z)
+            let vector1a = new Vector3(playerBB.max.x, 0, (playerBox.position.z-2.8))
+            let vector2a = new Vector3(playerBB.min.x, 0, (playerBox.position.z-2.8))
+            let vector3a = new Vector3((playerBox.position.x-2.8), 0, playerBB.max.z)
+            let vector4a = new Vector3((playerBox.position.x-2.8), 0, playerBB.min.z)
+            
             if((wallArr[i].containsPoint(vector1) || wallArr[i].containsPoint(vector1a)) && !(wallArr[i].containsPoint(vector2) || wallArr[i].containsPoint(vector2a))){
                 wallArr2.push('east');
             }
@@ -243,7 +254,98 @@ function cameraAnim(timeScale){
             else if((wallArr[i].containsPoint(vector4) || wallArr[i].containsPoint(vector4a)) && !(wallArr[i].containsPoint(vector3) || wallArr[i].containsPoint(vector3a))){
                 wallArr2.push('north')
             }
+            let vector1 = new Vector3(playerBB.max.x, 0, playerBox.position.z)
+            let vector2 = new Vector3(playerBB.min.x, 0, playerBox.position.z)
+            let vector3 = new Vector3(playerBox.position.x, 0, playerBB.max.z)
+            let vector4 = new Vector3(playerBox.position.x, 0, playerBB.min.z)
+            
+            let vector1 = new Vector3(playerBB.max.x, 0, (wallArr[i].object).position.z)
+            let vector2 = new Vector3(playerBB.min.x, 0, (wallArr[i].object).position.z)
+            let vector3 = new Vector3((wallArr[i].object).position.x, 0, playerBB.max.z)
+            let vector4 = new Vector3((wallArr[i].object).position.x, 0, playerBB.min.z)
+            */
+            let vector1 = new Vector3(playerBB.max.x, 0, playerBox.position.z)
+            let vector1a = new Vector3(playerBB.max.x, 0, playerBox.position.z-3)
+            let vector1b = new Vector3(playerBB.max.x, 0, playerBox.position.z+3)
+            let vector2 = new Vector3(playerBB.min.x, 0, playerBox.position.z)
+            let vector2a = new Vector3(playerBB.min.x, 0, playerBox.position.z-3)
+            let vector2b = new Vector3(playerBB.min.x, 0, playerBox.position.z+3)
+            let vector3 = new Vector3(playerBox.position.x, 0, playerBB.max.z)
+            let vector3a = new Vector3(playerBox.position.x-3, 0, playerBB.max.z)
+            let vector3b = new Vector3(playerBox.position.x+3, 0, playerBB.max.z)
+            let vector4 = new Vector3(playerBox.position.x, 0, playerBB.min.z)
+            let vector4a = new Vector3(playerBox.position.x-3, 0, playerBB.min.z)
+            let vector4b = new Vector3(playerBox.position.x+3, 0, playerBB.min.z)
+            
+
+            /*
+            if((wallArr[i].containsPoint(vector1a) || wallArr[i].containsPoint(vector1b)) && !(wallArr[i].containsPoint(vector2))){
+                wallArr2.push('east');
+            }
+            else if((wallArr[i].containsPoint(vector2a) || wallArr[i].containsPoint(vector2b)) && !(wallArr[i].containsPoint(vector1))){
+                wallArr2.push('west')
+                //console.log('west')
+            }
+            else if((wallArr[i].containsPoint(vector3a) || wallArr[i].containsPoint(vector3b)) && !(wallArr[i].containsPoint(vector4))){
+                wallArr2.push('south')
+            }
+            else if((wallArr[i].containsPoint(vector4a) || wallArr[i].containsPoint(vector4b)) && !(wallArr[i].containsPoint(vector3))){
+                wallArr2.push('north')
+            }
+            else{
+                console.log('no direction')
+            }
+            */
+            if(wallArr[i].containsPoint(vector1) && !(wallArr[i].containsPoint(vector2))){
+                wallArr2.push('east');
+            }
+            else if(wallArr[i].containsPoint(vector2) && !(wallArr[i].containsPoint(vector1))){
+                wallArr2.push('west')
+            }
+            else if(wallArr[i].containsPoint(vector3) && !(wallArr[i].containsPoint(vector4))){
+                wallArr2.push('south')
+            }
+            else if(wallArr[i].containsPoint(vector4) && !(wallArr[i].containsPoint(vector3))){
+            //else if((wallArr[i].containsPoint(vector4a) || wallArr[i].containsPoint(vector4b)) && !(wallArr[i].containsPoint(vector3))){
+                wallArr2.push('north')
+            }
+            else{
+                //wallArr2.push(closestFace);
+                /*
+                if(wallArr[i].containsPoint(vector4a) || wallArr[i].containsPoint(vector4b) && !(wallArr[i].containsPoint(vector3))){
+                    if(!(wallArr[i].containsPoint(vector2a) || wallArr[i].containsPoint(vector2b)) && !(wallArr[i].containsPoint(vector1))
+                    ){
+                        if(!((wallArr[i].containsPoint(vector1a) || wallArr[i].containsPoint(vector1b)))){
+                            console.log(closestFace)
+                            //wallArr2.push(closestFace)
+                        }
+                        
+                    }
+                }
+                else*/ if((wallArr[i].containsPoint(vector1a) && !(wallArr[i].containsPoint(vector1b))) && !(wallArr[i].containsPoint(vector2))){
+                    //console.log('hi')
+                    //wallArr2.push('east')
+                    addEast = true;
+                }
+                else if((wallArr[i].containsPoint(vector2a) || wallArr[i].containsPoint(vector2b)) && !(wallArr[i].containsPoint(vector1))){
+                    //console.log('hiiiiii')
+                    wallArr2.push(closestFace)
+                }
+                else if((wallArr[i].containsPoint(vector3a) || wallArr[i].containsPoint(vector3b)) && !(wallArr[i].containsPoint(vector4))){
+                    //console.log('hi')
+                    wallArr2.push(closestFace)
+                }
+                else if((wallArr[i].containsPoint(vector4a) || wallArr[i].containsPoint(vector4b)) && !(wallArr[i].containsPoint(vector3))){
+                    //console.log('hiiiiii')
+                    wallArr2.push(closestFace)
+                }
+                
+            }
+            
         }
+    }
+    if(wallArr2.length<1 && addEast == true){
+        wallArr2.push(closestFace)
     }
     if(wallArr2.length>1){
         if((wallArr2[0] == 'north' && wallArr2[1] == 'west') || (wallArr2[0] == 'east' && wallArr2[1] == 'north')
