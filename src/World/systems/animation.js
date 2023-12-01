@@ -140,12 +140,6 @@ window.addEventListener('keyup', (event) => {
         cameraBack = false;
     }
 })
-/*
-window.addEventListener('mousemove', (event) => {
-    mouseMovementX = event.movementX;
-    mouseMovementY = event.movementY;
-})
-*/
 function settings(){
     (function shape1Settings(){
         shape1XRot = rad(1.15);
@@ -180,12 +174,6 @@ function init(scene, camera, pBB, bBB, wbbArr, cbb){
     cameraMod = camera;
     playerBB = pBB;
     boxBB = bBB;
-    /*
-    wall1BB = wbbArr[0]
-    wall2BB = wbbArr[1]
-    wall3BB = wbbArr[2]
-    wall4BB = wbbArr[3]
-    */
     wallArr = wbbArr;
     cbbarr = cbb;
     settings();
@@ -223,47 +211,7 @@ function cameraAnim(timeScale){
     for(let i=0; i<wallArr.length; i++){
         if(playerBB.intersectsBox(wallArr[i])){
             wallInt = true;
-            boxInt = wallArr[i];/*
-            let vector1 = new Vector3(playerBB.max.x, 0, playerBB.max.z)
-            let vector2 = new Vector3(playerBB.min.x, 0, playerBB.max.z)
-            let vector3 = new Vector3(playerBB.max.x, 0, playerBB.max.z)
-            let vector4 = new Vector3(playerBB.max.x, 0, playerBB.min.z)
-            let vector1a = new Vector3(playerBB.max.x, 0, playerBB.min.z)
-            let vector2a = new Vector3(playerBB.min.x, 0, playerBB.min.z)
-            let vector3a = new Vector3(playerBB.min.x, 0, playerBB.max.z)
-            let vector4a = new Vector3(playerBB.min.x, 0, playerBB.min.z)
-            
-            let vector1 = new Vector3(playerBB.max.x, 0, (playerBox.position.z+2.8))
-            let vector2 = new Vector3(playerBB.min.x, 0, (playerBox.position.z+2.8))
-            let vector3 = new Vector3((playerBox.position.x+2.8), 0, playerBB.max.z)
-            let vector4 = new Vector3((playerBox.position.x+2.8), 0, playerBB.min.z)
-            let vector1a = new Vector3(playerBB.max.x, 0, (playerBox.position.z-2.8))
-            let vector2a = new Vector3(playerBB.min.x, 0, (playerBox.position.z-2.8))
-            let vector3a = new Vector3((playerBox.position.x-2.8), 0, playerBB.max.z)
-            let vector4a = new Vector3((playerBox.position.x-2.8), 0, playerBB.min.z)
-            
-            if((wallArr[i].containsPoint(vector1) || wallArr[i].containsPoint(vector1a)) && !(wallArr[i].containsPoint(vector2) || wallArr[i].containsPoint(vector2a))){
-                wallArr2.push('east');
-            }
-            else if((wallArr[i].containsPoint(vector2) || wallArr[i].containsPoint(vector2a)) && !(wallArr[i].containsPoint(vector1) || wallArr[i].containsPoint(vector1a))){
-                wallArr2.push('west')
-            }
-            else if((wallArr[i].containsPoint(vector3) || wallArr[i].containsPoint(vector3a)) && !(wallArr[i].containsPoint(vector4) || wallArr[i].containsPoint(vector4a))){
-                wallArr2.push('south')
-            }
-            else if((wallArr[i].containsPoint(vector4) || wallArr[i].containsPoint(vector4a)) && !(wallArr[i].containsPoint(vector3) || wallArr[i].containsPoint(vector3a))){
-                wallArr2.push('north')
-            }
-            let vector1 = new Vector3(playerBB.max.x, 0, playerBox.position.z)
-            let vector2 = new Vector3(playerBB.min.x, 0, playerBox.position.z)
-            let vector3 = new Vector3(playerBox.position.x, 0, playerBB.max.z)
-            let vector4 = new Vector3(playerBox.position.x, 0, playerBB.min.z)
-            
-            let vector1 = new Vector3(playerBB.max.x, 0, (wallArr[i].object).position.z)
-            let vector2 = new Vector3(playerBB.min.x, 0, (wallArr[i].object).position.z)
-            let vector3 = new Vector3((wallArr[i].object).position.x, 0, playerBB.max.z)
-            let vector4 = new Vector3((wallArr[i].object).position.x, 0, playerBB.min.z)
-            */
+            boxInt = wallArr[i];
             let vector1 = new Vector3(playerBB.max.x, 0, playerBox.position.z)
             let vector1a = new Vector3(playerBB.max.x, 0, playerBox.position.z-3)
             let vector1b = new Vector3(playerBB.max.x, 0, playerBox.position.z+3)
@@ -276,26 +224,6 @@ function cameraAnim(timeScale){
             let vector4 = new Vector3(playerBox.position.x, 0, playerBB.min.z)
             let vector4a = new Vector3(playerBox.position.x-3, 0, playerBB.min.z)
             let vector4b = new Vector3(playerBox.position.x+3, 0, playerBB.min.z)
-            
-
-            /*
-            if((wallArr[i].containsPoint(vector1a) || wallArr[i].containsPoint(vector1b)) && !(wallArr[i].containsPoint(vector2))){
-                wallArr2.push('east');
-            }
-            else if((wallArr[i].containsPoint(vector2a) || wallArr[i].containsPoint(vector2b)) && !(wallArr[i].containsPoint(vector1))){
-                wallArr2.push('west')
-                //console.log('west')
-            }
-            else if((wallArr[i].containsPoint(vector3a) || wallArr[i].containsPoint(vector3b)) && !(wallArr[i].containsPoint(vector4))){
-                wallArr2.push('south')
-            }
-            else if((wallArr[i].containsPoint(vector4a) || wallArr[i].containsPoint(vector4b)) && !(wallArr[i].containsPoint(vector3))){
-                wallArr2.push('north')
-            }
-            else{
-                console.log('no direction')
-            }
-            */
             if(wallArr[i].containsPoint(vector1) && !(wallArr[i].containsPoint(vector2))){
                 wallArr2.push('east');
             }
@@ -306,48 +234,22 @@ function cameraAnim(timeScale){
                 wallArr2.push('south')
             }
             else if(wallArr[i].containsPoint(vector4) && !(wallArr[i].containsPoint(vector3))){
-            //else if((wallArr[i].containsPoint(vector4a) || wallArr[i].containsPoint(vector4b)) && !(wallArr[i].containsPoint(vector3))){
                 wallArr2.push('north')
             }
             else{
-                //wallArr2.push(closestFace);
-                /*
-                if(wallArr[i].containsPoint(vector4a) || wallArr[i].containsPoint(vector4b) && !(wallArr[i].containsPoint(vector3))){
-                    if(!(wallArr[i].containsPoint(vector2a) || wallArr[i].containsPoint(vector2b)) && !(wallArr[i].containsPoint(vector1))
-                    ){
-                        if(!((wallArr[i].containsPoint(vector1a) || wallArr[i].containsPoint(vector1b)))){
-                            console.log(closestFace)
-                            //wallArr2.push(closestFace)
-                        }
-                        
-                    }
-                }
-                else*/ if((wallArr[i].containsPoint(vector1a) && !(wallArr[i].containsPoint(vector1b))) && !(wallArr[i].containsPoint(vector2))){
-                    //console.log('hi')
-                    //wallArr2.push('east')
+                if((wallArr[i].containsPoint(vector1a) && !(wallArr[i].containsPoint(vector1b))) && !(wallArr[i].containsPoint(vector2))){
                     addEast = true;
                 }
                 else if((wallArr[i].containsPoint(vector2a) || wallArr[i].containsPoint(vector2b)) && !(wallArr[i].containsPoint(vector1))){
-                    //console.log('hiiiiii')
-                    //wallArr2.push(closestFace)
-                    //addEast = 'west';
                     addEast = true;
                 }
                 else if((wallArr[i].containsPoint(vector3a) || wallArr[i].containsPoint(vector3b)) && !(wallArr[i].containsPoint(vector4))){
-                    //console.log('hi')
-                    //wallArr2.push(closestFace)
-                    //addEast = 'south';
                     addEast = true;
                 }
                 else if((wallArr[i].containsPoint(vector4a) || wallArr[i].containsPoint(vector4b)) && !(wallArr[i].containsPoint(vector3))){
-                    //console.log('hiiiiii')
-                    //wallArr2.push(closestFace)
-                    //addEast = 'north';
                     addEast = true;
                 }
-                
             }
-            
         }
     }
     if(wallArr2.length<1 && addEast == true){
@@ -358,7 +260,6 @@ function cameraAnim(timeScale){
         || (wallArr2[0] == 'south' && wallArr2[1] == 'east') || (wallArr2[0] == 'west' && wallArr2[1] == 'south')){
             wallArr2.reverse();
         }
-        //console.log(wallArr2);
     }
     if(doomControls == true){
         if(cameraPosX == true){
@@ -400,17 +301,23 @@ function cameraAnim(timeScale){
         cameraBobFun(false);
     }
     }
+    let moving = true;
+    if((cameraFoward == false && cameraBack == false && cameraPosX == false && cameraPosXRev == false ||
+    doomControls == true && cameraFoward == false && cameraBack == false)){
+        moving = false;
+    }
     if(playerBB.intersectsBox(boxBB)){
         collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, cameraMod, cameraBobAmount, closestFace, cameraMod.position.y, false);
         cameraBobFun(false);
     }
     else if(wallInt == true){
         collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, cameraMod, cameraBobAmount, wallArr2[0], cameraMod.position.y, true, boxInt, cbbarr, wallArr2);
-        cameraBobFun(false);
         boxInt = undefined;
+        if(moving == true || cameraBob>0){
+            cameraBobFun(false);
+        }
     }
-    if(cameraBob > 0 && (cameraFoward == false && cameraBack == false && cameraPosX == false && cameraPosXRev == false ||
-    doomControls == true && cameraFoward == false && cameraBack == false)){
+    if(moving == false){
         cameraBobFun(true);
     }
     /*

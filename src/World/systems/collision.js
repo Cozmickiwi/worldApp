@@ -13,6 +13,8 @@ function deg(num){
     return(num * (180/Math.PI));
 }
 
+let prevYPos;
+
 function collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, cameraMod, cameraBobAmount, face, yPos, connectorWall, obj, cbbarr, wArr2){
     let cornerInt = false;
     let cornerCol;
@@ -24,7 +26,7 @@ function collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, ca
             cornerInt = true;
         }
     }
-    
+    prevYPos = cameraMod.position.y;
     /*
     if(connectorWall == true){
         n = cbbarr.length-1;
@@ -54,6 +56,7 @@ function collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, ca
                 else if(worldPosX<0){
                     cameraMod.position.x -= .25*(worldPosX * -1);
                 }
+                //cameraMod.position.y = prevYPos;
                 return;
             }
             else if(cornerCol[0] == 'east' && cornerCol[1] == 'south'){
@@ -63,6 +66,7 @@ function collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, ca
                 else if(worldPosZ<0){
                     cameraMod.position.z -= .25*(worldPosZ * -1);
                 }
+                //cameraMod.position.y = prevYPos;
                 return;
             }
             else if(cornerCol[0] == 'south' && cornerCol[1] == 'west'){
@@ -72,6 +76,7 @@ function collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, ca
                 else if(worldPosX>0){
                     cameraMod.position.x += .25*worldPosX;
                 }
+                //cameraMod.position.y = prevYPos;
                 return;
             }
             else if(cornerCol[0] == 'west' && cornerCol[1] == 'north'){
@@ -81,6 +86,7 @@ function collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, ca
                 else if(worldPosZ>0){
                     cameraMod.position.z += .25*worldPosZ;
                 }
+                //cameraMod.position.y = prevYPos;
                 return;
             }
         }
@@ -171,6 +177,7 @@ function collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, ca
             cameraMod.translateZ(-.5);
             cameraSkipSide = false;
         }
+        //cameraMod.position.y = prevYPos;
     }
     else if(cameraBack == true){
         worldPosX = cameraMod.getWorldDirection(vector).x;
