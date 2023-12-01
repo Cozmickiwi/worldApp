@@ -16,7 +16,11 @@ import {
     ShapeGeometry,
     Group,
     Vector2,
-    CubeTextureLoader
+    CubeTextureLoader,
+    LinearMipMapLinearFilter,
+    NearestFilter,
+    LinearMipMapNearestFilter,
+    MeshLambertMaterial,
 
 } from '../../../node_modules/three/build/three.module.js';
 
@@ -35,6 +39,7 @@ import{
     objArr,
     cornerPositons
 } from '../systems/pixelArtConvert.js'
+
 
 
 let scene = new createScene(false);
@@ -451,7 +456,7 @@ function createCube(first){
         //wireframe: true,
         //roughness: 1,
         //map: floorTexture,
-        color: 'skyblue'
+        color: '#a6a6a6'
     });
     const material4 = new MeshStandardMaterial({
         color: 'LightSteelBlue',
@@ -474,7 +479,7 @@ function createCube(first){
     })
     const ceilingTexture = new MeshBasicMaterial({
         //map: ceilingTexture1,
-        color: 'skyblue'
+        color: '#7c7c7c'
     })
     const cube = new Mesh(geometry, material);
     const cube2 = new Mesh(geometry2, material2);
@@ -494,7 +499,7 @@ function createCube(first){
     let wall2BB = new Box3(new Vector3(), new Vector3());
     let wall3BB = new Box3(new Vector3(), new Vector3());
     let wall4BB = new Box3(new Vector3(), new Vector3());
-    buildingCeiling.position.set(35, 25, -65);
+    buildingCeiling.position.set(35, 20, -65);
     buildingCeiling.rotation.x = (Math.PI/2)
     //buildingCeiling.visible = false;
     cube.position.set(0,10,0);
@@ -532,10 +537,10 @@ function createCube(first){
     wall2.direction = 'long';
     wall3.direction = 'wide';
     wall4.direction = 'long';
-    //wall1.visible = false;
-    //wall2.visible = false;
-    //wall3.visible = false;
-    //wall4.visible = false;
+    wall1.visible = false;
+    wall2.visible = false;
+    wall3.visible = false;
+    wall4.visible = false;
     wall1BB.ignorePositions = ignorePositions(wall1);
     wall2BB.ignorePositions = ignorePositions(wall2);
     wall3BB.ignorePositions = ignorePositions(wall3);
@@ -591,113 +596,20 @@ function createCube(first){
             width = objArr[i].size;
             depth = 10;
         }
-        let objGeometry = new BoxGeometry(width, 40, depth);
+        let objGeometry = new BoxGeometry(width, 20, depth);
         let obj;
-        let texture = textureLoader.load('/src/World/components/assets/wall0016.png');
-        /*
-        let materialLeft = new TextureLoader().load('/src/World/components/assets/wall0016.png');
-        materialLeft.repeat.set(new Vector2(1, 4))
-        let materialRight = new TextureLoader().load('/src/World/components/assets/wall0016.png');
-        materialRight.repeat.set(new Vector2(1, 4))
-        let materialBack = new TextureLoader().load('/src/World/components/assets/wall0016.png');
-        materialBack.repeat.set(new Vector2((objArr[i].size/10), 4))
-        let materialFront = new TextureLoader().load('/src/World/components/assets/wall0016.png');
-        materialFront.repeat.set(new Vector2((objArr[i].size/10), 4))
-        let materialTop = new TextureLoader().load('/src/World/components/assets/wall0016.png');
-        materialTop.repeat.set(new Vector2((objArr[i].size/10), 4))
-        let materialBottom = new TextureLoader().load('/src/World/components/assets/wall0016.png');
-        materialBottom.repeat.set(new Vector2((objArr[i].size/10), 4))
-        let textureArr;
-        if(objArr[i].direction == 'long'){
-            textureArr = [
-                materialFront,
-                materialBack,
-                materialTop,
-                materialBottom,
-                materialLeft,
-                materialRight,
-            ]
-            for(let g=0; g<textureArr.length; g++){
-                textureArr[g].wrapS = RepeatWrapping;
-                textureArr[g].wrapT = RepeatWrapping;
-            }
-        }
-        else{
-            textureArr = [
-                materialLeft,
-                materialRight,
-                materialTop,
-                materialBottom,
-                materialFront,
-                materialBack,
-            ]
-        }
-        for(let c=0; c<textureArr.length; c++){
-            textureArr[c].wrapS = RepeatWrapping;
-            textureArr[c].wrapT = RepeatWrapping;
-        }
-        let materialFront1 = new MeshStandardMaterial({
-            map: materialFront,
-            side: DoubleSide,
-            //color: 'blue'
-        });
-          
-          var materialBack1 = new MeshStandardMaterial({
-            map: materialBack,
-            side: DoubleSide,
-            //color: 'blue'
-          });
-          
-          var materialTop1 = new MeshStandardMaterial({
-           map: materialTop,
-            side: DoubleSide,
-            //color: 'blue'
-          });
-          
-          var materialBottom1 = new MeshStandardMaterial({
-            map: materialBottom,
-            side: DoubleSide,
-            //color: 'blue'
-          });
-          
-          var materialRight1 = new MeshStandardMaterial({
-            map: materialRight,
-            side: DoubleSide,
-            //color: 'blue'
-          });
-          
-          var materialLeft1 = new MeshStandardMaterial({
-            map: materialLeft,
-            side: DoubleSide,
-            transparent: true,
-            //color: 'blue'
-          });
-        
-          var materials1 = [
-            materialFront1,
-            materialBack1,
-            materialTop1,
-            materialBottom1,
-            materialRight1,
-            materialLeft1,
-          ];
-//*/
-          
-
-/*
-
-        let texture1 = new CubeTextureLoader()
-            .load([
-                materialLeft,
-                materialRight,
-                materialTop,
-                materialBottom,
-                materialFront,
-                materialBack,
-            ])*/
+        let texture = textureLoader.load('/src/World/components/assets/walls1.png');
+        texture.magFilter = NearestFilter;
+        texture.minFilter = LinearMipMapLinearFilter;
         texture.wrapS = RepeatWrapping;
         texture.wrapT = RepeatWrapping;
-        texture.repeat.set((objArr[i].size/10), 4)
+        texture.repeat.set((width/10), 1)
+        let texture2 = textureLoader.load('/src/World/components/assets/walls1.png');
+        texture2.magFilter = NearestFilter;
+        texture2.minFilter = LinearMipMapLinearFilter;
+        texture2.wrapS = RepeatWrapping;
+        texture2.wrapT = RepeatWrapping;
+        texture2.repeat.set((depth/10), 1)
         let color;
         if(objArr[i].direction == 'wide'){
             color = 'blue';
@@ -705,15 +617,28 @@ function createCube(first){
         else{
             color = 'red';
         }
-        const pixelMaterial = new MeshStandardMaterial({
+        const pixelMaterial = new MeshBasicMaterial({
+            //color: color,
+            //map: texture,
+            //siz
+        })
+        
+        const pixelMaterial1 = new MeshLambertMaterial({
             //color: color,
             map: texture,
+            //siz
+        })
+        const pixelMaterial2 = new MeshLambertMaterial({
+            //color: color,
+            map: texture2,
             //siz
         })
         //if(iteration == 0){
             //wbbArr = [];
             obj = new Mesh(objGeometry, pixelMaterial);
             obj.position.set(objArr[i].objPosition[0], 0, objArr[i].objPosition[1]);
+            obj.visible = false;
+            //obj.matrixAutoUpdate = false;
             pixelMeshArr.push(obj);
             let wbb = new Box3(new Vector3(), new Vector3());
             wbb.setFromObject(obj);
@@ -727,8 +652,27 @@ function createCube(first){
                 wbb.orientation = 'long';
             }
             //wbbArr2.splice(0);
+            let wall1_3 = new PlaneGeometry(width, 10);
+            let wall2_4 = new PlaneGeometry(depth, 10);
+            let wall1 = new Mesh(wall1_3, pixelMaterial1);
+            let wall2 = new Mesh(wall2_4, pixelMaterial2);
+            let wall3 = new Mesh(wall1_3, pixelMaterial1);
+            let wall4 = new Mesh(wall2_4, pixelMaterial2);
+            wall1.position.set(obj.position.x, 4.85, wbb.max.z);
+            wall3.position.set(obj.position.x, 4.85, wbb.min.z);
+            wall3.rotation.set(0, Math.PI, 0);
+            wall2.rotation.set(0, Math.PI/2, 0);
+            wall2.position.set(wbb.max.x, 4.85, obj.position.z);
+            wall4.position.set(wbb.min.x, 4.85, obj.position.z);
+            wall4.rotation.set(0, Math.PI+(Math.PI/2), 0);
             wbbArr.push(wbb);
             pixelMeshes.push(wbb);
+            pixelMeshArr.push(wall1, wall2, wall3, wall4);
+            //wall1.matrixAutoUpdate = false;
+            //wall2.matrixAutoUpdate = false;
+            //wall3.matrixAutoUpdate = false;
+            //wall4.matrixAutoUpdate = false;
+            
             //iteration++;
         //}
         
