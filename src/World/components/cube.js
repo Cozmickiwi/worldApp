@@ -21,6 +21,7 @@ import {
     NearestFilter,
     LinearMipMapNearestFilter,
     MeshLambertMaterial,
+    NearestMipMapLinearFilter,
 
 } from '../../../node_modules/three/build/three.module.js';
 
@@ -584,8 +585,23 @@ function createCube(first){
     function addPixelMeshes(){
     wbbArr = [];
     wbbArr2 = [];
-    for(let i=0; i<objArr.length; i++){
+    let doorPositions = [[10, 240], [120, 0], [50, 240], [50, 190], [10, 190], [30, 170], [30, 50], [30, -50]];
+    for(let a=0; a<doorPositions.length; a++){
+        let doorGeometry = new BoxGeometry(10, 10, 10);
+        let doorTextureGeometry = new PlaneGeometry(10, 10);
+        let doorMaterial = new MeshBasicMaterial({
+            color: 'grey',
+        })
+        let doorTexture = textureLoader.load('/src/World/components/assets/door.png');
         
+        let door = new Mesh(doorGeometry, doorMaterial);
+        door.position.set((doorPositions[a])[0], 5, (doorPositions[a])[1]);
+
+    }
+    for(let i=0; i<objArr.length; i++){
+        let doorSideTexture = textureLoader.load('/src/World/components/assets/door1Side.png');
+        doorSideTexture.magFilter = NearestFilter;
+        doorSideTexture.minFilter = NearestMipMapLinearFilter;
         let width;
         let depth;
         if(objArr[i].direction == 'long'){
@@ -600,13 +616,14 @@ function createCube(first){
         let obj;
         let texture = textureLoader.load('/src/World/components/assets/walls1.png');
         texture.magFilter = NearestFilter;
-        texture.minFilter = LinearMipMapLinearFilter;
+        texture.anisotropy = 1;
+        texture.minFilter = NearestMipMapLinearFilter;
         texture.wrapS = RepeatWrapping;
         texture.wrapT = RepeatWrapping;
         texture.repeat.set((width/10), 1)
         let texture2 = textureLoader.load('/src/World/components/assets/walls1.png');
         texture2.magFilter = NearestFilter;
-        texture2.minFilter = LinearMipMapLinearFilter;
+        texture2.minFilter = NearestMipMapLinearFilter;
         texture2.wrapS = RepeatWrapping;
         texture2.wrapT = RepeatWrapping;
         texture2.repeat.set((depth/10), 1)
@@ -633,6 +650,11 @@ function createCube(first){
             map: texture2,
             //siz
         })
+        const pixelMaterial3 = new MeshBasicMaterial({
+            //color: color,
+            map: doorSideTexture,
+            //siz
+        })
         //if(iteration == 0){
             //wbbArr = [];
             obj = new Mesh(objGeometry, pixelMaterial);
@@ -654,10 +676,52 @@ function createCube(first){
             //wbbArr2.splice(0);
             let wall1_3 = new PlaneGeometry(width, 10);
             let wall2_4 = new PlaneGeometry(depth, 10);
-            let wall1 = new Mesh(wall1_3, pixelMaterial1);
-            let wall2 = new Mesh(wall2_4, pixelMaterial2);
-            let wall3 = new Mesh(wall1_3, pixelMaterial1);
-            let wall4 = new Mesh(wall2_4, pixelMaterial2);
+            let wall1Door = false;
+            let wall2Door = false;
+            let wall3Door = false;
+            let wall4Door = false;
+            for(let g=0; g<doorPositions.length; g++){
+                if((doorPositions[g])[0] == obj.position.x && (doorPositions[g])[1]-5 == wbb.max.z){
+                    wall1Door = true;
+                }
+                else if((doorPositions[g])[0] == obj.position.x && (doorPositions[g])[1]+5 == wbb.min.z){
+                    wall3Door = true;
+                }
+                else if((doorPositions[g])[1] == obj.position.z && (doorPositions[g])[0]-5 == wbb.max.x){
+                    wall2Door = true;
+                }
+                else if((doorPositions[g])[1] == obj.position.z && (doorPositions[g])[0]+5 == wbb.min.x){
+                    wall4Door = true;
+                }
+            }
+            let wall1;
+            let wall3;
+            let wall2;
+            let wall4;
+            if(wall1Door == true){
+                wall1 = new Mesh(wall1_3, pixelMaterial3);
+            }
+            else{
+                wall1 = new Mesh(wall1_3, pixelMaterial1);
+            }
+            if(wall3Door == true){
+                wall3 = new Mesh(wall1_3, pixelMaterial3);
+            }
+            else{
+                wall3 = new Mesh(wall1_3, pixelMaterial1);
+            }
+            if(wall2Door == true){
+                wall2 = new Mesh(wall2_4, pixelMaterial3);
+            }
+            else{
+                wall2 = new Mesh(wall2_4, pixelMaterial2);
+            }
+            if(wall4Door == true){
+                wall4 = new Mesh(wall2_4, pixelMaterial3);
+            }
+            else{
+                wall4 = new Mesh(wall2_4, pixelMaterial2);
+            }
             wall1.position.set(obj.position.x, 4.85, wbb.max.z);
             wall3.position.set(obj.position.x, 4.85, wbb.min.z);
             wall3.rotation.set(0, Math.PI, 0);
