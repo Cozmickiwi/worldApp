@@ -401,7 +401,7 @@ class World{
             function(gltf){
                 
                 person = gltf.scene;
-                person.scale.set(7,7,7)
+                person.scale.set(3.5,3.5,3.5)
                 person.position.set(-50,0,-50)
                 mixer2 = new AnimationMixer(gltf.scene);
                 personAction = mixer2.clipAction(gltf.animations[0]);
