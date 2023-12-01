@@ -36,11 +36,11 @@ function collisionDetect(cameraFoward, cameraBack, cameraPosX, cameraPosXRev, ca
             }
         }
     }*/
-    if(cameraMod.position.y < 10){
-        cameraMod.position.y = 10;
+    if(cameraMod.position.y < 5){
+        cameraMod.position.y = 5;
     }
-    else if(cameraMod.position.y > 10.5){
-        cameraMod.position.y = 10.5;
+    else if(cameraMod.position.y > 5.5){
+        cameraMod.position.y = 5.5;
     }
     if(cameraFoward == true){
         worldPosX = cameraMod.getWorldDirection(vector).x;

@@ -212,7 +212,7 @@ function cameraAnim(timeScale){
             if(cameraBob - (cameraBobAmount*timeScale) <= cameraBobAmount){
                 cameraBobDown = false;
                 cameraBob = 0;
-                cameraMod.position.y = 10;
+                cameraMod.position.y = 5;
             }
             cameraMod.position.y -= (cameraBobAmount*timeScale);
             cameraBob -= (cameraBobAmount*timeScale);
