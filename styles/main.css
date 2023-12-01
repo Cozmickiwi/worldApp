@@ -57,5 +57,5 @@ h1 {
 }
 
 canvas{
-  image-rendering:optimizeSpeed;
+  image-rendering: pixelated;
 }
