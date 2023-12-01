@@ -2,7 +2,7 @@ import { Color, Scene, Fog } from '../../../node_modules/three/build/three.modul
 
 function createScene(ortho){
     const scene = new Scene();
-    scene.background = new Color('skyblue');
+    scene.background = new Color('#7c7c7c');
     const sceneOrtho = new Scene();
     //sceneOrtho.background = new Color('blue');
     //scene.fog = new Fog( 0xcccccc, 600, 750 );
