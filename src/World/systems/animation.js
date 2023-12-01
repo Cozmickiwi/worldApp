@@ -1,7 +1,7 @@
 import { 
     Clock,
     Euler,
-Vector3 } from "../../../node_modules/three/build/three.module.js";
+Vector3, } from "../../../node_modules/three/build/three.module.js";
 
 import{
     createControls,
@@ -353,7 +353,16 @@ function cameraAnim(timeScale){
     //console.log(playerBB);
 
 }
-export function animateMod(scene, camera, controls, pBB, bBB, wbbArr, quad, face, cbb){
+export function animateMod(scene, camera, controls, pBB, bBB, wbbArr, quad, face, cbb, doorAnim, doorTex){
+    if(doorAnim == true){
+        //let innerDoor = doorTex.door.objectName;
+        let innerDoor = scene.getObjectByName(doorTex.door.objectName);
+        if(doorTex.currentStatus == 'opening'){
+            innerDoor.position.z -= .1;
+        }
+        
+        //innerDoor.visible = false;
+    }
     control1 = controls;
     const delta = clock.getDelta();
     quadrant = quad;

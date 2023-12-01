@@ -50,6 +50,7 @@ let iteration = 0;
 let pixelMeshes = [];
 let wbbArr2 = [];
 let pixelMeshArr = [];
+let doorBBArr = [];
 
 const ceilingTexture1 = new TextureLoader().load(
         'src/World/components/assets/43419803ee9ecad5c8ce7c0ae409796dafec3bb1.png'
@@ -395,7 +396,7 @@ function pixelCorners(){
     }
 }
 
-
+let count = 1;
 
 function createCube(first){
     const geometry = new IcosahedronGeometry(2.5);
@@ -505,6 +506,8 @@ function createCube(first){
     //buildingCeiling.visible = false;
     cube.position.set(0,10,0);
     cube2.position.set(0, 10, 0);
+    cube.visible = false;
+    cube2.visible = false;
     box.position.set(100,10,100);
     wall1.position.set(0,0,-500);
     wall3.position.set(0,0,500);
@@ -582,21 +585,64 @@ function createCube(first){
     pBox.material.visible = false;
     playerBB.name = 'playerBB'
     //let pixelMeshArr = [];
+    pixelMeshArr = []
+    let doorPositions = [[10, 240, 'z'], [120, 0, 'z'], [50, 240, 'z'], [50, 190, 'z'], [10, 190, 'z'], [30, 170, 'x'], [30, 50, 'x'], [30, -50, 'x']];
     function addPixelMeshes(){
     wbbArr = [];
     wbbArr2 = [];
-    let doorPositions = [[10, 240], [120, 0], [50, 240], [50, 190], [10, 190], [30, 170], [30, 50], [30, -50]];
+    
+    
     for(let a=0; a<doorPositions.length; a++){
         let doorGeometry = new BoxGeometry(10, 10, 10);
         let doorTextureGeometry = new PlaneGeometry(10, 10);
         let doorMaterial = new MeshBasicMaterial({
-            color: 'grey',
+            //color: 'grey',
+            //side: DoubleSide,
         })
-        let doorTexture = textureLoader.load('/src/World/components/assets/door.png');
-        
+        let doorTexture = textureLoader.load('/src/World/components/assets/door1.png');
+        let doorTextureMaterial = new MeshBasicMaterial({
+            side: DoubleSide,
+            map: doorTexture,
+            color: '#e0e0e0'
+        })
+        doorTexture.magFilter = NearestFilter;
+        doorTexture.minFilter = NearestMipMapLinearFilter;
         let door = new Mesh(doorGeometry, doorMaterial);
+        door.visible = false;
         door.position.set((doorPositions[a])[0], 5, (doorPositions[a])[1]);
-
+        let doorInnerTexture = new Mesh(doorTextureGeometry, doorTextureMaterial);
+        doorInnerTexture.position.set((doorPositions[a])[0], 5, (doorPositions[a])[1]);
+        if(a==2){
+            //doorInnerTexture.name = 'dooooor';
+        }
+        if((doorPositions[a])[2] == 'z'){
+            doorInnerTexture.rotation.y = Math.PI/2;
+        }
+        door.ignoreSides = false;
+        doorInnerTexture.ignoreSides = false;
+        doorInnerTexture.name = `innerDoor${count}`;
+        let doorBB = new Box3(new Vector3(), new Vector3());
+        doorBB.setFromObject(door);
+        doorBB.ignorePositions = false;
+        doorBB.position = door.position;
+        doorBB.object = doorInnerTexture;
+        doorBB.objectName = `innerDoor${count}`;
+        console.log(count);
+        count++
+        if((doorPositions[a])[2] == 'z'){
+            doorBB.ignoreSides = ['north', 'south'];
+            doorBB.orientation = 'z';
+        }
+        else{
+            doorBB.ignoreSides = ['east', 'west'];
+            doorBB.orientation = 'x';
+        }
+        
+        if(pixelMeshArr.length<doorPositions.length*2){
+            pixelMeshArr.push(door, doorInnerTexture);
+            doorBBArr.push(doorBB);
+            wbbArr.push(doorBB);
+        }
     }
     for(let i=0; i<objArr.length; i++){
         let doorSideTexture = textureLoader.load('/src/World/components/assets/door1Side.png');
@@ -648,7 +694,7 @@ function createCube(first){
         const pixelMaterial2 = new MeshLambertMaterial({
             //color: color,
             map: texture2,
-            //siz
+            color: '#e0e0e0'
         })
         const pixelMaterial3 = new MeshBasicMaterial({
             //color: color,
@@ -660,11 +706,14 @@ function createCube(first){
             obj = new Mesh(objGeometry, pixelMaterial);
             obj.position.set(objArr[i].objPosition[0], 0, objArr[i].objPosition[1]);
             obj.visible = false;
+            obj.ignorePositions = false;
+            obj.ignoreSides = false;
             //obj.matrixAutoUpdate = false;
             pixelMeshArr.push(obj);
             let wbb = new Box3(new Vector3(), new Vector3());
             wbb.setFromObject(obj);
             wbb.ignorePositions = false;
+            wbb.ignoreSides = false;
             wbb.position = obj.position;
             wbb.object = obj;
             if(objArr[i].direction == 'wide'){
@@ -745,7 +794,7 @@ function createCube(first){
 }
     console.log(pixelMeshArr);
     console.log(wbbArr)
-    
+        
     // instantiate a loader
     /*
 const loader = new SVGLoader();
@@ -830,11 +879,16 @@ loader.load(
         return(playerBB)
     }
     else if(first == 'pixel'){
+        pixelMeshArr = []
         addPixelMeshes();
+        //wbbArr = []
+        console.log(pixelMeshArr)
         return(pixelMeshArr);
     }
     else if(first == 'wbb'){
+        wbbArr = []
         addPixelMeshes();
+        count = 1;
         wbbArr.push(wall1BB, wall2BB, wall3BB, wall4BB)
         console.log(wbbArr)
         //console.log(wbbArr[9])
@@ -864,9 +918,12 @@ loader.load(
         //return(pixelMeshArr);
     }
     else if(first == 'ceiling'){
+        doorBBArr = [];
         return(buildingCeiling);
     }
-    
+    else if(first == 'door'){
+        return(doorBBArr);
+    }
 
 
 }

@@ -81,6 +81,7 @@ let dir;
 let arrowHelper;
 let closestFace;
 let wall1_2BB;
+let doorBBArr;
 //let canvas = document.querySelector('canvas');
 let gunMaterial = new MeshBasicMaterial({
 
@@ -128,6 +129,39 @@ function objInfo(posX, posZ, xLen, zLen, obj){
     return(info);
 }
 //let orthoCamera;
+
+let doorAnim = false;
+let door = false;
+let curDoorArr = [false]
+
+
+window.addEventListener('keypress', event => {
+    if(event.key == 'e'){
+        if(doorAnim == false){
+            for(let g=0; g<doorBBArr.length; g++){
+                if(playerBB.intersectsBox(doorBBArr[g])){
+                    doorAnim = true;
+                    door = {
+                        door: doorBBArr[g],
+                        currentStatus: 'opening',
+                    }
+                    curDoorArr = [true, door];
+                    setTimeout(() => {
+                        door.currentStatus = 'standby';
+                        curDoorArr = [true, door];
+                    }, 150);
+                    setTimeout(() => {
+                        door.currentStatus = 'closing';
+                        curDoorArr = [true, door];
+                    }, 7500);
+                    break;
+                }
+            }
+        }
+        
+    }
+})
+
 class World{
     constructor(container){
         camera = createCamera();
@@ -178,6 +212,8 @@ class World{
         console.log(wbbArr)
         cbbarr = createCube('cbb')
         objArr.push(box, wall1, wall2, wall3, wall4);
+        doorBBArr = createCube('door');
+        console.log(doorBBArr)
         /*
         wall1BB = wbbArr[0]
         wall2BB = wbbArr[1]
@@ -232,6 +268,11 @@ class World{
             console.log(wall1BB);
             */
         //playerBB = scene.getObjectByName('playerBB')
+        for(let i=0; i<pixelArr.length; i++){
+            if(doorBBArr[0].containsPoint(pixelArr[i].position)){
+                console.log(pixelArr[i])
+            }
+        }
         setInterval(() => {
             /*
             if(camera.position.x >=0 && camera.position.z >=0){
@@ -262,6 +303,9 @@ class World{
             if(chosenObj == undefined){
                 for(let i=0; i<objArr.length; i++){
                 //let dir = new Vector3(objArr[1].position);
+                if(objArr[i].geometry.type == 'PlaneGeometry'){
+                    continue;
+                }
                 let objX = objArr[i].position.x;
                 let objZ = objArr[i].position.z;
                 if(camera.position.z<(objZ+(objArr[i].geometry.parameters.depth/2)) && camera.position.z>(objZ-(objArr[i].geometry.parameters.depth/2))){
@@ -305,8 +349,16 @@ class World{
                     arrObj1 = directions;
                 }
             }
+            /*
             closestObj = [chosenObj.name, chosenObj, prevDistance, arrObj1];
             closestFace = arrObj1;
+            if(doorAnim == true){
+                //if(door.currentStatus == 'opening' && door.door.orientation == 'z'){
+                    //door.door.object.translateX(.1)
+                    //console.log('hi')
+                    
+                //}
+            }*/
         }, 10);
         /*
             setInterval(() => {
@@ -462,7 +514,7 @@ class World{
                     //console.log(camera.getWorldDirection( ))
                     console.log(playerBB);
                     console.log(closestObj);
-                    console.log(closestObj[1].geometry.parameters);
+                    //console.log(closestObj[1].geometry.parameters);
                     shootAction.play();
                     shotSound.load();
                     shotSound.play();
@@ -514,7 +566,7 @@ class World{
                 //console.log(person.position);
                 //action = baseAction;
             }
-            movementStatus = animateMod(scene, camera, controls, playerBB, boxBB, wbbArr, quad, closestFace, cbbarr);
+            movementStatus = animateMod(scene, camera, controls, playerBB, boxBB, wbbArr, quad, closestFace, cbbarr, doorAnim, door);
             if(gunModelLoaded == true){
                 mixer.update(clock.getDelta());
                 mixer2.update(clock2.getDelta());
