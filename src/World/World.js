@@ -286,7 +286,7 @@ class World{
         
         //const buildingArr = createCube('building');
         //const pixelArr = createCube('pixel');
-        doorBBArr.splice(doorBBArr.length/2)
+        //doorBBArr.splice(doorBBArr.length/2)
         //buildingArr.push(pixelArr);
         const light = createLights(false);
         const light2 = createLights(true);
