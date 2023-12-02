@@ -87,6 +87,10 @@ let quadrant;
 let closestFace;
 let cbbarr;
 let boxInt;
+let openDoors = [];
+let doorQueue = [];
+let currentlyClosing = [];
+let doorBBArr;
 const renderer = new createRenderer;
 function rad(num){
     return((Math.PI)/(360/num));
@@ -167,7 +171,7 @@ function settings(){
         cameraBobAmount = 0.012;
     })();
 }
-function init(scene, camera, pBB, bBB, wbbArr, cbb){
+function init(scene, camera, pBB, bBB, wbbArr, cbb, doorBB){
     cube = scene.getObjectByName('cube1');
     cube2 = scene.getObjectByName('cube2');
     playerBox = scene.getObjectByName('playerBox');
@@ -176,6 +180,7 @@ function init(scene, camera, pBB, bBB, wbbArr, cbb){
     boxBB = bBB;
     wallArr = wbbArr;
     cbbarr = cbb;
+    doorBBArr = doorBB;
     settings();
 }
 function shape1(timeScale){
@@ -209,7 +214,7 @@ function cameraAnim(timeScale){
     let wallArr2 = [];
     let addEast = false;
     for(let i=0; i<wallArr.length; i++){
-        if(playerBB.intersectsBox(wallArr[i])){
+        if(playerBB.intersectsBox(wallArr[i]) && !(openDoors.includes(wallArr[i]))){
             wallInt = true;
             boxInt = wallArr[i];
             let vector1 = new Vector3(playerBB.max.x, 0, playerBox.position.z)
@@ -320,6 +325,9 @@ function cameraAnim(timeScale){
     if(moving == false){
         cameraBobFun(true);
     }
+    if(cameraMod.position.y<5){
+        cameraMod.position.y = 5;
+    }
     /*
     xP.textContent = (`x:${cameraMod.position.x}`);
     yP.textContent = (`y:${cameraMod.position.y}`);
@@ -353,22 +361,203 @@ function cameraAnim(timeScale){
     //console.log(playerBB);
 
 }
-export function animateMod(scene, camera, controls, pBB, bBB, wbbArr, quad, face, cbb, doorAnim, doorTex){
-    if(doorAnim == true){
+
+let doorTick1 = 0;
+let openingDoors = [];
+let standByDoors = [];
+let closingDoors = [];
+
+window.addEventListener('keypress', event =>{
+    if(event.key=='e'){
+        for(let i=0; i<doorBBArr.length; i++){
+            if(playerBB.intersectsBox(doorBBArr[i]) && doorBBArr[i].status == 'null'){
+                let skip = false;
+                if(openingDoors.length>0){
+                    for(let k=0; k<openingDoors.length; k++){
+                        if(doorBBArr[i].objectName == openingDoors[k].objectName){
+                            skip = true;
+                            break;
+                        }
+                    }
+                }
+                if(skip==false){
+                    let curDoor = doorBBArr[i]
+                    curDoor.status = 'opening';
+                    curDoor.value = doorTick1;
+                    curDoor.frameNum = 100;
+                    openingDoors.push(curDoor);
+                    doorTick1++;
+                }
+                
+            }
+        }
+    }
+})
+
+function doorOpen(selDoor){
+    if(selDoor.orientation == 'z'){
+        selDoor.object.position.z -=.1;
+    }
+    else if(selDoor.orientation == 'x'){
+        selDoor.object.position.x +=.1;
+    }
+    selDoor.frameNum--;
+    if(selDoor.frameNum<=0){
+        //openingDoors.splice(selDoor.value, 1);
+        openDoors.push(selDoor);
+        selDoor.status = 'standby';
+        selDoor.frameNum = 900;
+        standByDoors.push(selDoor);
+        if(openingDoors.length>0){
+            for(let r=0; r<openingDoors.length; r++){
+                if(openingDoors[r].value == selDoor.value){
+                    openingDoors.splice(r, 1);
+                    break;
+                }
+                //openingDoors[r].value--;
+            }
+        }
+    }
+}
+
+function doorStandBy(selDoor){
+    selDoor.frameNum--;
+    if(selDoor.frameNum<=0 && !(playerBB.intersectsBox(selDoor))){
+        for(let q=0; q<standByDoors.length; q++){
+            if(standByDoors[q].value == selDoor.value){
+                standByDoors.splice(q, 1)
+                break;
+            }
+        }
+        for(let t=0; t<openDoors.length; t++){
+            if(openDoors[t].value == selDoor.value){
+                openDoors.splice(t, 1);
+                break;
+            }
+        }
+        selDoor.status = 'closing';
+        selDoor.frameNum = 100;
+        closingDoors.push(selDoor);
+    }
+}
+
+function doorClose(selDoor){
+    if(selDoor.orientation == 'z'){
+        selDoor.object.position.z +=.1;
+    }
+    else if(selDoor.orientation == 'x'){
+        selDoor.object.position.x -=.1;
+    }
+    selDoor.frameNum--;
+    if(selDoor.frameNum<=0){
+        if(selDoor.orientation == 'z'){
+            selDoor.object.position.z = selDoor.max.z-5;
+        }
+        else{
+            selDoor.object.position.x = selDoor.max.x-5;
+        }
+        for(let f=0; f<closingDoors.length; f++){
+            if(closingDoors[f].value == selDoor.value){
+                closingDoors.splice(f, 1);
+                break;
+            }
+        }
+        
+        selDoor.status = 'null';
+    }
+}
+
+export function animateMod(scene, camera, controls, pBB, bBB, wbbArr, quad, face, cbb, doorAnim, doorTex, curDoorArr, doorBBArr){
+    if(openingDoors.length>0){
+        for(let v=0; v<openingDoors.length; v++){
+            doorOpen(openingDoors[v]);
+        }
+    }
+    if(standByDoors.length>0){
+        for(let d=0; d<standByDoors.length; d++){
+            doorStandBy(standByDoors[d]);
+        }
+    }
+    if(closingDoors.length>0){
+        for(let p=0; p<closingDoors.length; p++){
+            doorClose(closingDoors[p]);
+        }
+    }
+    //for(let b=0; b<curDoorArr.length; b++){
+        //if(curDoorArr[b] != false){
         //let innerDoor = doorTex.door.objectName;
-        let innerDoor = scene.getObjectByName(doorTex.door.objectName);
-        if(doorTex.currentStatus == 'opening'){
-            innerDoor.position.z -= .1;
+        /*
+        for(let o=1; o<curDoorArr.length; o++){
+            if(curDoorArr[o] != false){
+                let innerDoor = scene.getObjectByName((curDoorArr[o])[1].door.objectName);
+            if(doorTex.currentStatus == 'opening'){
+                if((curDoorArr[o])[1].door.orientation == 'z'){
+                    innerDoor.position.z -= .1;
+                }
+                else{
+                    innerDoor.position.x += .1;
+                }
+                
+            }
+            else if((curDoorArr[o])[1].currentStatus == 'standby' && !(openDoors.includes((curDoorArr[o])[1].door))){
+                openDoors.push((curDoorArr[o])[1].door);
+            }
+            else if((curDoorArr[o])[1].currentStatus == 'closing'){
+                if(!(doorQueue.includes((curDoorArr[o])[1].door))){
+                    doorQueue.push((curDoorArr[o])[1].door);
+                }
+            }
+            }
+            
         }
         
         //innerDoor.visible = false;
+    //}
+    if(doorQueue.length>0){
+        for(let f=0; f<doorQueue.length; f++){
+            if(!(playerBB.intersectsBox(doorQueue[f])) && !(currentlyClosing.includes(doorQueue[f]))){
+                currentlyClosing.push(doorQueue[f]);
+                openDoors = [];
+                setTimeout(() => {
+                    currentlyClosing.splice(f, 1);
+                    doorQueue.splice(f, 1);
+                }, 750);
+                }
+        }
+        
     }
+    if(currentlyClosing.length>0){
+        for(let k=0; k<currentlyClosing.length; k++){
+            if((currentlyClosing[k].orientation == 'z' && scene.getObjectByName(currentlyClosing[k].objectName).position.z+5 < currentlyClosing[k].max.z)
+            ||(currentlyClosing[k].orientation == 'x' && scene.getObjectByName(currentlyClosing[k].objectName).position.x+5 > currentlyClosing[k].max.x)){
+                if(currentlyClosing[k].orientation == 'z'){
+                    scene.getObjectByName(currentlyClosing[k].objectName).position.z += .1;
+                }
+                else{
+                    scene.getObjectByName(currentlyClosing[k].objectName).position.x -= .1;
+                }
+                
+            }
+            else{
+                if(currentlyClosing[0].orientation == 'z'){
+                    scene.getObjectByName(currentlyClosing[k].objectName).position.z = currentlyClosing[k].max.z-5;
+                }
+                else{
+                    scene.getObjectByName(currentlyClosing[k].objectName).position.x = currentlyClosing[k].max.x-5;
+                }
+                
+            }
+            
+        }
+    }
+    //}
+    */
     control1 = controls;
     const delta = clock.getDelta();
     quadrant = quad;
     closestFace = face;
     if(listCont == false){
-        init(scene, camera, pBB, bBB, wbbArr, cbb);
+        init(scene, camera, pBB, bBB, wbbArr, cbb, doorBBArr);
         list.push(shape1);
         list.push(shape2);
         list.push(cameraAnim);
