@@ -91,6 +91,8 @@ let openDoors = [];
 let doorQueue = [];
 let currentlyClosing = [];
 let doorBBArr;
+let doorOpenSound = new Audio('src/World/components/assets/wolf3ddooropen.mp3');
+let doorCloseSound = new Audio('src/World/components/assets/wolf3ddoorclose.mp3');
 const renderer = new createRenderer;
 function rad(num){
     return((Math.PI)/(360/num));
@@ -369,33 +371,23 @@ let closingDoors = [];
 
 window.addEventListener('keypress', event =>{
     if(event.key=='e'){
-        let zVector1 = new Vector3(cameraMod.position.x+9, 2, cameraMod.position.z)
-        let zVector2 = new Vector3(cameraMod.position.x-9, 2, cameraMod.position.z)
-        let xVector1 = new Vector3(cameraMod.position.x, 2, cameraMod.position.z+9)
-        let xVector2 = new Vector3(cameraMod.position.x, 2, cameraMod.position.z-9)
+        let zVector1 = new Vector3(cameraMod.position.x+11.5, 2, cameraMod.position.z)
+        let zVector2 = new Vector3(cameraMod.position.x-11.5, 2, cameraMod.position.z)
+        let xVector1 = new Vector3(cameraMod.position.x, 2, cameraMod.position.z+11.5)
+        let xVector2 = new Vector3(cameraMod.position.x, 2, cameraMod.position.z-11.5)
         for(let i=0; i<doorBBArr.length; i++){
-            //if(playerBB.intersectsBox(doorBBArr[i]) && doorBBArr[i].status == 'null'){
                 if(doorBBArr[i].status == 'null' && ((doorBBArr[i].orientation == 'z' && (doorBBArr[i].containsPoint(zVector1)
                 || doorBBArr[i].containsPoint(zVector2)))
                 || (doorBBArr[i].orientation == 'x' && (doorBBArr[i].containsPoint(xVector1)
                 || doorBBArr[i].containsPoint(xVector2))))){
-                let skip = false;
-                if(openingDoors.length>0){
-                    for(let k=0; k<openingDoors.length; k++){
-                        if(doorBBArr[i].objectName == openingDoors[k].objectName){
-                            skip = true;
-                            break;
-                        }
-                    }
-                }
-                if(skip==false){
-                    let curDoor = doorBBArr[i]
-                    curDoor.status = 'opening';
-                    curDoor.value = doorTick1;
-                    curDoor.frameNum = 100;
-                    openingDoors.push(curDoor);
-                    doorTick1++;
-                }
+                doorOpenSound.load();
+                let curDoor = doorBBArr[i]
+                curDoor.status = 'opening';
+                curDoor.value = doorTick1;
+                curDoor.frameNum = 100;
+                openingDoors.push(curDoor);
+                doorTick1++;
+                doorOpenSound.play();
                 
             }
         }
@@ -446,6 +438,15 @@ function doorStandBy(selDoor){
             }
             selDoor.status = 'closing';
             selDoor.frameNum = 100;
+            let playerDistVector = new Vector3(cameraMod.position.x, 2, cameraMod.position.z);
+            //console.log(selDoor.distanceToPoint(playerDistVector));
+            let volume = .8-(selDoor.distanceToPoint(playerDistVector)/100);
+            if(selDoor.distanceToPoint(playerDistVector)>80){
+                volume = 0;
+            }
+            doorCloseSound.load();
+            doorCloseSound.volume = volume;
+            doorCloseSound.play();
             closingDoors.push(selDoor);
         }
         else{
