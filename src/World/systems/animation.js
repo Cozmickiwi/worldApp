@@ -369,8 +369,16 @@ let closingDoors = [];
 
 window.addEventListener('keypress', event =>{
     if(event.key=='e'){
+        let zVector1 = new Vector3(cameraMod.position.x+9, 2, cameraMod.position.z)
+        let zVector2 = new Vector3(cameraMod.position.x-9, 2, cameraMod.position.z)
+        let xVector1 = new Vector3(cameraMod.position.x, 2, cameraMod.position.z+9)
+        let xVector2 = new Vector3(cameraMod.position.x, 2, cameraMod.position.z-9)
         for(let i=0; i<doorBBArr.length; i++){
-            if(playerBB.intersectsBox(doorBBArr[i]) && doorBBArr[i].status == 'null'){
+            //if(playerBB.intersectsBox(doorBBArr[i]) && doorBBArr[i].status == 'null'){
+                if(doorBBArr[i].status == 'null' && ((doorBBArr[i].orientation == 'z' && (doorBBArr[i].containsPoint(zVector1)
+                || doorBBArr[i].containsPoint(zVector2)))
+                || (doorBBArr[i].orientation == 'x' && (doorBBArr[i].containsPoint(xVector1)
+                || doorBBArr[i].containsPoint(xVector2))))){
                 let skip = false;
                 if(openingDoors.length>0){
                     for(let k=0; k<openingDoors.length; k++){
@@ -422,22 +430,27 @@ function doorOpen(selDoor){
 
 function doorStandBy(selDoor){
     selDoor.frameNum--;
-    if(selDoor.frameNum<=0 && !(playerBB.intersectsBox(selDoor))){
-        for(let q=0; q<standByDoors.length; q++){
+    if(selDoor.frameNum<=0){
+        if(!(playerBB.intersectsBox(selDoor))){
+            for(let q=0; q<standByDoors.length; q++){
             if(standByDoors[q].value == selDoor.value){
                 standByDoors.splice(q, 1)
                 break;
             }
-        }
-        for(let t=0; t<openDoors.length; t++){
-            if(openDoors[t].value == selDoor.value){
-                openDoors.splice(t, 1);
-                break;
             }
+            for(let t=0; t<openDoors.length; t++){
+                if(openDoors[t].value == selDoor.value){
+                    openDoors.splice(t, 1);
+                    break;
+                }
+            }
+            selDoor.status = 'closing';
+            selDoor.frameNum = 100;
+            closingDoors.push(selDoor);
         }
-        selDoor.status = 'closing';
-        selDoor.frameNum = 100;
-        closingDoors.push(selDoor);
+        else{
+            selDoor.frameNum = 500;
+        }
     }
 }
 
