@@ -642,22 +642,8 @@ function createCube(first){
         
         if(pixelMeshArr.length<doorPositions.length*2){
             pixelMeshArr.push(door, doorInnerTexture);
-            /*
-            let skip = false;
-            if(doorBBArr.length>0){
-                for(let b=0; b<doorBBArr.length; b++){
-                    if(doorBBArr[b].objectName == doorBB.objectName){
-                        skip = true
-                        break;
-                    }
-                }
-            }
-            if(skip = false){
-                
-            }*/
             doorBBArr.push(doorBB);
-                wbbArr.push(doorBB);
-            
+            wbbArr.push(doorBB);
         }
     }
     for(let i=0; i<objArr.length; i++){
@@ -717,270 +703,116 @@ function createCube(first){
             map: doorSideTexture,
             //siz
         })
-        //if(iteration == 0){
-            //wbbArr = [];
-            obj = new Mesh(objGeometry, pixelMaterial);
-            obj.position.set(objArr[i].objPosition[0], 0, objArr[i].objPosition[1]);
-            obj.visible = false;
-            obj.ignorePositions = false;
-            obj.ignoreSides = false;
-            //obj.matrixAutoUpdate = false;
-            pixelMeshArr.push(obj);
-            let wbb = new Box3(new Vector3(), new Vector3());
-            wbb.setFromObject(obj);
-            wbb.ignorePositions = false;
-            wbb.ignoreSides = false;
-            wbb.position = obj.position;
-            wbb.object = obj;
-            if(objArr[i].direction == 'wide'){
-                wbb.orientation = 'wide';
+        obj = new Mesh(objGeometry, pixelMaterial);
+        obj.position.set(objArr[i].objPosition[0], 0, objArr[i].objPosition[1]);
+        obj.visible = false;
+        obj.ignorePositions = false;
+        obj.ignoreSides = false;
+        //obj.matrixAutoUpdate = false;
+        pixelMeshArr.push(obj);
+        let wbb = new Box3(new Vector3(), new Vector3());
+        wbb.setFromObject(obj);
+        wbb.ignorePositions = false;
+        wbb.ignoreSides = false;
+        wbb.position = obj.position;
+        wbb.object = obj;
+        if(objArr[i].direction == 'wide'){
+            wbb.orientation = 'wide';
+        }
+        else{
+            wbb.orientation = 'long';
+        }
+        //wbbArr2.splice(0);
+        let wall1_3 = new PlaneGeometry(width, 10);
+        let wall2_4 = new PlaneGeometry(depth, 10);
+        let wall1Door = false;
+        let wall2Door = false;
+        let wall3Door = false;
+        let wall4Door = false;
+        for(let g=0; g<doorPositions.length; g++){
+            if((doorPositions[g])[0] == obj.position.x && (doorPositions[g])[1]-5 == wbb.max.z){
+                wall1Door = true;
             }
-            else{
-                wbb.orientation = 'long';
+            else if((doorPositions[g])[0] == obj.position.x && (doorPositions[g])[1]+5 == wbb.min.z){
+                wall3Door = true;
             }
-            //wbbArr2.splice(0);
-            let wall1_3 = new PlaneGeometry(width, 10);
-            let wall2_4 = new PlaneGeometry(depth, 10);
-            let wall1Door = false;
-            let wall2Door = false;
-            let wall3Door = false;
-            let wall4Door = false;
-            for(let g=0; g<doorPositions.length; g++){
-                if((doorPositions[g])[0] == obj.position.x && (doorPositions[g])[1]-5 == wbb.max.z){
-                    wall1Door = true;
-                }
-                else if((doorPositions[g])[0] == obj.position.x && (doorPositions[g])[1]+5 == wbb.min.z){
-                    wall3Door = true;
-                }
-                else if((doorPositions[g])[1] == obj.position.z && (doorPositions[g])[0]-5 == wbb.max.x){
-                    wall2Door = true;
-                }
-                else if((doorPositions[g])[1] == obj.position.z && (doorPositions[g])[0]+5 == wbb.min.x){
-                    wall4Door = true;
-                }
+            else if((doorPositions[g])[1] == obj.position.z && (doorPositions[g])[0]-5 == wbb.max.x){
+                wall2Door = true;
             }
-            let wall1;
-            let wall3;
-            let wall2;
-            let wall4;
-            if(wall1Door == true){
-                wall1 = new Mesh(wall1_3, pixelMaterial3);
+            else if((doorPositions[g])[1] == obj.position.z && (doorPositions[g])[0]+5 == wbb.min.x){
+                wall4Door = true;
             }
-            else{
-                wall1 = new Mesh(wall1_3, pixelMaterial1);
-            }
-            if(wall3Door == true){
-                wall3 = new Mesh(wall1_3, pixelMaterial3);
-            }
-            else{
-                wall3 = new Mesh(wall1_3, pixelMaterial1);
-            }
-            if(wall2Door == true){
-                wall2 = new Mesh(wall2_4, pixelMaterial3);
-            }
-            else{
-                wall2 = new Mesh(wall2_4, pixelMaterial2);
-            }
-            if(wall4Door == true){
-                wall4 = new Mesh(wall2_4, pixelMaterial3);
-            }
-            else{
-                wall4 = new Mesh(wall2_4, pixelMaterial2);
-            }
-            wall1.position.set(obj.position.x, 4.85, wbb.max.z);
-            wall3.position.set(obj.position.x, 4.85, wbb.min.z);
-            wall3.rotation.set(0, Math.PI, 0);
-            wall2.rotation.set(0, Math.PI/2, 0);
-            wall2.position.set(wbb.max.x, 4.85, obj.position.z);
-            wall4.position.set(wbb.min.x, 4.85, obj.position.z);
-            wall4.rotation.set(0, Math.PI+(Math.PI/2), 0);
-            wbbArr.push(wbb);
-            pixelMeshes.push(wbb);
-            pixelMeshArr.push(wall1, wall2, wall3, wall4);
-            //wall1.matrixAutoUpdate = false;
-            //wall2.matrixAutoUpdate = false;
-            //wall3.matrixAutoUpdate = false;
-            //wall4.matrixAutoUpdate = false;
-            
-            //iteration++;
-        //}
-        
+        }
+        let wall1;
+        let wall3;
+        let wall2;
+        let wall4;
+        if(wall1Door == true){
+            wall1 = new Mesh(wall1_3, pixelMaterial3);
+        }
+        else{
+            wall1 = new Mesh(wall1_3, pixelMaterial1);
+        }
+        if(wall3Door == true){
+            wall3 = new Mesh(wall1_3, pixelMaterial3);
+        }
+        else{
+            wall3 = new Mesh(wall1_3, pixelMaterial1);
+        }
+        if(wall2Door == true){
+            wall2 = new Mesh(wall2_4, pixelMaterial3);
+        }
+        else{
+            wall2 = new Mesh(wall2_4, pixelMaterial2);
+        }
+        if(wall4Door == true){
+            wall4 = new Mesh(wall2_4, pixelMaterial3);
+        }
+        else{
+            wall4 = new Mesh(wall2_4, pixelMaterial2);
+        }
+        wall1.position.set(obj.position.x, 4.85, wbb.max.z);
+        wall3.position.set(obj.position.x, 4.85, wbb.min.z);
+        wall3.rotation.set(0, Math.PI, 0);
+        wall2.rotation.set(0, Math.PI/2, 0);
+        wall2.position.set(wbb.max.x, 4.85, obj.position.z);
+        wall4.position.set(wbb.min.x, 4.85, obj.position.z);
+        wall4.rotation.set(0, Math.PI+(Math.PI/2), 0);
+        wbbArr.push(wbb);
+        pixelMeshes.push(wbb);
+        pixelMeshArr.push(wall1, wall2, wall3, wall4);
     }
     console.log(wbbArr)
 }
     console.log(pixelMeshArr);
     console.log(wbbArr)
-        
-    // instantiate a loader
-    /*
-const loader = new SVGLoader();
-
-// load a SVG resource
-loader.load(
-	// resource URL
-	'/src/World/components/assets/graph (2).svg',
-	// called when the resource is loaded
-	function ( data ) {
-		const paths = data.paths;
-		const group = new Group();
-		for ( let i = 0; i < paths.length; i ++ ) {
-			const path = paths[ i ];
-			const material = new MeshBasicMaterial( {
-				color: path.color,
-				side: DoubleSide,
-				depthWrite: false
-			} );
-			const shapes = SVGLoader.createShapes( path );
-			for ( let j = 0; j < shapes.length; j ++ ) {
-				const shape = shapes[ j ];
-				const geometry = new ShapeGeometry( shape );
-				const mesh = new Mesh( geometry, material );
-				group.add( mesh );
-			}
-		}
-        group.position.y = 50;
-        group.rotation.x = Math.PI/2
-        group.scale.set(.1,.1,.1)
-		scene.add( group );
-        console.log(group)
-	},
-	// called when loading is in progresses
-	function ( xhr ) {
-		console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
-	},
-	// called when loading has errors
-	function ( error ) {
-		console.log( 'An error happened' );
-	}
-);*/
-
     console.log(iteration)
-    /*
-    if(first == true){
-        return (cube);
-    }
-    else if(first == false){
-        return (cube2);
-    }
-    else if(first == 'floor'){
-        return (plane)
-    }
-    else if(first == 'wall1'){
-        return(wall1)
-    }
-    else if(first == 'wall2'){
-        return(wall2)
-    }
-    else if(first == 'wall3'){
-        return(wall3)
-    }
-    else if(first == 'wall4'){
-        return(wall4)
-    }
-    else if(first == 'cross'){
-        return(crossHair)
-    }
-    else if(first == 'fire'){
-        return(fire)
-    }
-    else if(first == 'box'){
-        return(box)
-    }
-    else if(first == 'playerBox'){
-        return(pBox)
-    }
-    else if(first == 'bbb'){
-        return(boxBB)
-    }
-    else if(first == 'pbb'){
-        return(playerBB)
-    }
-    else if(first == 'pixel'){
-        pixelMeshArr = []
-        wbbArr = []
-        addPixelMeshes();
-
-        
-        console.log(pixelMeshArr)
-        return(pixelMeshArr);
-    }
-    else if(first == 'wbb'){
-        wbbArr = []
-        addPixelMeshes();
-        count = 1;
-        wbbArr.push(wall1BB, wall2BB, wall3BB, wall4BB)
-        console.log(wbbArr)
-        //console.log(wbbArr[9])
-        //wbbArr.push(wbbArr2)
-        //console.log(wbbArr.length)
-        return(wbbArr);
-    }
-    else if(first == 'cbb'){
-        pixelCorners();
-        let cbbArr2 = [];
-        for(let i=0; i<cbbArr.length; i++){
-            let comparitor = cbbArr[i];
-            for(let a=0; a<cbbArr.length; a++){
-                if(a!=i && cbbArr[a].intersectsBox(comparitor)){
-                    cbbArr2.push([comparitor, cbbArr[a]]);
-                }
-            }
-        }
-        console.log(cbbArr2);
-        cbbArr.push(wall1and2CornerBB, wall2and3CornerBB, wall3and4CornerBB, wall4and1CornerBB)
-        console.log(cbbArr)
-        return(cbbArr);
-
-    }
-    else if(first == 'building'){
-        //return(building());
-        //return(pixelMeshArr);
-    }
-    else if(first == 'ceiling'){
-        doorBBArr = [];
-        return(buildingCeiling);
-    }
-    else if(first == 'door'){
-        return(doorBBArr);
-    }
-    */
     if(first == 'allObjs'){
-        //[crossHair, fire]
         pixelMeshArr = []
         wbbArr = []
         addPixelMeshes();
         wbbArr.push(wall1BB, wall2BB, wall3BB, wall4BB) 
-        /*
         let returnObj = {
-            main: [cube, cube2, plane, wall1, wall2, wall3, wall4, box, pBox],
-            ortho: [crossHair, fire],
+            cube: cube,
+            cube2: cube2,
+            floor: plane,
+            wall1: wall1,
+            wall2: wall2,
+            wall3: wall3,
+            wall4: wall4,
+            cross: crossHair,
+            fire: fire,
+            box: box,
+            playerBox: pBox,
+            bbb: boxBB,
+            pbb: playerBB,
+            pixel: pixelMeshArr,
             wbb: wbbArr,
-
-        }*/
-        let returnObj = {
-                cube: cube,
-                cube2: cube2,
-                floor: plane,
-                wall1: wall1,
-                wall2: wall2,
-                wall3: wall3,
-                wall4: wall4,
-                cross: crossHair,
-                fire: fire,
-                box: box,
-                playerBox: pBox,
-                bbb: boxBB,
-                pbb: playerBB,
-                pixel: pixelMeshArr,
-                wbb: wbbArr,
-                ceiling: buildingCeiling,
-                door: doorBBArr,
+            ceiling: buildingCeiling,
+            door: doorBBArr,
         }
-        //return[cube, cube2, plane, wall1, wall2, wall3, wall4, box, pBox]
         return(returnObj);
     }
-
-
 }
 export{createCube};
 

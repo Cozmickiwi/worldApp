@@ -330,29 +330,7 @@ function cameraAnim(timeScale){
     if(cameraMod.position.y<5){
         cameraMod.position.y = 5;
     }
-    /*
-    xP.textContent = (`x:${cameraMod.position.x}`);
-    yP.textContent = (`y:${cameraMod.position.y}`);
-    zP.textContent = (`z:${cameraMod.position.z}`);
-    */
     xP.textContent = (`x:${cameraMod.rotation.x}`);
-    //yP.textContent = (`y:${cameraMod.rotation.y}`);
-    //zP.textContent = (`z:${cameraMod.rotation.z}`);
-    //yP.textContent = (`${(cameraMod.rotation.y)+((Math.PI*2)*camYRot)}`);
-    /*
-    if(Number(yP.textContent) <= (-(Math.PI*2))){
-        camYRot++;
-    }
-    else if(Number(yP.textContent) >= ((Math.PI*2))){
-        camYRot--;
-    }
-    
-    if(0>currentCamPos){
-        yP.textContent = (`${360+currentCamPos}`);
-    }
-    else{
-        yP.textContent = (`${currentCamPos}`);
-    }*/
     zP.textContent = (`Position: X=${cameraMod.position.x} Y=${cameraMod.position.y} Z=${cameraMod.position.z}`);
     yP.textContent = (`y:${deg(cameraMod.rotation.y)} z:${deg(cameraMod.rotation.z)}`);
     playerBox.position.set(cameraMod.position.x, 5, cameraMod.position.z);
@@ -360,8 +338,6 @@ function cameraAnim(timeScale){
     if(wallInt == true){
         wallInt = false;
     }
-    //console.log(playerBB);
-
 }
 
 let doorTick1 = 0;
@@ -403,7 +379,6 @@ function doorOpen(selDoor){
     }
     selDoor.frameNum--;
     if(selDoor.frameNum<=0){
-        //openingDoors.splice(selDoor.value, 1);
         openDoors.push(selDoor);
         selDoor.status = 'standby';
         selDoor.frameNum = 900;
@@ -414,7 +389,6 @@ function doorOpen(selDoor){
                     openingDoors.splice(r, 1);
                     break;
                 }
-                //openingDoors[r].value--;
             }
         }
     }
@@ -439,8 +413,7 @@ function doorStandBy(selDoor){
             selDoor.status = 'closing';
             selDoor.frameNum = 100;
             let playerDistVector = new Vector3(cameraMod.position.x, 2, cameraMod.position.z);
-            //console.log(selDoor.distanceToPoint(playerDistVector));
-            let volume = .8-(selDoor.distanceToPoint(playerDistVector)/100);
+            let volume = .8-(selDoor.distanceToPoint(playerDistVector)/150);
             if(selDoor.distanceToPoint(playerDistVector)>80){
                 volume = 0;
             }
@@ -497,75 +470,6 @@ export function animateMod(scene, camera, controls, pBB, bBB, wbbArr, quad, face
             doorClose(closingDoors[p]);
         }
     }
-    //for(let b=0; b<curDoorArr.length; b++){
-        //if(curDoorArr[b] != false){
-        //let innerDoor = doorTex.door.objectName;
-        /*
-        for(let o=1; o<curDoorArr.length; o++){
-            if(curDoorArr[o] != false){
-                let innerDoor = scene.getObjectByName((curDoorArr[o])[1].door.objectName);
-            if(doorTex.currentStatus == 'opening'){
-                if((curDoorArr[o])[1].door.orientation == 'z'){
-                    innerDoor.position.z -= .1;
-                }
-                else{
-                    innerDoor.position.x += .1;
-                }
-                
-            }
-            else if((curDoorArr[o])[1].currentStatus == 'standby' && !(openDoors.includes((curDoorArr[o])[1].door))){
-                openDoors.push((curDoorArr[o])[1].door);
-            }
-            else if((curDoorArr[o])[1].currentStatus == 'closing'){
-                if(!(doorQueue.includes((curDoorArr[o])[1].door))){
-                    doorQueue.push((curDoorArr[o])[1].door);
-                }
-            }
-            }
-            
-        }
-        
-        //innerDoor.visible = false;
-    //}
-    if(doorQueue.length>0){
-        for(let f=0; f<doorQueue.length; f++){
-            if(!(playerBB.intersectsBox(doorQueue[f])) && !(currentlyClosing.includes(doorQueue[f]))){
-                currentlyClosing.push(doorQueue[f]);
-                openDoors = [];
-                setTimeout(() => {
-                    currentlyClosing.splice(f, 1);
-                    doorQueue.splice(f, 1);
-                }, 750);
-                }
-        }
-        
-    }
-    if(currentlyClosing.length>0){
-        for(let k=0; k<currentlyClosing.length; k++){
-            if((currentlyClosing[k].orientation == 'z' && scene.getObjectByName(currentlyClosing[k].objectName).position.z+5 < currentlyClosing[k].max.z)
-            ||(currentlyClosing[k].orientation == 'x' && scene.getObjectByName(currentlyClosing[k].objectName).position.x+5 > currentlyClosing[k].max.x)){
-                if(currentlyClosing[k].orientation == 'z'){
-                    scene.getObjectByName(currentlyClosing[k].objectName).position.z += .1;
-                }
-                else{
-                    scene.getObjectByName(currentlyClosing[k].objectName).position.x -= .1;
-                }
-                
-            }
-            else{
-                if(currentlyClosing[0].orientation == 'z'){
-                    scene.getObjectByName(currentlyClosing[k].objectName).position.z = currentlyClosing[k].max.z-5;
-                }
-                else{
-                    scene.getObjectByName(currentlyClosing[k].objectName).position.x = currentlyClosing[k].max.x-5;
-                }
-                
-            }
-            
-        }
-    }
-    //}
-    */
     control1 = controls;
     const delta = clock.getDelta();
     quadrant = quad;

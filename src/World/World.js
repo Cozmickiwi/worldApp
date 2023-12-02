@@ -88,16 +88,6 @@ let gunMaterial = new MeshBasicMaterial({
 
 })
 function objInfo(posX, posZ, xLen, zLen, obj){
-    /*
-    let xStart = pos-(xLen/2);
-    let xEnd = pos+(xLen/2);
-    let Zstart = pos-(zLen/2);
-    let zEnd = pos+(zLen/2);
-    let info = {
-        x: [xStart, xEnd],
-        z: [Zstart, zEnd],
-    };
-    */
     let info = {};
     if(obj.ignoreSides == false || (!(obj.ignoreSides).includes('west'))){
         let westStart = [(posX+(xLen/2)), (posZ-(zLen/2))]
@@ -119,78 +109,14 @@ function objInfo(posX, posZ, xLen, zLen, obj){
         let soundEnd = [(posX+(xLen/2)), (posZ-(zLen/2))]
         info.south = [southStart, soundEnd]
     }
-    /*
-    let info = {
-        west: [westStart, westEnd],
-        north: [northStart, northEnd],
-        east: [eastStart, eastEnd],
-        south: [southStart, soundEnd],
-    }
-    */
     return(info);
 }
-//let orthoCamera;
 
 let doorAnim = false;
 let door = false;
 let curDoorArr = [false]
 let doorTicker = 0;
 let doorTicker2 = 0;
-/*
-window.addEventListener('keypress', event => {
-    if(event.key == 'e'){
-        //if(doorAnim == false){
-            for(let g=0; g<doorBBArr.length; g++){
-                if(playerBB.intersectsBox(doorBBArr[g])){
-                    doorAnim = true;
-                    door = {
-                        door: doorBBArr[g],
-                        currentStatus: 'opening',
-                        doorNum: doorTicker,
-                    }
-                    
-                    //curDoorArr[0] = true;
-                    //curDoorArr.push(door);
-                    curDoorArr[doorTicker] = [true, door];
-                    
-                    setTimeout(() => {
-                        //let index = curDoorArr.findIndex(door);
-                        //curDoorArr.splice[index, 1]
-                        (curDoorArr[doorTicker])[1].currentStatus = 'standby';
-                        curDoorArr[doorTicker] = [true, door];
-                        doorTicker++;
-                        //curDoorArr[0] = true;
-                        //curDoorArr.push(door);
-                    }, 750);
-                    setTimeout(() => {
-                        //let index = curDoorArr.findIndex(door);
-                        //curDoorArr.splice[index, 1]
-                        (curDoorArr[doorTicker2])[1].currentStatus = 'closing';
-                        curDoorArr[doorTicker2] = [true, door];
-                        doorTicker2++;
-                        //curDoorArr[0] = true;
-                        //curDoorArr.push(door);
-                    }, 7000);
-                    setTimeout(() => {
-                        doorAnim = false;
-                        curDoorArr.splice(0,1);
-                        doorTicker2--;
-                        doorTicker--;
-                        //let index = curDoorArr.findIndex(door);
-                        //curDoorArr.splice[index, 1]
-                        //door = false;
-                        //curDoorArr[0] = true;
-                        //curDoorArr.push(door);
-                        //curDoorArr = [false]
-                    }, 8500);
-                    break;
-                }
-            }
-        //}
-        
-    }
-})
-*/
 class World{
     constructor(container){
         camera = createCamera();
@@ -244,50 +170,6 @@ class World{
         doorBBArr = objList.door;
         console.log(doorBBArr)
         const pixelArr = objList.pixel;
-        /*
-        cube = createCube(true);
-        const cube2 = createCube(false);
-        const floor = createCube('floor');
-        const wall1 = createCube('wall1');
-        const wall2 = createCube('wall2');
-        const wall3 = createCube('wall3');
-        const wall4 = createCube('wall4');
-        
-        
-        
-        const crossHair = createCube('cross');
-        const fire = createCube('fire');
-        const ceiling = createCube('ceiling');
-        playerBox = createCube('playerBox');
-        box = createCube('box');
-        
-        
-
-        playerBB = createCube('pbb');
-        boxBB = createCube('bbb')
-        
-        
-        console.log(playerBB);
-        wbbArr = createCube('wbb');
-        console.log(wbbArr)
-        cbbarr = createCube('cbb')
-        objArr.push(box, wall1, wall2, wall3, wall4);
-        doorBBArr = createCube('door');
-        console.log(doorBBArr)*/
-        //doorBBArr.splice(doorBBArr.length)
-        /*
-        wall1BB = wbbArr[0]
-        wall2BB = wbbArr[1]
-        wall3BB = wbbArr[2]
-        wall4BB = wbbArr[3]
-        */
-        //wall1_2BB = wbbArr[4];
-        //cube.translateZ(-80);
-        
-        //const buildingArr = createCube('building');
-        //const pixelArr = createCube('pixel');
-        //doorBBArr.splice(doorBBArr.length/2)
-        //buildingArr.push(pixelArr);
         const light = createLights(false);
         const light2 = createLights(true);
         const light3 = createLights('amb');
@@ -300,57 +182,19 @@ class World{
             wall4.rotation.set(0,-(Math.PI)/(360/180),0);
             
         }
-        //walls()
-        //boxInfo = objInfo(box.position.x, box.position.z, 6, 6);
-        //wall1Info = objInfo(wall1.position.x, wall1.position.z, 600, 3);
         console.log(wall1Info);
-        //console.log(wall1.position.)
-        //console.log(boxInfo);
         scene.add(cube, cube2, floor, wall1, wall2, wall3, wall4, box, playerBox, ceiling, light, light3);
-        /*
-        for(let i=0; i<buildingArr.length; i++){
-            //buildingArr[i].ignoreSides = false;
-            scene.add(buildingArr[i]);
-            objArr.push(buildingArr[i]);
-        }*/
         for(let i=0; i<pixelArr.length; i++){
             pixelArr[i].ignoreSides = false;
             scene.add(pixelArr[i]);
             objArr.push(pixelArr[i]);
         }
-        //cbbarr.push(playerBB);
-        //console.log(box.position);
-        /*
-            wall1BB.copy(wall1.geometry.boundingBox).applyMatrix4(wall1.matrixWorld);
-            wall2BB.copy(wall2.geometry.boundingBox).applyMatrix4(wall2.matrixWorld);
-            wall3BB.copy(wall3.geometry.boundingBox).applyMatrix4(wall3.matrixWorld);
-            wall4BB.copy(wall4.geometry.boundingBox).applyMatrix4(wall4.matrixWorld);
-            console.log(wall1.geometry.boundingBox);
-            //wall1BB.position.set(0,0,-300)
-            console.log(wall1BB);
-            */
-        //playerBB = scene.getObjectByName('playerBB')
         for(let i=0; i<pixelArr.length; i++){
             if(doorBBArr[0].containsPoint(pixelArr[i].position)){
                 console.log(pixelArr[i])
             }
         }
         setInterval(() => {
-            /*
-            if(camera.position.x >=0 && camera.position.z >=0){
-                quad = 'xz';
-            }
-            else if(camera.position.x <0 && camera.position.z >=0){
-                quad = '-xz';
-            }
-            else if(camera.position.x <0 && camera.position.z <0){
-                quad = '-x-z';
-            }
-            else if(camera.position.x >=0 && camera.position.z <0){
-                quad = 'x-z';
-            }
-            */
-            //let origin = new Vector3(camera.position);
             let prevDistance;
             let prevDistance1;
             let arrObj;
@@ -411,62 +255,17 @@ class World{
                     arrObj1 = directions;
                 }
             }
-            /*
-            closestObj = [chosenObj.name, chosenObj, prevDistance, arrObj1];
-            closestFace = arrObj1;
-            if(doorAnim == true){
-                //if(door.currentStatus == 'opening' && door.door.orientation == 'z'){
-                    //door.door.object.translateX(.1)
-                    //console.log('hi')
-                    
-                //}
-            }*/
         }, 10);
-        /*
-            setInterval(() => {
-                if(closestObj != undefined){
-                    if(arrowLoaded == false){
-                        dir = new Vector3(closestObj[1].position.x, closestObj[1].position.y, closestObj[1].position.z);
-                        dir.normalize();
-                        let origin = new Vector3(camera.position.x, camera.position.y, camera.position.z);
-                        arrowHelper = new ArrowHelper(dir, origin, 2);
-                        scene.add(arrowHelper);
-                        arrowLoaded = true;
-                    }
-                    else{
-                        dir = new Vector3(closestObj[1].position.x, closestObj[1].position.y, closestObj[1].position.z);
-                        //dir = new Vector3( 0, 0, -(Math.sqrt(((camera.position.z-(closestObj[1].position.z))**2)+((camera.position.x-(closestObj[1].position.x))**2))) ).applyQuaternion( camera.quaternion ).add( camera.position );
-                        dir.normalize();
-                        arrowHelper.setDirection(dir);
-                    }
-                }
-            }, 50);*/
         gltfLoader.load(
-            //'/src/World/components/assets/ultrakillgun/silahful2.glb',
             '/src/World/components/assets/gunAnim/source/untitled.glb',
             function(gltf){
-                //gltf.scene.name = 'gun';
                 let gun1 = gltf.scene;
-                //console.log(gun1)
-                //let gun2 = new Mesh (gun1, MeshBasicMaterial);
-                //orthoScene.add(gun2);
-                //gun1.scale.set(12,12,38);
-                //gun1.position.set(350,700,1)
                 gun1.scale.set(-2000,2000,2000);
                 gun1.position.set(150,3020,1)
                 gun1.name = 'gun';
                 const textureLoader = new TextureLoader();
-                
-                
-                //texture.flipY = false;
-                
-                //gun1.rotation.z = (1)
-                //gun1.rotation.X = (1.5)
                 gun1.rotation.set(-Math.PI/2,-.1,-0.15)
                 gun1.rotation.x = (3.1)
-                //gun1.applyMatrix()
-                //renderer.render(orthoScene, ortho);
-                
                 console.log(gltf.animations)
                 mixer = new AnimationMixer(gltf.scene);
                 const clips = gltf.animations;
@@ -474,15 +273,10 @@ class World{
                 action = mixer.clipAction(gltf.animations[3]);
                 shootAction = mixer.clipAction(gltf.animations[1]);
                 walkAction = mixer.clipAction(gltf.animations[10]);
-                //action.play();
-                
                 document.addEventListener('mousedown', (event) => {
-                        if(event.target != document.getElementById('doomControl')){
-                            shoot = true;
-                        }
-                        
-                        //shootAction.setLoop(LoopRepeat);
-                    
+                    if(event.target != document.getElementById('doomControl')){
+                        shoot = true;
+                    }
                 })
                 document.addEventListener('keydown', (event) => {
                     if(event.key == 'Control'){
@@ -490,30 +284,17 @@ class World{
                     }
                 })
                 gunModelLoaded = true;
-                /*
-                function update () {
-                    mixer.update( deltaSeconds );
-                }
-                clips.forEach( function ( clip ) {
-                    mixer.clipAction( clip ).play();
-                } );
-                */
                 crossHair.position.set(0,0,-500);
                 fire.position.set(480,270,-850);
                 fire.scale.set(1.5,1.5,1.5)
                 fireImg = fire;
                 fire.visible = false;
-                
-                //fire.scale.set(-100000,-100000,-100000)
                 orthoScene.add(gltf.scene, crossHair, fire, light2);
-
             }
         )
         gltfLoader.load(
-            //'/src/World/components/assets/ultrakillgun/silahful2.glb',
             '/src/World/components/assets/gunAnim/source/untitled2222.glb',
             function(gltf){
-                
                 person = gltf.scene;
                 person.scale.set(3.5,3.5,3.5)
                 person.position.set(-50,0,-50)
@@ -522,16 +303,6 @@ class World{
                 console.log(gltf.animations)
                 personAction.timeScale = 1.25;
                 scene.add(person);
-                /*
-                setInterval(() => {
-                    if((person.position.x < (camera.position.x-15) || person.position.x > (camera.position.x+15))
-                    ||(person.position.z < (camera.position.z-15)|| person.position.z > (camera.position.z+15))){
-                        enemyCollision = false;
-                    }
-                    else{
-                        enemyCollision = true;
-                    }
-                }, 200);*/
             }
         )
         const resizer = new Resizer(container, camera, renderer);
@@ -540,7 +311,6 @@ class World{
         function animate(){
             window.requestAnimationFrame(animate);
             if(gunModelLoaded == true){
-                //walkAction.setLoop(LoopRepeat);
                 if(shoot == true){
                     pos = new Vector3( 0, 0, -(Math.sqrt((camera.position.z**2)+(camera.position.x**2))) ).applyQuaternion( camera.quaternion ).add( camera.position );
                     boxPos = new Vector3( 0, 0, -(Math.sqrt(((camera.position.z-100)**2)+((camera.position.x-100)**2))) ).applyQuaternion( camera.quaternion ).add( camera.position );
@@ -617,23 +387,16 @@ class World{
                 personAction.play();
                 person.lookAt(camera.position.x, camera.position.y, camera.position.z);
                 personPos = new Vector3( 0, 0, -(Math.sqrt(((camera.position.z-(person.position.z))**2)+((camera.position.x-(person.position.x))**2))) ).applyQuaternion( camera.quaternion ).add( camera.position );
-                //if(person.position.x > camera.position.x+15 || person.position.x < camera.position.x-15 || person.position.z > camera.position.z+15 || person.position.z < camera.position.z-15){
-                //    person.translateZ(.3);
-                //    person.position.y = 0.1;
-                //}
                 if(enemyCollision == false){
                     person.translateZ(.3);
                     person.position.y = 0.1;
                 }
-                //console.log(person.position);
-                //action = baseAction;
             }
             movementStatus = animateMod(scene, camera, controls, playerBB, boxBB, wbbArr, quad, closestFace, cbbarr, doorAnim, door, curDoorArr, doorBBArr);
             if(gunModelLoaded == true){
                 mixer.update(clock.getDelta());
                 mixer2.update(clock2.getDelta());
             }
-            
             renderer.clear();
             renderer.render(scene, camera);
             renderer.clearDepth();
