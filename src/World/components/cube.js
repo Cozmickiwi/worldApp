@@ -611,7 +611,7 @@ function createCube(first){
         door.visible = false;
         door.position.set((doorPositions[a])[0], 5, (doorPositions[a])[1]);
         let doorInnerTexture = new Mesh(doorTextureGeometry, doorTextureMaterial);
-        doorInnerTexture.position.set((doorPositions[a])[0], 5, (doorPositions[a])[1]);
+        doorInnerTexture.position.set((doorPositions[a])[0], 4.84, (doorPositions[a])[1]);
         if(a==2){
             //doorInnerTexture.name = 'dooooor';
         }
@@ -621,12 +621,14 @@ function createCube(first){
         door.ignoreSides = false;
         doorInnerTexture.ignoreSides = false;
         doorInnerTexture.name = `innerDoor${count}`;
+        
         let doorBB = new Box3(new Vector3(), new Vector3());
         doorBB.setFromObject(door);
         doorBB.ignorePositions = false;
         doorBB.position = door.position;
         doorBB.object = doorInnerTexture;
         doorBB.objectName = `innerDoor${count}`;
+        doorBB.status = 'null';
         console.log(count);
         count++
         if((doorPositions[a])[2] == 'z'){
@@ -640,8 +642,22 @@ function createCube(first){
         
         if(pixelMeshArr.length<doorPositions.length*2){
             pixelMeshArr.push(door, doorInnerTexture);
+            /*
+            let skip = false;
+            if(doorBBArr.length>0){
+                for(let b=0; b<doorBBArr.length; b++){
+                    if(doorBBArr[b].objectName == doorBB.objectName){
+                        skip = true
+                        break;
+                    }
+                }
+            }
+            if(skip = false){
+                
+            }*/
             doorBBArr.push(doorBB);
-            wbbArr.push(doorBB);
+                wbbArr.push(doorBB);
+            
         }
     }
     for(let i=0; i<objArr.length; i++){
@@ -839,6 +855,7 @@ loader.load(
 );*/
 
     console.log(iteration)
+    /*
     if(first == true){
         return (cube);
     }
@@ -880,8 +897,10 @@ loader.load(
     }
     else if(first == 'pixel'){
         pixelMeshArr = []
+        wbbArr = []
         addPixelMeshes();
-        //wbbArr = []
+
+        
         console.log(pixelMeshArr)
         return(pixelMeshArr);
     }
@@ -923,6 +942,42 @@ loader.load(
     }
     else if(first == 'door'){
         return(doorBBArr);
+    }
+    */
+    if(first == 'allObjs'){
+        //[crossHair, fire]
+        pixelMeshArr = []
+        wbbArr = []
+        addPixelMeshes();
+        wbbArr.push(wall1BB, wall2BB, wall3BB, wall4BB) 
+        /*
+        let returnObj = {
+            main: [cube, cube2, plane, wall1, wall2, wall3, wall4, box, pBox],
+            ortho: [crossHair, fire],
+            wbb: wbbArr,
+
+        }*/
+        let returnObj = {
+                cube: cube,
+                cube2: cube2,
+                floor: plane,
+                wall1: wall1,
+                wall2: wall2,
+                wall3: wall3,
+                wall4: wall4,
+                cross: crossHair,
+                fire: fire,
+                box: box,
+                playerBox: pBox,
+                bbb: boxBB,
+                pbb: playerBB,
+                pixel: pixelMeshArr,
+                wbb: wbbArr,
+                ceiling: buildingCeiling,
+                door: doorBBArr,
+        }
+        //return[cube, cube2, plane, wall1, wall2, wall3, wall4, box, pBox]
+        return(returnObj);
     }
 
 

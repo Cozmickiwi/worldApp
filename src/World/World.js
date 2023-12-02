@@ -82,6 +82,7 @@ let arrowHelper;
 let closestFace;
 let wall1_2BB;
 let doorBBArr;
+let objList;
 //let canvas = document.querySelector('canvas');
 let gunMaterial = new MeshBasicMaterial({
 
@@ -133,35 +134,63 @@ function objInfo(posX, posZ, xLen, zLen, obj){
 let doorAnim = false;
 let door = false;
 let curDoorArr = [false]
-
-
+let doorTicker = 0;
+let doorTicker2 = 0;
+/*
 window.addEventListener('keypress', event => {
     if(event.key == 'e'){
-        if(doorAnim == false){
+        //if(doorAnim == false){
             for(let g=0; g<doorBBArr.length; g++){
                 if(playerBB.intersectsBox(doorBBArr[g])){
                     doorAnim = true;
                     door = {
                         door: doorBBArr[g],
                         currentStatus: 'opening',
+                        doorNum: doorTicker,
                     }
-                    curDoorArr = [true, door];
+                    
+                    //curDoorArr[0] = true;
+                    //curDoorArr.push(door);
+                    curDoorArr[doorTicker] = [true, door];
+                    
                     setTimeout(() => {
-                        door.currentStatus = 'standby';
-                        curDoorArr = [true, door];
-                    }, 150);
+                        //let index = curDoorArr.findIndex(door);
+                        //curDoorArr.splice[index, 1]
+                        (curDoorArr[doorTicker])[1].currentStatus = 'standby';
+                        curDoorArr[doorTicker] = [true, door];
+                        doorTicker++;
+                        //curDoorArr[0] = true;
+                        //curDoorArr.push(door);
+                    }, 750);
                     setTimeout(() => {
-                        door.currentStatus = 'closing';
-                        curDoorArr = [true, door];
-                    }, 7500);
+                        //let index = curDoorArr.findIndex(door);
+                        //curDoorArr.splice[index, 1]
+                        (curDoorArr[doorTicker2])[1].currentStatus = 'closing';
+                        curDoorArr[doorTicker2] = [true, door];
+                        doorTicker2++;
+                        //curDoorArr[0] = true;
+                        //curDoorArr.push(door);
+                    }, 7000);
+                    setTimeout(() => {
+                        doorAnim = false;
+                        curDoorArr.splice(0,1);
+                        doorTicker2--;
+                        doorTicker--;
+                        //let index = curDoorArr.findIndex(door);
+                        //curDoorArr.splice[index, 1]
+                        //door = false;
+                        //curDoorArr[0] = true;
+                        //curDoorArr.push(door);
+                        //curDoorArr = [false]
+                    }, 8500);
                     break;
                 }
             }
-        }
+        //}
         
     }
 })
-
+*/
 class World{
     constructor(container){
         camera = createCamera();
@@ -184,6 +213,38 @@ class World{
                 locked = false;
             }
         })
+        objList = createCube('allObjs');
+        cube = objList.cube;
+        const cube2 = objList.cube2;
+        const floor = objList.floor;
+        const wall1 = objList.wall1;
+        const wall2 = objList.wall2;
+        const wall3 = objList.wall3;
+        const wall4 = objList.wall4;
+        wall1.name = 'wall1'
+        wall2.name = 'wall2'
+        wall3.name = 'wall3'
+        wall4.name = 'wall4'
+        const crossHair = objList.cross;
+        const fire = objList.fire;
+        const ceiling = objList.ceiling;
+        playerBox = objList.playerBox;
+        box = objList.box;
+        box.name = 'box';
+        playerBB = objList.pbb;
+        boxBB = objList.bbb;
+        fire.name = 'fireFlash';
+        cube.name = 'cube1';
+        cube2.name = 'cube2';
+        playerBox.name = 'playerBox';
+        console.log(playerBB);
+        wbbArr = objList.wbb;
+        console.log(wbbArr)
+        objArr.push(box, wall1, wall2, wall3, wall4);
+        doorBBArr = objList.door;
+        console.log(doorBBArr)
+        const pixelArr = objList.pixel;
+        /*
         cube = createCube(true);
         const cube2 = createCube(false);
         const floor = createCube('floor');
@@ -191,29 +252,29 @@ class World{
         const wall2 = createCube('wall2');
         const wall3 = createCube('wall3');
         const wall4 = createCube('wall4');
-        wall1.name = 'wall1'
-        wall2.name = 'wall2'
-        wall3.name = 'wall3'
-        wall4.name = 'wall4'
+        
+        
+        
         const crossHair = createCube('cross');
         const fire = createCube('fire');
         const ceiling = createCube('ceiling');
         playerBox = createCube('playerBox');
         box = createCube('box');
-        box.name = 'box';
+        
+        
+
         playerBB = createCube('pbb');
         boxBB = createCube('bbb')
-        fire.name = 'fireFlash';
-        cube.name = 'cube1';
-        cube2.name = 'cube2';
-        playerBox.name = 'playerBox';
+        
+        
         console.log(playerBB);
         wbbArr = createCube('wbb');
         console.log(wbbArr)
         cbbarr = createCube('cbb')
         objArr.push(box, wall1, wall2, wall3, wall4);
         doorBBArr = createCube('door');
-        console.log(doorBBArr)
+        console.log(doorBBArr)*/
+        //doorBBArr.splice(doorBBArr.length)
         /*
         wall1BB = wbbArr[0]
         wall2BB = wbbArr[1]
@@ -224,7 +285,8 @@ class World{
         //cube.translateZ(-80);
         
         //const buildingArr = createCube('building');
-        const pixelArr = createCube('pixel');
+        //const pixelArr = createCube('pixel');
+        doorBBArr.splice(doorBBArr.length/2)
         //buildingArr.push(pixelArr);
         const light = createLights(false);
         const light2 = createLights(true);
@@ -256,7 +318,7 @@ class World{
             scene.add(pixelArr[i]);
             objArr.push(pixelArr[i]);
         }
-        cbbarr.push(playerBB);
+        //cbbarr.push(playerBB);
         //console.log(box.position);
         /*
             wall1BB.copy(wall1.geometry.boundingBox).applyMatrix4(wall1.matrixWorld);
@@ -566,7 +628,7 @@ class World{
                 //console.log(person.position);
                 //action = baseAction;
             }
-            movementStatus = animateMod(scene, camera, controls, playerBB, boxBB, wbbArr, quad, closestFace, cbbarr, doorAnim, door);
+            movementStatus = animateMod(scene, camera, controls, playerBB, boxBB, wbbArr, quad, closestFace, cbbarr, doorAnim, door, curDoorArr, doorBBArr);
             if(gunModelLoaded == true){
                 mixer.update(clock.getDelta());
                 mixer2.update(clock2.getDelta());
